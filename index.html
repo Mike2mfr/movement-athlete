@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#15181d"><meta name="description" content="12-week handstand, movement and athleticism program with logging, skill ladder and supplement tracker."><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><style>:root{color-scheme:light dark}body{margin:0}img{max-width:100%}[hidden]{display:none!important}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style><title>Movement Athlete</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#15181d"><meta name="description" content="12-week handstand, movement and athleticism program with logging, skill ladder, breathwork and supplement tracker."><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><style>:root{color-scheme:light dark}body{margin:0}img{max-width:100%}[hidden]{display:none!important}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style><title>Movement Athlete</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
 <style>
@@ -140,8 +140,8 @@ select,input[type=number],input[type=date]{border:1px solid var(--line);backgrou
 
 /* tab bar */
 .tabbar{position:fixed;left:0;right:0;bottom:0;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));z-index:5}
-.tabbar nav{max-width:640px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:2px}
-.tab{border:0;background:none;padding:6px 0;border-radius:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11.5px;font-weight:600;color:var(--mut)}
+.tabbar nav{max-width:640px;margin:0 auto;display:grid;grid-template-columns:repeat(6,1fr);gap:0}
+.tab{border:0;background:none;padding:6px 0;border-radius:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;font-weight:600;color:var(--mut);min-width:0}
 .tab svg{width:22px;height:22px}
 .tab.on{color:var(--fg)} .tab.on svg{color:var(--accent)}
 .toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:9px 14px;border-radius:10px;font-size:13px;font-weight:600;z-index:6;opacity:0;transition:opacity .2s;pointer-events:none}
@@ -169,6 +169,72 @@ select,input[type=number],input[type=date]{border:1px solid var(--line);backgrou
 .howrun{margin:0 0 10px;background:var(--surface2);border-radius:12px;padding:9px 12px;font-size:13px}
 .howrun summary{cursor:pointer;font-weight:700}
 .howrun div{margin-top:6px;color:var(--fg)}
+/* breathwork */
+:root{--b-in:var(--sb);--b-out:var(--tm);--b-hold:var(--accent);--b-rest:var(--mut)}
+.brcard{margin-top:12px}
+.br-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.br-head .num{font-size:12.5px;white-space:nowrap}
+.br-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+.br-stats.three{grid-template-columns:repeat(3,1fr)}
+.br-stats .metric{padding:10px 12px}
+.br-stats.three .val{font-size:19px}
+.br-slot{margin:10px 0 2px}
+.br-item{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
+.br-slot + .br-item, .br-list > .br-item:first-child{border-top:0}
+.br-item .check{width:26px;height:26px;cursor:pointer;background:none}
+.br-item.done .br-txt b{text-decoration:line-through;color:var(--mut)}
+.br-txt{display:flex;flex-direction:column;gap:1px;min-width:0;font-size:14px}
+.br-txt .mut{font-size:12px}
+.br-go{padding:7px 12px;font-size:13px}
+.br-note{font-size:12.5px;border-radius:8px;padding:8px 10px;margin-top:8px;background:var(--accentSoft)}
+.br-note.warn{background:color-mix(in srgb,var(--warn) 16%,var(--surface))}
+.br-note.info{background:var(--surface2);margin:0 0 4px}
+.br-more{font-size:13px;margin:0 0 6px 40px}
+.br-txt .br-more{margin:4px 0 0}
+.br-day{border-top:1px solid var(--line);margin-top:8px;padding-top:8px}
+.br-day > summary{cursor:pointer;display:flex;justify-content:space-between;gap:8px;font-weight:650;font-size:14px;list-style:none}
+.br-day > summary::-webkit-details-marker{display:none}
+.br-day > summary span:first-child::before{content:'▸ ';color:var(--mut)}
+.br-day[open] > summary span:first-child::before{content:'▾ '}
+.br-day > summary .num{font-size:12.5px}
+.br-more summary{cursor:pointer;color:var(--sb);font-weight:600;font-size:12.5px}
+.br-more ol,.br-steps{margin:4px 0;padding-left:1.2em;display:flex;flex-direction:column;gap:3px;font-size:13px}
+.br-libbody{display:flex;flex-direction:column;gap:6px;padding:4px 0 10px;font-size:13.5px}
+.br-libbody .eyebrow{margin-top:4px}
+.br-lib,.br-week{border-top:1px solid var(--line);padding:9px 0}
+.br-lib:first-child,.br-week:first-child{border-top:0}
+.br-lib summary,.br-week summary{cursor:pointer;display:flex;justify-content:space-between;gap:10px;list-style:none;font-size:14px}
+.br-lib summary::-webkit-details-marker,.br-week summary::-webkit-details-marker{display:none}
+.br-lib summary .num,.br-week summary .num{font-size:12px}
+.br-h{font-size:22px;margin:16px 0 6px}
+.br-h small{font-size:12px;font-family:var(--f-num);text-transform:none;letter-spacing:0}
+.br-phase{border-left:3px solid var(--b-in);padding:2px 0 2px 12px;margin:6px 0 10px}
+.br-phase.p2{border-color:var(--b-hold)} .br-phase.p3{border-color:var(--b-out)}
+.br-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:12px 0 10px}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:var(--surface2);border-radius:12px;padding:4px;margin:12px 0 6px}
+.seg button{border:0;background:none;border-radius:9px;padding:8px 4px;font-weight:600;font-size:13px;cursor:pointer;color:var(--mut)}
+.seg button.on{background:var(--surface);color:var(--fg);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.br-bars{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;align-items:end;height:80px}
+.br-bars div{background:var(--surface2);border-radius:3px 3px 0 0;height:100%;position:relative;overflow:hidden}
+.br-bars div.now{outline:1.5px solid var(--fg);outline-offset:1px}
+.br-bars i{position:absolute;left:0;right:0;bottom:0;background:var(--b-in)}
+.br-barlab{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;text-align:center;font-size:11px;color:var(--mut);font-family:var(--f-num);margin-top:4px}
+.brsum{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px}
+#bplayer{position:fixed;inset:0;background:var(--bg);z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:12px;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px));text-align:center}
+#bplayer[hidden]{display:none}
+.bp-top{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%}
+.bp-top h2{font-family:var(--f-display);font-weight:800;font-size:28px;text-transform:uppercase;line-height:1}
+#bp-prog{width:100%;max-width:520px;height:4px;background:var(--surface2);border-radius:2px;overflow:hidden}
+#bp-prog i{display:block;height:100%;background:var(--fg);width:0}
+#bp-stage{flex:1;display:grid;place-items:center;width:100%;min-height:0}
+#bp-ring{width:min(62vw,46vh,340px);aspect-ratio:1;border-radius:50%;border:1px dashed var(--line);display:grid;place-items:center;position:relative}
+#bp-orb{position:absolute;inset:0;border-radius:50%;background:var(--pc,var(--b-in));opacity:.22;transform:scale(.3)}
+#bp-orbline{position:absolute;inset:0;border-radius:50%;border:2px solid var(--pc,var(--b-in));transform:scale(.3)}
+#bp-count{position:relative;font:700 52px var(--f-num);font-variant-numeric:tabular-nums}
+#bp-phase{font-family:var(--f-display);font-weight:800;font-size:34px;text-transform:uppercase;color:var(--pc,var(--b-in))}
+#bp-cue{max-width:40ch;min-height:3em;margin:4px auto 10px;font-size:14px}
+.bp-btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.bp-bottom{display:flex;flex-direction:column;align-items:center}
 </style>
 </head><body><main class="wrap" id="main"></main>
 <div class="tabbar"><nav id="tabs" aria-label="Sections"></nav></div>
@@ -226,7 +292,7 @@ function dateOf(week, dayIdx){ const d = parseISO(S.profile.startDate); d.setDat
 /* ---------- state ---------- */
 const LS_KEY = 'ma2-state-v1';
 let S = { profile:{ startDate: iso(mondayOf(new Date())), bw:90 }, logs:{}, metrics:{ entries:[] }, supps:{ items:[] }, supplog:{} };
-function loadLocal(){ try { const r = localStorage.getItem(LS_KEY); if (r) { const o = JSON.parse(r); S.profile = Object.assign(S.profile, o.profile||{}); S.logs = o.logs||{}; S.metrics = o.metrics||{entries:[]}; S.supps = o.supps||{items:[]}; S.supplog = o.supplog||{}; return true; } } catch(e){} return false; }
+function loadLocal(){ try { const r = localStorage.getItem(LS_KEY); if (r) { const o = JSON.parse(r); S.profile = Object.assign(S.profile, o.profile||{}); S.logs = o.logs||{}; S.metrics = o.metrics||{entries:[]}; S.supps = o.supps||{items:[]}; S.supplog = o.supplog||{}; S.breath = o.breath||null; return true; } } catch(e){} return false; }
 function saveLocal(){ try { localStorage.setItem(LS_KEY, JSON.stringify(S)); } catch(e){} }
 const hadLocal = loadLocal();
 
@@ -244,7 +310,7 @@ async function flush(docId){
   if (q.busy) { q.again = true; return; }
   q.busy = true;
   try {
-    const body = docId === 'profile' ? S.profile : docId === 'metrics' ? S.metrics : docId === 'supps' ? S.supps : docId.startsWith('supplog-') ? (S.supplog[docId.slice(8)] ? { days: S.supplog[docId.slice(8)] } : null) : S.logs[docId.slice(4)];
+    const body = docId === 'profile' ? S.profile : docId === 'metrics' ? S.metrics : docId === 'supps' ? S.supps : docId === 'breath' ? S.breath : docId.startsWith('supplog-') ? (S.supplog[docId.slice(8)] ? { days: S.supplog[docId.slice(8)] } : null) : S.logs[docId.slice(4)];
     const ref = DB.collection('data/users/' + UID).doc(docId);
     if (body) await ref.set(JSON.parse(JSON.stringify(body))); else await ref.delete();
     setSync('ok');
@@ -270,16 +336,17 @@ async function initDb(){
       if (snap.empty && first && hadLocal) {
         // first time on the synced store: upload what this device has
         first = false; setSync('ok');
-        persist('profile'); persist('metrics'); persist('supps'); Object.keys(S.supplog).forEach(m => persist('supplog-' + m)); Object.keys(S.logs).forEach(k => persist('log-' + k));
+        persist('profile'); persist('metrics'); persist('supps'); if (S.breath) persist('breath'); Object.keys(S.supplog).forEach(m => persist('supplog-' + m)); Object.keys(S.logs).forEach(k => persist('log-' + k));
         return;
       }
       first = false;
       const logs = {};
-      let profile = null, metrics = null, supps = null; const supplog = {};
+      let profile = null, metrics = null, supps = null, breath = null; const supplog = {};
       snap.docs.forEach(d => {
         if (d.id === 'profile') profile = d.data();
         else if (d.id === 'metrics') metrics = d.data();
         else if (d.id === 'supps') supps = d.data();
+        else if (d.id === 'breath') breath = d.data();
         else if (d.id.startsWith('supplog-')) supplog[d.id.slice(8)] = (d.data().days || {});
         else if (d.id.startsWith('log-')) logs[d.id.slice(4)] = d.data();
       });
@@ -289,6 +356,7 @@ async function initDb(){
         S.logs = JSON.parse(JSON.stringify(logs));
         if (supps) S.supps = { items: JSON.parse(JSON.stringify(supps.items || [])) };
         S.supplog = JSON.parse(JSON.stringify(supplog));
+        if (breath) S.breath = Object.assign(BR_DEF(), JSON.parse(JSON.stringify(breath)));
         seedCore();
         migrateCodes();
         saveLocal();
@@ -487,6 +555,7 @@ function renderToday(){
   if (dk === 'D7') {
     h += `<div class="rest-card"><div class="eyebrow">Sunday</div><h2>Rest</h2><p class="mut">Optional 10 min daily trio (Roye Gold): spinal waves 5 min, passive squat 2–5 min, passive hang 1 min. Go for a walk.</p></div>`;
     if (P.routines && P.routines.dw_flow) { const F = P.routines.dw_flow; h += `<details class="card" style="margin-top:10px"><summary style="cursor:pointer"><b>${esc(F[0])}</b><div class="mut" style="font-size:12.5px;margin-top:3px">${esc(F[1])}</div></summary><ul class="rt-list" style="margin-top:10px">${F[2].map(d => `<li class="rt-item" style="grid-template-columns:1fr;cursor:default"><span class="rt-txt"><b>${esc(d[0])}</b><span class="rt-dose">${esc(d[1])}</span>${d[2]?`<span class="mut">${esc(d[2])}</span>`:''}</span></li>`).join('')}</ul></details>`; }
+    h += breathCard(iso(dateOf(w, di)));
     return h;
   }
   const sess = sessionOf(w, dk);
@@ -561,6 +630,7 @@ function renderToday(){
   h += '</div>';
   const tot = sess.rows.filter(r => r[2].some(Boolean)).length, n = lg ? Object.keys(lg.entries).length : 0;
   h += `<div class="complete"><span><b class="num">${n}/${tot}</b> logged</span><span class="mut">Easy twice in a row steps it up · Hard twice or missed steps it down</span></div>`;
+  h += breathCard(iso(dateOf(w, di)));
   return h;
 }
 
@@ -584,7 +654,8 @@ function spark(m, ents){
   return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="${esc(m.n)} trend">${tgt}<path d="${area}" fill="var(--accent)" fill-opacity=".14"/><path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2" vector-effect="non-scaling-stroke"/><circle cx="${X(last.d).toFixed(1)}" cy="${Y(last.v).toFixed(1)}" r="3.5" fill="var(--accent)"/></svg>`;
 }
 function renderProgress(){
-  let h = `<div class="section-title">Skill ladder</div><p class="mut" style="margin:0 0 8px;font-size:13.5px">Your level in each Handstand Phases element. Today's session uses it. Move up only when you meet the requirement.</p>`;
+  const bst = brStats();
+  let h = `<div class="card brsum"><div><h3>Breathwork</h3><div class="mut" style="font-size:12.5px">${bst.streak}-day streak · ${bst.sess} sessions · BOLT ${bst.lastB ? bst.lastB.v + 's' : 'not tested yet'}</div></div><button class="btn ghost" data-act="bprog">Details</button></div>` + `<div class="section-title">Skill ladder</div><p class="mut" style="margin:0 0 8px;font-size:13.5px">Your level in each Handstand Phases element. Today's session uses it. Move up only when you meet the requirement.</p>`;
   ['Balance','Movement','Specialist','Elements'].forEach(ph => {
     h += `<div class="eyebrow" style="margin:12px 0 6px">${ph}</div><div class="grid2">`;
     Object.values(EL).filter(e => e.phase === ph).forEach(e => {
@@ -637,6 +708,7 @@ function renderGuide(){
    <li>Tempo 3011: 3s down · 0 bottom · 1s up · 1s top.</li>
    <li>ATG: find the pain-free range first, then the pain-free load.</li>
    <li>Soreness lasting past 48h means too much volume.</li></ul></div>`;
+  h += `<div class="card"><h3>Breathwork with your training</h3><ul><li>The breath program runs on the same 12 weeks and three phases as your training: awareness, then reprogramming, then power and stress resilience. It starts on your program start date (change it under Breath → 12 weeks).</li><li><b>Training days:</b> finish with the 4-minute recovery holds. They bring your breathing down and add a little CO2-tolerance work to every session.</li><li><b>Power breathing, fast breathing and maximal holds:</b> at least 30 minutes before training, or after it. Never between handstand sets or right before inversions: the holds can leave you light-headed.</li><li><b>Low readiness:</b> do Coherent breathing instead of the power rounds. The Breath card offers the swap.</li><li><b>Sunday:</b> breath-hold test (BOLT score) and a longer sequence, which fits the rest day.</li><li>Breathe through your nose in the prep, the movement day and easy conditioning.</li></ul></div>`;
   if (P.howto) h += `<div class="card"><h3>How to run a session</h3>${P.howto.map(([k, v]) => `<div class="gl"><b>${esc(k)}</b>${esc(v)}</div>`).join('')}</div>`;
   if (P.dw) h += `<div class="card"><h3>Dylan Werner: how to practice</h3><ul>${P.dw.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>`;
   h += `<div class="card"><h3>Handstand Phases: where you are</h3>${P.check.map(([a,b,c,d]) => `<div class="gl"><b>${esc(a)}</b>${esc(b)}<div class="alt" style="color:var(--accent)">Pass: ${esc(c)}</div><div class="mut" style="font-size:12.5px">${esc(d)}</div></div>`).join('')}</div>`;
@@ -732,10 +804,504 @@ function renderSupps(){
   return h;
 }
 
+/* ---------- BREATHWORK LIBRARY (techniques, details, 12-week breath plan) ---------- */
+const BR = (() => {
+/* ---------- step builders ---------- */
+const I=(s,c,to)=>({t:'in',s,c,to}),O=(s,c,to)=>({t:'out',s,c,to}),H=(s,c)=>({t:'hold',s,c}),E=(s,c)=>({t:'empty',s,c}),
+      R=(s,c)=>({t:'rest',s,c}),F=(s,r,c)=>({t:'fast',s,r,c}),X=(c,rec,t)=>({t:t||'openE',s:60,c,rec});
+const rep=(n,a)=>Array.from({length:n},()=>a).flat();
+const seq=(n,f)=>Array.from({length:n},(_,i)=>f(i)).flat();
+const forMin=(m,a)=>rep(Math.max(1,Math.round(m*60/a.reduce((x,y)=>x+y.s,0))),a);
+const nadiBox=n=>[I(n,'In through the LEFT nostril (thumb closes right)'),H(n,'Both closed. Stay soft'),O(n,'Out through the RIGHT'),E(n,'Empty. Relaxed'),
+                  I(n,'In through the RIGHT nostril (ring finger closes left)'),H(n,'Both closed'),O(n,'Out through the LEFT'),E(n,'Empty')];
+const viloma=(out)=>[I(3,'Belly',.45),H(2,'Pause'),I(2,'Mid-chest',.75),H(3,'Pause'),I(1,'Upper chest',1),H(4,'Hold full')].concat(
+  out?[O(1,'Release a little',.75),E(4,'Pause'),O(2,'Release more',.5),E(3,'Pause'),O(3,'Empty out',.3),E(2,'Pause')]:[O(5,'One smooth exhale, throat lightly narrowed')]);
+
+/* ---------- exercise library ---------- */
+const EX={
+belly:{n:'Belly breathing 3:6',tag:'Calm',
+  how:'Lie down with a light book on your belly. Inhale through the nose and lift the book; exhale and let it settle. The first two-thirds of each breath comes from the belly, the last third from the chest.',
+  b:(m=5)=>[['Belly breathing',forMin(+m,[I(3,'Nose in. Lift the book with your belly'),O(6,'Let the belly fall. Slow')])]]},
+box:{n:'Box breathing',tag:'Balance',
+  how:'Equal inhale, hold, exhale, hold. Picture the four sides of a box. Stay loose in the shoulders, jaw and face during both holds. In weeks 1–4 do it lying down with a water bottle on the belly as feedback.',
+  b:(n=4,m=10)=>[['Box '+n+'-'+n+'-'+n+'-'+n,forMin(+m,[I(+n,'Nose in, low into the belly'),H(+n,'Hold full. Soften shoulders and jaw'),O(+n,'Slow exhale'),E(+n,'Hold empty. Relaxed')])]]},
+coherent:{n:'Coherent breathing 5:5',tag:'Balance',
+  how:'Six breaths a minute: 5 seconds in, 5 seconds out. On each exhale relax face, tongue, throat, hands, pelvic floor and feet. Aim for 5 minutes, three times a day: on waking, before lunch, at the end of work.',
+  b:(m=5)=>[['Coherent breathing',forMin(+m,[I(5,'Nose in, low and smooth'),O(5,'Out. Relax face, jaw, hands, feet')])]]},
+triangle:{n:'Triangle breath',tag:'Calm',
+  how:'Inhale, exhale, pause. This is the shape of breathing at rest. Find the length that feels easy, then stretch each side a little over the weeks.',
+  b:(n=4,m=5)=>[['Triangle '+n+'-'+n+'-'+n,forMin(+m,[I(+n,'Inhale'),O(+n,'Exhale'),E(+n,'Pause. Rest here')])]]},
+f478:{n:'4-7-8',tag:'Calm',
+  how:'Inhale quietly through the nose for 4, hold 7, exhale 8 through pursed lips, like cooling hot soup. If 7 and 8 are too long, halve all three and keep the ratio.',
+  b:(c=8)=>[['4-7-8',[O(4,'Empty the lungs with a whoosh')].concat(rep(+c,[I(4,'Quiet nose inhale'),H(7,'Hold. Enjoy the stillness'),O(8,'Pursed lips, steady whoosh')]))]]},
+sigh:{n:'Cyclic sighing',tag:'Calm',
+  how:'A nose inhale, a second short sip on top, then a long slow exhale through the mouth. The slow exhale version settles you; a quick sharp exhale snaps you out of a tense moment.',
+  b:(m=5)=>[['Cyclic sighing',forMin(+m,[I(2,'Nose inhale',.8),I(1,'Second sip on top',1),O(7,'Long, slow mouth exhale')])]]},
+nadi:{n:'Alternate nostril breathing',tag:'Balance',
+  how:'Right thumb closes the right nostril, ring finger closes the left. Start by emptying the lungs. Traditional count: exhale 4, hold 2, inhale 4, hold 2, then switch sides.',
+  b:(m=8)=>[['Alternate nostril',forMin(+m,[O(4,'Out through the LEFT (thumb on right)'),E(2,'Pause'),I(4,'In through the LEFT'),H(2,'Pause, switch'),O(4,'Out through the RIGHT (ring finger on left)'),E(2,'Pause'),I(4,'In through the RIGHT'),H(2,'Pause, switch')])]]},
+ladder:{n:'Equal-breath ladder 5→15',tag:'Capacity',
+  how:'Equal inhale and exhale, adding one second each breath from 5:5 up to 15:15, then back down. Breathe only as deep as each length needs: about a third of a full breath at 5 seconds.',
+  b:(top=15)=>[['Up',seq(top-4,i=>[I(5+i,'Inhale '+(5+i)),O(5+i,'Exhale '+(5+i))])],['Down',seq(top-5,i=>[I(top-1-i,'Inhale '+(top-1-i)),O(top-1-i,'Exhale '+(top-1-i))])]]},
+relaxladder:{n:'Long-exhale ladder',tag:'Calm',
+  how:'Keep the inhale at 5 seconds and add one second to every exhale, from 5 to 15. The intensity rises while the nervous system settles.',
+  b:()=>[['Exhale ladder',seq(11,i=>[I(5,'Inhale 5'),O(5+i,'Exhale '+(5+i))])],['Rest',[R(60,'Natural breath. Let it come, let it be, let it go')]]]},
+sniff:{n:'Sniff-sniff-sniff-pooh',tag:'Energy',
+  how:'A Sufi wake-up breath. Three short, sharp sniffs into the chest through the nose, then blow out through pursed lips. Two minutes.',
+  b:()=>[['Wake-up breath',forMin(2,[I(.45,'Sniff',.55),I(.45,'Sniff',.8),I(.45,'Sniff',1),O(1.6,'Pooh, through pursed lips')])]]},
+fire:{n:'Energizing breath (kapalabhati)',tag:'Energy',
+  how:'Sit tall. Sharp exhales through the nose by snapping the navel toward the spine; the inhale happens by itself. Build to 1–2 breaths per second. Stop or slow down if you feel dizzy.',
+  b:(r=3)=>[['Energizing breath',[R(10,'Sit tall. Hands on knees')].concat(rep(+r,[F(30,1.6,'Sharp nose exhales. Inhale is passive'),R(30,'Natural breathing. Notice the buzz')]))]]},
+connected:{n:'20 connected breaths',tag:'Energy',
+  how:'No pauses: the inhale turns into the exhale like a wheel. Four small breaths, then one big one, four times. Pull the inhale in, let the exhale drop out. Round 1 at normal speed, round 2 fast, round 3 slow. Use one channel only: all nose or all mouth.',
+  b:()=>{const rd=k=>rep(4,rep(4,[I(1.4*k,'Small breath in',.6),O(1*k,'Let go',.35)]).concat([I(2.8*k,'Big breath in',1),O(2*k,'Sigh of relief')]));
+    return [['Round 1 · normal',rd(1).concat([R(90,'Sit with what you feel')])],['Round 2 · fast',rd(.55).concat([R(90,'Sit with what you feel')])],['Round 3 · slow',rd(2).concat([R(60,'Notice what changed')])]]}},
+power:{n:'Power breathing rounds',tag:'Energy',
+  how:'30 full breaths (active inhale, passive exhale), then let the last breath out and hold empty for as long as is comfortable. When the urge is strong, take one full breath in and hold it 15 seconds. Three rounds. Sitting or lying only. Tingling and light-headedness are expected.',
+  b:(r=3)=>seq(+r,i=>[['Round '+(i+1),[R(i?10:20,'A few slow breaths to settle')].concat(rep(30,[I(1.7,'Full breath in'),O(1.3,'Let it go',.4)]),[O(3,'Last one out, without forcing'),X('Hold empty. Relax everything. Tap when you need to breathe','empty'),I(3,'Full recovery breath'),H(15,'Hold it in'),O(4,'Release')])]])},
+co2:{n:'Comfortable pause training',tag:'Capacity',
+  how:'Normal breath in, normal breath out, then pause before the next inhale. Stay just under the first urge to breathe: if you need a recovery gasp, you went too long. Add 2–3 seconds to your pause every two or three days (set it under Progress).',
+  b:()=>[['Pause '+brPause()+' s',forMin(10,[I(3,'Normal breath in',.7),O(4,'Normal breath out',.4),E(brPause(),'Pause. Relax into it'),R(20,'Free breathing. No gasp needed')])]]},
+walk:{n:'Breath-hold walk',tag:'Capacity',
+  how:'Simulated altitude. Walk, exhale, hold while walking until a medium-strong urge, then 15 seconds of tiny nose sips and 30 seconds normal. Eight rounds. Start gently on the first two.',
+  b:()=>[['Walk',rep(8,[R(45,'Walk. Nose breathing'),O(3,'Exhale normally'),X('Hold and keep walking. Tap when the urge is medium-strong','walk'),R(15,'Tiny sips of air through the nose'),R(30,'Normal nose breathing')])]]},
+anapana:{n:'Anapana',tag:'Focus',
+  how:'Observe the natural breath as it comes in and goes out. No control, no counting. When the mind wanders, come back to the sensation at the nostrils.',
+  b:(m=10)=>[['Anapana',[R(m*60,'Watch the natural breath at the nostrils. Change nothing')]]]},
+recover:{n:'Post-training recovery holds',tag:'Calm',
+  how:'Right after training: exhale through the nose, pinch and hold 2–5 seconds, breathe normally for 10 seconds. Repeat for 3–5 minutes.',
+  b:()=>[['Recovery',forMin(4,[O(3,'Exhale through the nose'),E(4,'Pinch the nose. Short hold'),R(10,'Normal nose breathing')])]]},
+test:{n:'Breath-hold test',tag:'Capacity',
+  how:'Two holds after a normal exhale, always measured the same way. First: tap at the first clear urge to breathe (your comfortable pause, used for training). Second: tap at a strong but manageable urge (your BOLT score). Do it rested, before any fast breathing.',
+  b:()=>[['Settle',[R(60,'Sit quietly. Breathe normally through the nose')]],['Comfortable pause',[I(3,'Normal breath in',.7),O(3,'Normal breath out',.4),X('Hold empty. Tap at the FIRST clear urge to breathe','pause'),R(90,'Recover. Normal breathing')]],['BOLT score',[I(3,'Normal breath in',.7),O(3,'Normal breath out',.4),X('Hold empty. Tap at a strong but manageable urge','bolt'),R(20,'Breathe normally. You should not need to gasp')]]]},
+/* themed sequences */
+sEquanimity:{n:'Sequence: Equanimity',tag:'Balance',
+  how:'Equal-breath ladder up, alternate-nostril box breathing, interrupted breathing (viloma 3), ladder back down. If viloma leaves you short of breath, count faster: this one should feel steady, never strained.',
+  b:()=>[['Warm-up · ladder',seq(11,i=>[I(5+i,'Inhale '+(5+i)),O(5+i,'Exhale '+(5+i))])],['Heat · alternate-nostril box',rep(10,nadiBox(5))],['Vitalizing · viloma 3',rep(8,viloma(true))],['Cool-down · ladder',seq(11,i=>[I(15-i,'Inhale '+(15-i)),O(15-i,'Exhale '+(15-i))]).concat([R(45,'Natural breath. Notice the shift')])]]},
+sRelax:{n:'Sequence: Deep relaxation',tag:'Calm',
+  how:'Three-part breathing, a lengthening exhale, then gentle holds: 30 seconds full and 15 seconds empty, each separated by five slow breaths. Ends with three long breaths and a voiced sigh. Lying down is fine.',
+  b:()=>[['Warm-up · three-part breath',forMin(5,[I(2,'Belly',.5),I(2,'Mid-chest',.75),I(1,'Upper chest',.9),O(5,'Exhale evenly')])],['Heat · exhale ladder',seq(11,i=>[I(5,'Inhale 5'),O(5+i,'Exhale '+(5+i))])],
+    ['Vitalizing · gentle holds',rep(5,rep(5,[I(5,'Slow breath'),O(5,'Slow breath')]).concat([I(5,'Deep inhale'),H(30,'Hold full. Soft face'),O(6,'Exhale naturally')],rep(5,[I(5,'Slow breath'),O(5,'Slow breath')]),[O(3,'Empty completely',.2),E(15,'Hold empty')]))],
+    ['Cool-down · three sighs',[10,20,30].flatMap(h=>[I(10,'Long inhale'),H(h,'Hold '+h),O(5,'Open mouth, sigh "ha"')]).concat([R(120,'Let go of all control')])]]},
+sEnergy:{n:'Sequence: Energy boost',tag:'Energy',
+  how:'Strong ujjayi 10-5-5, bellows breath with holds, interrupted inhale (viloma 1), then cooling sitali with a lion’s breath exhale. Seated. Tingling during the holds is normal; ease off if it becomes unpleasant.',
+  b:()=>[['Warm-up · ujjayi 2:1:1',rep(10,[I(10,'Ocean-sound inhale, fill completely'),H(5,'Hold'),O(5,'Strong, slow exhale')])],
+    ['Heat 1 · bellows + full hold',[0,1,2].flatMap(i=>[F(30,1,'Bellows: pump in and out from the belly'),I(3,'Fill up'),H(i==2?60:30,'Hold full'),O(4,'Release')])],
+    ['Heat 2 · fast bellows + empty hold',seq(8,i=>[F(15,2,'Faster. Same depth'),O(2,'Empty out',.2),E(i<5?15:30,'Hold empty'),I(3,'Breathe in',.6)])],
+    ['Vitalizing · viloma 1',rep(8,viloma(false))],['Cool-down · sitali',rep(5,[I(10,'In through a curled tongue'),H(15,'Hold'),O(4,'Lion’s breath: tongue out, "ha"')]).concat([R(30,'Natural breath')])]]},
+sStress:{n:'Sequence: Stress and anxiety relief',tag:'Calm',
+  how:'Start by holding something you are grateful for. Pyramid breath 1 to 10 and back, short bursts of breath of fire each ended by a hold and open-mouth release, five rounds of 4-7-8, then alternating 10-10-2 and 2-10-10.',
+  b:()=>[['Warm-up · pyramid',[R(20,'Bring to mind something you are grateful for')].concat(seq(10,i=>[I(i+1,'Inhale '+(i+1),.3+.07*(i+1)),O(i+1,'Exhale '+(i+1))]),seq(9,i=>[I(9-i,'Inhale '+(9-i),.3+.07*(9-i)),O(9-i,'Exhale '+(9-i))]))],
+    ['Heat · breath of fire',rep(5,[F(8,1.9,'Light, shallow, even nose breaths'),I(3,'Deep inhale'),H(5,'Hold'),O(4,'Open mouth, let it out')])],
+    ['Vitalizing · 4-7-8',rep(5,[I(4,'Nose inhale'),H(7,'Hold'),O(8,'Pursed lips')])],['Cool-down · 10-10-2 / 2-10-10',rep(4,[I(10,'Long inhale'),H(10,'Hold'),O(2,'Quick full exhale'),I(2,'Quick full inhale'),H(10,'Hold'),O(10,'Long exhale')]).concat([R(30,'Natural breath')])]]},
+sSleep:{n:'Sequence: Sleep',tag:'Calm',
+  how:'Do it where you will sleep. Three-part equal breath from 5-5-5 to 10-10-10, alternate nostril 6:12 with a humming exhale, then 4-6-10 lying on your back, then a body scan. Drop the control whenever sleep arrives.',
+  b:()=>[['Warm-up · 5-5-5 to 10-10-10',seq(6,i=>[I(5+i,'Inhale '+(5+i),.5+.05*i),H(5+i,'Hold'),O(5+i,'Exhale')])],
+    ['Heat · alternate nostril with hum',rep(5,[I(6,'In through the RIGHT'),O(12,'Hum out through the LEFT'),I(6,'In through the LEFT'),O(12,'Hum out through the RIGHT')])],
+    ['Vitalizing · 4-6-10',forMin(5,[I(4,'Chest and belly together'),H(6,'Hold'),O(10,'Slow, controlled exhale')])],['Cool-down · body scan',[R(150,'Release face and jaw, shoulders, arms, hands, chest, belly, legs, feet')]]]},
+sFocus:{n:'Sequence: Concentration and memory',tag:'Focus',
+  how:'Box breathing with a humming exhale, bellows breath with empty holds (chin tucked, belly drawn in), a slow 10-20-10-5 with humming, then alternate nostril. Humming raises nasal nitric oxide. Shorten the 20-second hold before you rush the exhale.',
+  b:()=>[['Warm-up · humming box',forMin(5,[I(5,'Nose in'),H(5,'Hold'),O(5,'Hum the exhale'),E(5,'Hold empty')])],
+    ['Heat · bellows + empty hold',rep(6,[F(30,1.5,'Bellows: pump the belly'),I(3,'Deep inhale'),O(4,'Empty fully, chin tucked',.2),E(15,'Belly drawn in. Hold empty'),I(3,'Breathe in',.6)])],
+    ['Vitalizing · 10-20-10-5',rep(8,[I(10,'Soft, like smelling perfume'),H(20,'Hold'),O(10,'Hum, push the vibration up into the nose'),E(5,'Pause')])],
+    ['Cool-down · alternate nostril',rep(5,[I(5,'In LEFT'),O(5,'Hum out RIGHT'),E(3,'Pause'),I(5,'In RIGHT'),O(5,'Hum out LEFT'),E(3,'Pause')])]]},
+sAthlete:{n:'Sequence: Athletic performance',tag:'Capacity',
+  how:'Lung expansion (a full breath plus two small sips, each held 10 seconds, never to the point of pain), bellows breath with empty and full holds, CO2-tolerance holds, then three maximal holds after ten deep breaths. Seated or lying, never in water.',
+  b:()=>[['Warm-up · lung expansion',rep(10,[I(5,'Full inhale',.9),H(10,'Hold. Let the ribs stretch'),I(1,'Small sip',.95),H(10,'Hold'),I(1,'One more sip',1),H(10,'Hold'),O(5,'Out through the mouth'),R(8,'Easy breath')])],
+    ['Heat · bellows + holds',rep(3,[F(60,1.5,'Bellows: strong belly pump'),O(3,'Exhale fully',.2),E(30,'Hold empty'),I(4,'Full inhale'),H(60,'Hold full'),O(5,'Release')])],
+    ['Vitalizing · CO2 tolerance',rep(5,rep(3,[I(3,'Normal nose breath',.7),O(3,'Out',.4)]).concat([O(3,'Full exhale',.2),E(20,'Hold empty'),I(4,'Single inhale'),H(40,'Hold full'),O(4,'Release')]))],
+    ['Cool-down · max holds',rep(3,rep(10,[I(3,'Deep nose inhale'),O(2,'Let go',.4)]).concat([I(4,'Full breath'),X('Hold full for as long as you can stay relaxed. Tap to release','full','openH'),O(5,'Release'),R(20,'Recover')]))]]}
+};
+const HABIT={
+ stretch:['Morning stretches, 12 min','Open the ribs, sides, hips and neck so the diaphragm can move freely. Breathe through the nose throughout and never force a position.',[
+  'Crocodile breathing, 1 min. Lie face down, forehead on stacked hands. Breathe into the belly so it presses the floor and the lower back rises. This wakes up the diaphragm.',
+  'Cat-cow, 10 slow rounds. On hands and knees: inhale, drop the belly and lift chest and tailbone; exhale, round the whole spine and push the floor away. One breath per movement.',
+  'Child’s pose with side reach, 5 breaths per side. Sit back on the heels, arms long, then walk both hands to one side. Breathe into the stretched ribs and feel them widen.',
+  'Thread the needle, 5 per side. From hands and knees slide one arm under the other until the shoulder rests down, then open that arm up to the ceiling. Exhale going under, inhale opening.',
+  'Low lunge with overhead reach, 5 breaths per side. Back knee down, hips sinking forward, same-side arm reaching up and slightly over. This lengthens the hip flexors, which attach close to the diaphragm.',
+  'Standing side bend, 5 breaths per side. Feet hip width, grip one wrist overhead and lean away from it. Send each inhale into the open side of the rib cage.',
+  'Chest opener, 5 breaths. Clasp hands behind the back, draw the shoulder blades together and down, lift the breastbone. Or place a forearm on a door frame and turn the chest away.',
+  'Neck release, 3 breaths per side. Ear toward shoulder, opposite arm reaching down. Then chin slightly toward the armpit. These are the muscles that overwork in shallow chest breathing.',
+  'Lying twist, 5 breaths per side. On your back, knees dropped to one side, arms wide, head turned the other way. Let each exhale soften the twist.',
+  'Finish with 5 full three-part breaths lying down: belly, ribs, upper chest, then a slow exhale. Hold any stretch longer if it feels good.']],
+ string:['String check-ins','Tie a string or piece of yarn just above the navel, snug enough that it tightens on a full breath. Weeks 1–4.',[
+  'Tie it after your morning practice and wear it until bed.','Set two alarms, one in the afternoon and one in the evening.','At each alarm take five slow breaths and feel the string tighten on the inhale. If it does not, the breath is staying in the chest.','From about day 26, wear it only if you still need the reminder.']],
+ move:['Breathing squats or slow breath walk, 10 min','Slow movement matched to belly breathing, so the new pattern becomes automatic. Keep it slow enough that the heart rate does not rise.',[
+  'Breathing squat: stand with feet a little wider than the hips. Inhale through the nose at the top, belly first.','Exhale slowly as you lower into a comfortable squat, heels down.','Inhale as you rise, again filling the belly first, then the ribs. One squat takes 8–10 seconds.','Slow breath walk: walk at an easy pace, inhale through the nose for 4 steps, exhale for 6 steps.','In both, the first two-thirds of each breath comes from the belly and only the last third from the chest.']],
+ cold:['Cold shower, 3–5 min','Below 21 °C, straight after the breathing rounds and meditation.',[
+  'Start warm if you need to and turn the water colder every 10 seconds until you reach your limit.','Keep the breath slow and through the nose. Lengthen the exhale when the cold makes you want to gasp.','Relax the shoulders and jaw. The aim is to stay calm in the stress, not to fight it.','Build up from 30 seconds to 3–5 minutes over the weeks.']],
+ nose:['Nose-only breathing all day','Mouth closed at rest and during easy training.',[
+  'Rest the tongue on the roof of the mouth, lips together, teeth slightly apart.','Notice each time you catch yourself mouth breathing and switch back without judgement.','If you have to open the mouth during easy exercise, slow down until you can keep it closed.']]
+};
+
+/* ---------- detail per technique: steps, benefits , tips ---------- */
+const D={
+belly:{s:['Lie on your back, knees bent if that is more comfortable. Put a light book or your hands on the belly.','Inhale through the nose for 3 and let the belly rise so the book lifts. The chest stays quiet until the end of the breath.','Exhale for 6 and let the book sink, navel moving toward the spine.','Variation, "horizontal breathing": hands on the sides of the waist, push them apart on the inhale and squeeze them together on the exhale. Pressing in with the hands adds resistance and strengthens the breathing muscles.'],
+ b:['Calms the body in moments of stress.','Practised daily it becomes the automatic baseline pattern, so you stay relaxed and centred without thinking about it.','The exhale twice as long as the inhale switches on the rest-and-digest side of the nervous system.','Deep diaphragm movement helps the heart circulate blood, which lowers heart rate and blood pressure.'],
+ t:'If the chest lifts first, breathe smaller. This is the foundation for everything else in the program, so do not rush past it.'},
+box:{s:['Inhale through the nose for the count.','Hold the breath in for the same count. Keep shoulders, chest, jaw and face soft: tensing during the holds defeats the purpose.','Exhale for the same count.','Hold empty for the same count, then repeat. Picture travelling along the four sides of a box.','Set a timer: 3 minutes is the minimum, 10 or more is ideal.'],
+ b:['Equal inhale and exhale balance the activating and calming branches of the nervous system.','Counting gives the mind a predictable, controllable rhythm when the surroundings are chaotic. This is why military personnel and first responders use it.','Works both ways: to release stress that is already there, and ahead of a demanding task so you show up composed.','Raises heart rate variability.'],
+ t:'Progress the count over time: 4, then 5, 6, 8, even 10 seconds. Shorter sides (2–3 s) keep the sense of control but are more energizing; longer sides are more grounding. You can also make the holds shorter than the breaths.'},
+coherent:{s:['Sit tall but at ease. Optionally state an intention before you start.','Breathe in for 5 seconds, low into the belly, through the nose.','Breathe out for 5 seconds through the nose, through pursed lips as if blowing bubbles through a straw, or with a soft "shhh" or hum.','On every exhale relax the "six bridges": face, tongue and throat, hands, diaphragm, pelvic floor, feet.','Imagine blood drawn toward the lungs on the inhale and sent out to the limbs on the exhale. A hand on the heart helps focus.'],
+ b:['Five minutes raises heart rate variability and lowers heart rate, blood pressure and cortisol.','Ten to twelve minutes is said to bring a theta-dominant "awakened mind" state linked to creativity, intuition and meditation.','The morning session is the most important of the day; the midday one clears the morning’s stress, prepares digestion and helps prevent the afternoon slump; the evening one moves you from work mode to home.','One or two minutes before a meeting or when you are upset calms and focuses you.'],
+ t:'Prescription: 6 breaths a minute, 5 minutes, 3 times a day. Do the first one before coffee or breakfast. It is a feeling exercise, not a thinking one: put all attention on the sensations of the breath.'},
+triangle:{s:['Inhale for the count.','Exhale for the count.','Pause empty for the count, resting, before the next inhale.','Once it feels easy, lengthen each side, or try unequal sides: 2 in, 4 pause, 6 out is a "relaxing triangle".'],
+ b:['Inhale, exhale, pause is how everyone breathes at rest, so this trains your natural rhythm consciously.','Promotes relaxation and mindfulness.','If you know your comfortable triangle from a calm state and return to it under stress, the body cannot stay stressed for long.','Gradually stretching the sides builds lung capacity and comfort with longer breaths.'],
+ t:'First job: find your own comfortable triangle while you are calm. "Stretch, not snap": a little discomfort is training, strain is too much.'},
+f478:{s:['Sit or lie comfortably. Empty the lungs with a whooshing exhale.','Inhale quietly through the nose for 4.','Hold for 7. Relax the muscles and enjoy the stillness.','Exhale through pursed lips for 8 with a soft whoosh, like blowing on hot soup, not blowing out candles.','Do 4–8 cycles.'],
+ b:['Acts like a reset button for stress.','Studies on this and similar patterns report less stress and anxiety, better heart and lung function, lower blood pressure, better concentration and fewer or milder migraines.','Triggers the relaxation response and can help you fall asleep.','The pursed-lip exhale raises pressure in the lungs, opens their deeper areas and stimulates the vagus nerve.','At about three breaths a minute, carbon dioxide builds gently, which slows the heart and relaxes body and mind.'],
+ t:'The ratio matters more than the length. If 7 and 8 are a struggle, use 2 – 3.5 – 4 and keep the proportions. Any exhale 1.5 to 2.5 times the inhale is calming.'},
+sigh:{s:['Inhale through the nose until comfortably full.','Take a second, shorter sip of air on top to stretch the lungs a little more.','Exhale long and slow through the mouth until empty.','Repeat for about 5 minutes.'],
+ b:['The long slow exhale version gives steady calming, relaxation and recovery. Five minutes a day of this pattern has been studied at Stanford.','A quick, sharp exhale after the double inhale releases tension and snaps you out of a stressed or panicked moment.'],
+ t:'Use the slow version as a daily practice and the sharp version as a one-or-two-breath rescue.'},
+nadi:{s:['Right hand: thumb closes the right nostril, ring finger closes the left. Index and middle finger can rest between the eyebrows.','Empty the lungs first. Close the right nostril; exhale then inhale through the left.','Switch. Close the left nostril; exhale then inhale through the right.','Keep alternating for up to 10 minutes at any steady pace that is comfortable.','Traditional counts: exhale 4, hold 2, inhale 4, hold 2; or 4-4-4-4.'],
+ b:['A balancing practice: harmonizes the active and receptive sides and the two hemispheres of the brain.','Naturally calming and neutralizes busy thoughts; used in the sleep and concentration sequences for that reason.','Speeding it up keeps the emotional balance but makes it physically energizing.'],
+ t:'Breathe softly enough that the air is almost silent. One nostril is usually more open than the other; that is the normal nasal cycle.'},
+ladder:{s:['Start with 5 seconds in, 5 seconds out.','Add one second to both on every breath: 6:6, 7:7, up to the top of the ladder.','Breathe only as deeply as each length needs. Five seconds is about a third of a full breath; by the top the lungs are full.','Come back down one second at a time until the breath is effortless again.'],
+ b:['Equal breathing regulates the autonomic nervous system and promotes a balanced, present state.','Lengthening the breath slows breathing and builds carbon dioxide, which is calming.','Gradually fuller breaths warm up the diaphragm and stretch the muscles between the ribs.','Meeting a manageable challenge and returning to ease trains the mind to feel challenged without feeling stressed.'],
+ t:'The last few rungs are 20–30 second breaths. If you gasp, your top rung is too high; use 12 for now.'},
+relaxladder:{s:['Inhale for 5, chest and belly moving together.','Exhale for 5, then 6, then 7, adding a second each breath up to 15.','Finish with a minute of natural breathing.'],
+ b:['A longer exhale than inhale brings relaxation and a sense of being grounded.','Carbon dioxide rises slowly, which stimulates the calming side of the nervous system even as the breath gets harder.','Prepares you for comfortable breath holds.'],
+ t:'Slow the exhale by narrowing the throat or lips slightly, not by clenching.'},
+sniff:{s:['Take 2 to 4 short, quick, powerful sniffs through the nose, into the chest.','Blow the breath out through pursed lips: "pooh".','Keep going for 2 minutes.'],
+ b:['A Sufi technique for grogginess on waking: two minutes should leave you buzzing with energy.','Works like a cup of coffee with no caffeine.'],
+ t:'If you wake already tense or anxious, skip it and start with a calming technique instead.'},
+fire:{s:['Sit tall or cross-legged, hands on knees or lower belly.','Exhale sharply through the nose by snapping the navel and solar plexus toward the spine.','Let the inhale happen by reflex. All the effort is in the exhale.','Start slowly, then settle into a steady pump of 1, 2 or 3 breaths per second.','Practise from 30 seconds up to several minutes, with natural breathing between rounds.'],
+ b:['Activates the nervous system: you feel alert and energized within seconds, where caffeine takes about 20 minutes and can end in a crash.','A quick fix for tiredness or lack of focus during the day.','Strengthens the core and diaphragm.','Combined with slow reverse breaths it is taught as a "detoxing breath" that supports circulation and digestion.'],
+ t:'Dizziness and light-headedness are common. Do not push: slow down or return to natural breathing. Be very gentle, or skip it, if you are pregnant or have a heart condition.'},
+connected:{s:['Check how you feel before you start.','Breathe with no pauses: inhale flows into exhale, exhale into inhale.','Pull the inhale in actively; let the exhale fall out with no pushing or blowing.','Take four small breaths, then one big one with a sigh of relief. Repeat four times for 20 breaths.','Rest with eyes closed for a minute or two and notice what was activated.','Round 2 at double speed, round 3 at half the original speed. Keep the 4-to-1 pattern.'],
+ b:['A short form of circular connected breathing: a way to take control, regain balance, reset and feel better anywhere.','Faster connected breathing activates energy; slower connected breathing relaxes.','Starts a strong energy cycle in the body; longer connected-breathing sessions are used for emotional release.'],
+ t:'Stay in one channel: all nose or all mouth. It can bring on tingling or other signs of over-breathing while you learn it; slow down if so. Try it sitting, lying and standing.'},
+power:{s:['Sit or lie down. Take a few slow breaths to settle.','Take 30–40 deep breaths: full inhale, relaxed exhale with no force. Nose in and mouth out, or all mouth.','After the last one, let the air out and hold empty for as long as is comfortable.','When the urge is strong or the diaphragm flutters, take one full breath in and hold it 10–15 seconds.','Release. That is one round. Do 3–5 rounds.'],
+ b:['Breath-hold time roughly doubles straight away, because the deep breathing lowers carbon dioxide, the trigger for the urge to breathe.','Over a few weeks breathing eases and capacity grows.','Used to train stress resilience, energy and focus, and to work through fear and old emotional blocks. It is also claimed to support the immune response.','A voluntary, short stress response that builds resilience to everyday stress.'],
+ t:'Tingling lips, hands or feet and light-headedness are normal effects of controlled hyperventilation. Never do it in water, in the bath or driving. It is a deliberate practice for set times, not a way to breathe all day. Do not use it before measuring your BOLT score.'},
+co2:{s:['Take a normal breath in and a normal breath out.','Do not breathe in. Pause for your comfortable time, relaxing everything you can.','Resume normal breathing. If you need a big recovery breath, the pause was too long.','Breathe freely for a short while, then repeat. Practise 10–20 minutes, ideally 2–3 times a day.','Add 2–3 seconds to the pause every two or three days.'],
+ b:['Trains the system to tolerate more carbon dioxide comfortably, which is what makes breathing light and efficient.','Your maximum hold rises on its own without ever forcing it.','Raises your BOLT score, which is linked to more efficient lungs and better athletic endurance.','Builds body awareness and self-control; even a short hold creates an instant inner stillness.','A long hold is reported to be followed by about 30 minutes of increased blood flow to the brain.'],
+ t:'Work with the first, subtle urge to breathe, not the limit. Fighting the urge brings few long-term benefits; relaxing into it does.'},
+walk:{s:['Walk normally for a minute, breathing through the nose.','Exhale, then hold the breath (pinch the nose if you like) and keep walking.','First two rounds: stop at a light wish for air. Later rounds: go to a medium-strong urge.','Breathe in gently through the nose, then take tiny sips of air for 15 seconds.','Breathe normally for 30 seconds and repeat, 8–10 rounds.'],
+ b:['Simulates high-altitude training without the altitude: oxygen saturation drops, which signals the body to carry more oxygen.','Aimed at endurance and athletic performance.','Breath holding is also claimed to help with weight loss.'],
+ t:'Raise your BOLT score with the basic pause training first. Walk somewhere safe, never near traffic or water, and stop if you feel faint.'},
+anapana:{s:['Sit comfortably, right after the breathing rounds while the body is quiet.','Let the breath be completely natural.','Rest attention where the air enters and leaves the nostrils.','Each time the mind wanders, notice it and come back.'],
+ b:['Uses the relaxed state after breathwork to let the mind settle into real meditation.','The breath is always available as an object of attention, and the practice belongs to no religion.','Trains steady attention.'],
+ t:'No counting and no control. If the breath is shallow, let it be shallow.'},
+recover:{s:['Straight after training, exhale normally through the nose.','Pinch the nose and hold for 2–5 seconds.','Breathe normally through the nose for 10 seconds.','Repeat for 3–5 minutes, then let the breath go.'],
+ b:['Brings breathing down faster after hard efforts.','Adds a small dose of carbon-dioxide tolerance work to every training session.'],
+ t:'Keep the holds short. This is a cool-down, not a test.'},
+test:{s:['Sit quietly for a few minutes. Do not test after fast breathing or exercise.','Normal breath in, normal breath out, then hold.','Comfortable pause: stop the clock at the first clear, subtle urge to breathe.','BOLT score, or controlled pause: stop at a strong but manageable urge. You should be able to breathe normally afterwards.'],
+ b:['Gives a simple number to track your carbon-dioxide tolerance week to week.','The comfortable pause sets the length for your pause training.'],
+ t:'Always measure the same way, at the same time of day if you can.'},
+sEquanimity:{s:['Warm-up: equal breaths growing from 5:5 to 15:15.','Heat: alternate-nostril box breathing, 5 seconds per side of the box, light breaths.','Vitalizing: viloma 3. Inhale in three parts with pauses (3-2, 2-3, 1-4), exhale in three parts with pauses (1-4, 2-3, 3-2), about 30 seconds per breath.','Cool-down: equal breaths shrinking from 15:15 back to 5:5, then sit with the natural breath.'],
+ b:['Brings you back to centre whether you arrive flat and lethargic or wound up and agitated.','Builds calm that holds under pressure: emotional and mental stability.','Raises heart rate variability and supports the part of the nervous system used for relating well to others.'],
+ t:'Keep it stimulating but never hard. If the interrupted breathing makes you hungry for air, count faster.'},
+sRelax:{s:['Before starting, acknowledge the thoughts and worries that are present without pushing them away.','Warm-up: 5 minutes of three-part breathing, 5 in (belly 2, mid-chest 2, upper chest 1) and 5 out, filling to about 60–70%.','Heat: keep the 5-second inhale and lengthen the exhale to 15.','Vitalizing: five slow breaths, hold full 30 seconds; five slow breaths, hold empty 15 seconds. Repeat for 15–20 minutes.','Cool-down: three breaths of 10 seconds in, held 10, 20 then 30 seconds, each released with an open-mouth "ha".'],
+ b:['Calms the mind, eases the nervous system and lets body and mind repair.','Rising carbon dioxide slows the heart, lowers blood pressure and opens the airways.','Gradually raises carbon-dioxide tolerance.','The sighs release stress and anxiety.'],
+ t:'Lying down with one hand on the belly and one on the chest helps you feel safe and let go. If a hold is hard, add recovery breaths or shorten it.'},
+sEnergy:{s:['Warm-up: strong ujjayi (narrowed-throat, ocean sound). Inhale 10, hold 5, exhale 5, ten times.','Heat 1: bellows breath, one breath a second for 30 seconds, then hold full 30 seconds. Three rounds, the last hold 60.','Heat 2: bellows at two breaths a second for 15 seconds, then hold empty 15 seconds, five rounds; three more rounds with 30-second holds.','Vitalizing: viloma 1. Inhale belly 3, pause 2, mid-chest 2, pause 3, upper chest 1, hold 4, exhale 5.','Cool-down: inhale 10 through a curled tongue (sitali), hold 15, exhale with lion’s breath: tongue out, eyes up, "ha".'],
+ b:['Wakes up motivation and drive when you feel flat or stuck: likened to several coffees without the jitters.','Stimulates the mobilizing side of the nervous system while the holds keep it from tipping into restlessness.','Empty holds lower blood oxygen and stimulate red blood cell production, which supports VO2 max and lasting energy.','Bellows breath strengthens the core and diaphragm.'],
+ t:'Aim for only mild air hunger by the last empty hold. Tingling in fingers, face or belly during the holds is expected.'},
+sStress:{s:['Warm-up: hold something you are grateful for, then breathe 1:1, 2:2 … up to 10:10 and back down to 1:1.','Heat: 15 quick, light, shallow nose breaths (7–10 seconds), then a deep inhale, a 5-second hold and an open-mouth exhale. Five rounds.','Vitalizing: 4-7-8 with a pursed-lip exhale, five cycles.','Cool-down: alternate 10 in – 10 hold – 2 out with 2 in – 10 hold – 10 out.'],
+ b:['Makes the nervous system more resilient to stress responses.','Interrupting fast breathing with a hold and a release teaches control and relief, moving you from fight-or-flight toward feeling safe and connected.','Releases built-up tension; gratitude is called one of the most powerful practices against stress and anxiety.','Ends by strengthening both sides of the nervous system in balance.'],
+ t:'If you arrive anxious you may feel it through the warm-up. That is fine; repeat the warm-up if it helps.'},
+sSleep:{s:['Sit where you will sleep. Warm-up: inhale, hold, exhale in equal parts from 5-5-5 up to 10-10-10, filling no more than two-thirds.','Heat: inhale 6 through one nostril, exhale 12 through the other while humming. Five cycles. Use 5:10 or 4:8 if easier.','Vitalizing: lie on your back. Inhale 4, hold 6, exhale 10, for about 5 minutes.','Cool-down: release control and scan the body from face to feet, lightly tensing then letting go of each part.'],
+ b:['Counting occupies the mind and frees it from the thoughts keeping you awake.','Humming raises nitric oxide, which is reported to improve sleep quality and duration, including REM and deep sleep.','Long exhales and slow carbon-dioxide build-up bring deep relaxation.'],
+ t:'Let go of the technique the moment you feel like drifting off.'},
+sFocus:{s:['Warm-up: box breathing 5-5-5-5 with a humming exhale, 5 minutes.','Heat: 30 seconds of bellows breath, a deep inhale, a full exhale, then hold empty 15 seconds with chin tucked and lower belly drawn in. Six rounds.','Vitalizing: inhale 10 as softly as smelling perfume, hold 20, hum out for 10, pause 5. Six to twelve rounds.','Cool-down: alternate nostril breathing with a hummed exhale and a short empty pause.'],
+ b:['Lowers stress hormones first, because stress and anxiety block focus and memory.','Humming increases nasal nitric oxide about fifteen-fold; nitric oxide is reported to improve oxygen uptake by 10–20% and supports concentration and learning.','Bellows breath sharpens alertness; the empty hold then restores carbon dioxide so blood flow to the brain is not reduced.','Balancing both hemispheres supports fluent thinking and creativity.'],
+ t:'Hum high and push the vibration up into the nose. A smooth slow breath matters more than a long hold.'},
+sAthlete:{s:['Warm-up, lung expansion: full inhale, hold 10; a small extra sip, hold 10; one more sip, hold 10; exhale through the mouth. Ten times.','Heat: one minute of bellows breath, exhale and hold empty 30 seconds, inhale and hold full 60 seconds. Three rounds.','Vitalizing: three normal breaths, full exhale and hold empty 20 seconds, one inhale and hold full 40 seconds. Five rounds.','Cool-down: ten deep breaths, then hold full for as long as you can stay relaxed. Three times. Aim for around two minutes at first.'],
+ b:['Stretches the lungs and rib muscles to expand vital capacity.','Strengthens the respiratory muscles and core.','Builds carbon-dioxide tolerance and lowers oxygen saturation during holds, a stimulus for more red blood cells and a higher VO2 max.','The final holds show your progress; later holds often get longer as the spleen releases red blood cells.'],
+ t:'The expansion breaths may feel like a stretch but must never hurt: over-packing the lungs can injure them. Seated or lying, never in water.'}
+};
+
+/* ---------- 12-week program ---------- */
+const PH=[
+ {n:'Awareness',w:'Weeks 1–4',c:'',d:'Learn to breathe low and slow, and notice your breathing through the day. Belly breathing, box breathing on your back, coherent breathing three times a day.'},
+ {n:'Reprogramming',w:'Weeks 5–8',c:'p2',d:'Make the new mechanics automatic and start building CO2 tolerance. Alternate nostril, comfortable-pause training, connected breathing, box breathing at night.'},
+ {n:'Power and stress resilience',w:'Weeks 9–12',c:'p3',d:'Controlled stress, then stillness. Power breathing rounds, Anapana, cold exposure, breath-hold walks and the full themed sequences.'}];
+function plan(w,d){
+  const ph=w<=4?0:w<=8?1:2, mid=['coherent:5'];
+  if(ph==0){const pm=['triangle:'+(d<4?3:4)+':5','sigh:5','f478:8','relaxladder'][w-1];
+    return {ph,am:[d==7?'test':'sniff','belly:5','box:'+(w<3?4:5)+':10'],mid,pm:[d==7?'sSleep':pm,'coherent:5'].filter((x,i)=>!(d==7&&i==1)),hab:['stretch','string']};}
+  if(ph==1){const n=w<7?5:6;
+    return {ph,am:d==7?['test','sEquanimity']:d%2?['nadi:8','co2']:['ladder:'+(w<7?12:15),'connected'],mid,pm:[d==6?'sRelax':d==3?'sStress':'box:'+n+':15'],hab:['move','nose']};}
+  const am={1:['power:3','anapana:10'],2:['sEnergy'],3:['power:3','anapana:10'],4:['fire:3','walk'],5:['power:'+(w>10?4:3),'anapana:10'],6:['sAthlete'],7:['test','sEquanimity']}[d];
+  return {ph,am,mid:d==4?['sFocus']:mid,pm:[d==6?'sRelax':d==2?'sSleep':d%2?'f478:8':'sigh:5'],hab:[1,3,5].includes(d)?['cold','nose']:['nose']};
+}
+const spec=s=>{const [id,...a]=s.split(':');return {id,a,ex:EX[id]}};
+const build=s=>{const {ex,a}=spec(s);return ex.b(...a)};
+const mins=s=>Math.max(1,Math.round(build(s).flat(2).filter(x=>x&&x.s).reduce((x,y)=>x+y.s,0)/60));
+const title=s=>{const {id,a,ex}=spec(s);return id=='box'?`Box breathing ${a[0]}-${a[0]}-${a[0]}-${a[0]}`:id=='triangle'?`Triangle breath ${a[0]}-${a[0]}-${a[0]}`:id=='power'?`Power breathing, ${a[0]} rounds`:ex.n};
+
+return { EX, HABIT, D, PH, plan, spec, build, mins, title };
+})();
+
+/* ---------- BREATHWORK: state ---------- */
+const BR_DEF = () => ({ start: S.profile.startDate, done: {}, bolt: [], holds: [], pause: 10, sound: true });
+function BS(){ if (!S.breath) S.breath = BR_DEF(); return S.breath; }
+function brPause(){ return BS().pause || 10; }
+const brToday = () => iso(new Date());
+const brDayNum = date => Math.round((parseISO(date) - parseISO(BS().start)) / 864e5);
+const brWD = n => { const wi = Math.floor(n / 7); return { w: wi < 12 ? wi + 1 : 9 + (wi - 8) % 4, d: n % 7 + 1, cycle: wi >= 12 }; };
+const brDate = n => { const d = parseISO(BS().start); d.setDate(d.getDate() + n); return iso(d); };
+const brIsDone = (date, k) => (BS().done[date] || []).includes(k);
+function brToggle(date, k, force){
+  const B = BS(); const a = B.done[date] || (B.done[date] = []); const i = a.indexOf(k);
+  if (i < 0) a.push(k); else if (!force) a.splice(i, 1);
+  if (!a.length) delete B.done[date];
+  persist('breath');
+}
+function brPlanFor(date){ const n = brDayNum(date); if (n < 0) return null; const wd = brWD(n); return Object.assign({ n }, wd, BR.plan(wd.w, wd.d)); }
+// what the movement program has on that date
+function mvOn(date){
+  const diff = Math.round((parseISO(date) - parseISO(S.profile.startDate)) / 864e5);
+  if (diff < 0 || diff >= 84) return null;
+  const week = Math.floor(diff / 7) + 1, dayIdx = diff % 7, dk = DAYKEYS[dayIdx], lg = getLog(week, dk);
+  return { week, dayIdx, dk, sess: sessionOf(week, dk), train: dayIdx < 5, move: dayIdx === 5, rest: dayIdx === 6, ready: lg ? lg.readiness : null };
+}
+// fast breathing, hyperventilation or long holds: keep them away from inversions and heavy sets
+const BR_INTENSE = new Set(['power', 'fire', 'sEnergy', 'sAthlete', 'walk', 'connected']);
+const brIntense = s => BR_INTENSE.has(BR.spec(s).id);
+const BR_SLOTS = [['am', 'Morning'], ['mid', 'Midday'], ['pm', 'Evening']];
+
+/* ---------- BREATHWORK: rows ---------- */
+function brRow(date, slot, s, label){
+  const k = slot + '|' + s, dn = brIsDone(date, k), ex = BR.spec(s).ex;
+  return `<div class="br-item ${dn ? 'done' : ''}"><button class="check ${dn ? 'on' : ''}" data-act="brtog" data-date="${date}" data-k="${esc(k)}" aria-pressed="${dn}" aria-label="Mark done">${dn ? '✓' : ''}</button>
+    <span class="br-txt"><b>${esc(label || BR.title(s))}</b><span class="mut">${BR.mins(s)} min · ${esc(ex.tag)}</span></span>
+    <button class="btn ghost br-go" data-act="brplay" data-s="${esc(s)}" data-k="${esc(k)}" data-date="${date}">Start</button></div>`;
+}
+function brHabitRow(date, h, open){
+  const k = 'hab|' + h, dn = brIsDone(date, k), H = BR.HABIT[h];
+  return `<div class="br-item ${dn ? 'done' : ''}"><button class="check ${dn ? 'on' : ''}" data-act="brtog" data-date="${date}" data-k="${k}" aria-pressed="${dn}" aria-label="Mark done">${dn ? '✓' : ''}</button>
+    <span class="br-txt"><b>${esc(H[0])}</b><span class="mut">${esc(H[1])}</span>${open ? `<details class="br-more"><summary>Step by step</summary><ol>${H[2].map(x => `<li>${esc(x)}</li>`).join('')}</ol></details>` : ''}</span><span></span></div>`;
+}
+function brDetail(id){
+  const e = BR.EX[id], d = BR.D[id];
+  return `<p style="margin:0">${esc(e.how)}</p>${d ? `<div class="eyebrow">How to do it</div><ol class="br-steps">${d.s.map(x => `<li>${esc(x)}</li>`).join('')}</ol><div class="eyebrow">Benefits</div><ul class="br-steps">${d.b.map(x => `<li>${esc(x)}</li>`).join('')}</ul><div class="eyebrow">Tips and cautions</div><p style="margin:0">${esc(d.t)}</p>` : ''}`;
+}
+function brNotes(p, mv){
+  const notes = [];
+  const intense = [...p.am, ...p.mid, ...p.pm].some(brIntense);
+  if (intense && mv && (mv.train || mv.move)) notes.push(['warn', 'Power breathing, fast breathing and long holds: at least 30 minutes before training, or after it. Never between handstand sets.']);
+  if (mv && mv.ready === 'low') notes.push(['', 'Low readiness today: do Coherent breathing instead of any power or fast breathing.']);
+  return notes;
+}
+
+/* ---------- BREATHWORK: card on the training day ---------- */
+function breathCard(date){
+  const p = brPlanFor(date), mv = mvOn(date);
+  if (!p) return `<div class="card brcard"><div class="br-head"><h3>Breathwork</h3></div><p class="mut" style="margin:0;font-size:13px">Starts ${parseISO(BS().start).toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' })}. Change it in the Breath tab.</p></div>`;
+  const items = [...p.am, ...p.mid, ...p.pm];
+  const keys = BR_SLOTS.flatMap(([sl]) => p[sl].map(s => sl + '|' + s)).concat(mv && mv.train ? ['post|recover'] : []);
+  const done = keys.filter(k => brIsDone(date, k)).length;
+  const tot = items.reduce((a, s) => a + BR.mins(s), 0);
+  let h = `<div class="card brcard"><div class="br-head"><h3>Breathwork · ${esc(BR.PH[p.ph].n)}</h3><span class="mut num">${done}/${keys.length} · ~${tot} min</span></div>`;
+  h += `<div class="mut" style="font-size:12.5px;margin:-2px 0 6px">Breath week ${p.w} · day ${p.d}${p.cycle ? ' · repeat cycle' : ''}</div>`;
+  if (mv && mv.train) h += `<div class="eyebrow br-slot">Right after training</div>` + brRow(date, 'post', 'recover', 'Recovery holds');
+  const slotKeys = BR_SLOTS.flatMap(([sl]) => p[sl].map(s => sl + '|' + s)), slotDone = slotKeys.filter(k => brIsDone(date, k)).length;
+  const open = V.brOpen != null ? V.brOpen : !(mv && mv.train);
+  h += `<details class="br-day" ${open ? 'open' : ''}><summary><span>Morning · midday · evening</span><span class="mut num">${slotDone}/${slotKeys.length}</span></summary>`;
+  BR_SLOTS.forEach(([sl, nm]) => { if (p[sl].length) h += `<div class="eyebrow br-slot">${nm}</div>` + p[sl].map(s => brRow(date, sl, s)).join(''); });
+  if (mv && mv.ready === 'low' && items.some(brIntense)) h += `<div class="eyebrow br-slot">Swap for today</div>` + brRow(date, 'am', 'coherent:10');
+  h += `</details>`;
+  brNotes(p, mv).forEach(([c, t]) => h += `<div class="br-note ${c}">${esc(t)}</div>`);
+  h += `<button class="btn ghost" data-act="tab" data-v="breath" style="margin-top:8px">Open Breath tab</button></div>`;
+  return h;
+}
+
+/* ---------- BREATHWORK: tab ---------- */
+function renderBreath(){
+  const sub = V.btab || 'today';
+  let h = `<div class="top"><div class="wk-title"><small>Breathwork</small>${sub === 'today' ? 'Breath' : sub === 'program' ? 'Program' : sub === 'library' ? 'Library' : 'Progress'}</div></div>`;
+  h += `<div class="seg" role="tablist">${[['today', 'Today'], ['program', '12 weeks'], ['library', 'Library'], ['progress', 'Progress']].map(([k, l]) => `<button class="${sub === k ? 'on' : ''}" data-act="bsub" data-v="${k}" role="tab" aria-selected="${sub === k}">${l}</button>`).join('')}</div>`;
+  h += sub === 'program' ? brProgram() : sub === 'library' ? brLibrary() : sub === 'progress' ? brProgress() : brTodayView();
+  return h;
+}
+function brTodayView(){
+  const date = (() => { const d = new Date(); d.setDate(d.getDate() + (V.bOff || 0)); return iso(d); })();
+  const p = brPlanFor(date), mv = mvOn(date);
+  let h = `<div class="br-nav"><button class="icon-btn" data-act="boff" data-d="-1" aria-label="Previous day">‹</button><b>${V.bOff ? parseISO(date).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' }) : 'Today'}</b><button class="icon-btn" data-act="boff" data-d="1" aria-label="Next day">›</button></div>`;
+  if (V.bOff) h += `<div style="text-align:center;margin:-4px 0 8px"><button class="chip" data-act="boff" data-d="0">Back to today</button></div>`;
+  if (!p) return h + `<div class="rest-card"><h2>Not started</h2><p class="mut">The breath program starts ${parseISO(BS().start).toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' })}. Change the start under 12 weeks.</p></div>`;
+  const ph = BR.PH[p.ph], items = [...p.am, ...p.mid, ...p.pm];
+  h += `<div class="br-phase p${p.ph + 1}"><div class="eyebrow">Phase ${p.ph + 1} · ${esc(ph.n)} · week ${p.w} day ${p.d} · about ${items.reduce((a, s) => a + BR.mins(s), 0)} min</div><div style="font-size:13.5px;margin-top:3px">${esc(ph.d)}</div></div>`;
+  if (mv) h += `<div class="br-note info"><b>Training:</b> ${mv.rest ? 'rest day' : esc(mv.sess ? mv.sess.title : '')}${mv.ready ? ` · readiness ${esc(mv.ready)}` : ''}</div>`;
+  if (mv && mv.train) h += `<div class="section-title br-h">Right after training</div><div class="card br-list">${brRow(date, 'post', 'recover', 'Recovery holds')}</div>`;
+  BR_SLOTS.forEach(([sl, nm]) => {
+    if (!p[sl].length) return;
+    h += `<div class="section-title br-h">${nm} <small class="mut num">${p[sl].reduce((a, s) => a + BR.mins(s), 0)} min</small></div><div class="card br-list">`;
+    h += p[sl].map(s => brRow(date, sl, s) + `<details class="br-more"><summary>How, why and benefits</summary>${brDetail(BR.spec(s).id)}</details>`).join('');
+    h += `</div>`;
+  });
+  if (mv && mv.ready === 'low' && items.some(brIntense)) h += `<div class="section-title br-h">Swap for today</div><div class="card br-list">${brRow(date, 'am', 'coherent:10')}</div>`;
+  h += `<div class="section-title br-h">Through the day</div><div class="card br-list">${p.hab.map(x => brHabitRow(date, x, true)).join('')}</div>`;
+  brNotes(p, mv).forEach(([c, t]) => h += `<div class="br-note ${c}">${esc(t)}</div>`);
+  h += `<p class="mut" style="font-size:12.5px;margin:12px 2px">Practise fast breathing and breath holds seated or lying down, never in water, in the bath or while driving. Skip the fast techniques and long holds if you are pregnant, or have a heart condition, epilepsy or uncontrolled blood pressure, unless your doctor agrees.</p>`;
+  return h;
+}
+function brProgram(){
+  const cur = brWD(Math.max(0, brDayNum(brToday()))).w;
+  let h = `<p style="font-size:14px;margin:0 0 10px">Three phases of four weeks, lined up with your movement phases: awareness, then control and CO2 tolerance, then power and stress resilience. Day 7 of every week is a test day. After week 12 the plan repeats weeks 9–12.</p>`;
+  BR.PH.forEach((ph, i) => {
+    h += `<div class="br-phase p${i + 1}" style="margin-top:14px"><div class="eyebrow">${esc(ph.w)}</div><b>Phase ${i + 1}: ${esc(ph.n)}</b><div class="mut" style="font-size:13px">${esc(ph.d)}</div></div><div class="card" style="margin-top:6px">`;
+    for (let k = 1; k <= 4; k++) {
+      const w = i * 4 + k;
+      const tot = [1, 2, 3, 4, 5, 6, 7].reduce((a, d) => { const p = BR.plan(w, d); return a + [...p.am, ...p.mid, ...p.pm].reduce((x, s) => x + BR.mins(s), 0); }, 0);
+      h += `<details class="br-week" ${w === cur ? 'open' : ''}><summary><b>Week ${w}${w === cur ? ' · current' : ''}</b><span class="mut num">${tot} min</span></summary>${[1, 2, 3, 4, 5, 6, 7].map(d => { const p = BR.plan(w, d); return `<div class="gl"><b>Day ${d}</b>${[...p.am, ...p.mid, ...p.pm].map(s => esc(BR.title(s))).join(' · ')}</div>`; }).join('')}</details>`;
+    }
+    h += `</div>`;
+  });
+  h += `<div class="card"><h3>Start date</h3><p class="mut" style="margin:0 0 8px;font-size:13px">Now: ${esc(BS().start)}. Your logged breath sessions and test results stay.</p>
+    <div class="confirm" style="flex-wrap:wrap;align-items:center"><label for="br-jump" style="font-size:14px">Make today day 1 of</label><select id="br-jump">${Array.from({ length: 12 }, (_, i) => `<option value="${i + 1}" ${i + 1 === cur ? 'selected' : ''}>Week ${i + 1}</option>`).join('')}</select><button class="btn" data-act="brjump">Apply</button></div>
+    <div class="confirm"><button class="btn ghost" data-act="bralign">Line up with the movement program (${esc(S.profile.startDate)})</button></div></div>`;
+  return h;
+}
+function brLibrary(){
+  const tags = ['Calm', 'Balance', 'Energy', 'Capacity', 'Focus'];
+  let h = `<p style="font-size:14px;margin:0 0 10px">Every technique in the program, with steps, benefits and a guided pacer. The benefits are commonly reported effects, not medical claims.</p>`;
+  tags.forEach(t => {
+    h += `<div class="section-title br-h">${t}</div><div class="card br-list">`;
+    h += Object.entries(BR.EX).filter(([, e]) => e.tag === t).map(([id, e]) => `<details class="br-lib"><summary><b>${esc(e.n)}</b><span class="mut num">${BR.mins(id)} min</span></summary><div class="br-libbody">${brDetail(id)}<div><button class="btn" data-act="brplay" data-s="${id}">Start</button></div></div></details>`).join('');
+    h += `</div>`;
+  });
+  return h;
+}
+function brChart(arr){
+  if (arr.length < 2) return '<p class="mut" style="font-size:13px;margin:0">Two or more results draw a trend line here.</p>';
+  const W = 640, Hh = 150, L = 34, T = 12, B = 22, vs = arr.map(x => x.v), mx = Math.ceil(Math.max(...vs, 20) / 10) * 10, x = i => L + i * (W - L - 12) / (arr.length - 1), y = v => T + (Hh - T - B) * (1 - v / mx);
+  return `<svg viewBox="0 0 ${W} ${Hh}" style="width:100%;height:auto;display:block" role="img" aria-label="BOLT score over time">
+  ${[0, mx / 2, mx].map(v => `<line x1="${L}" x2="${W - 12}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/><text x="${L - 6}" y="${y(v) + 4}" text-anchor="end" font-size="11" fill="var(--mut)">${v}s</text>`).join('')}
+  <polyline fill="none" stroke="var(--accent)" stroke-width="2" points="${arr.map((p, i) => x(i) + ',' + y(p.v)).join(' ')}"/>
+  ${arr.map((p, i) => `<circle cx="${x(i)}" cy="${y(p.v)}" r="${i === arr.length - 1 ? 4.5 : 3}" fill="var(--accent)"/>`).join('')}
+  <text x="${L}" y="${Hh - 4}" font-size="11" fill="var(--mut)">${arr[0].d.slice(5)}</text><text x="${W - 12}" y="${Hh - 4}" text-anchor="end" font-size="11" fill="var(--mut)">${arr[arr.length - 1].d.slice(5)}</text></svg>`;
+}
+function brStats(){
+  const B = BS(), n = brDayNum(brToday());
+  let streak = 0;
+  for (let i = n; i >= 0; i--) { const a = (B.done[brDate(i)] || []).filter(k => !k.startsWith('hab')); if (a.length) streak++; else if (i < n) break; }
+  const all = Object.values(B.done).flat().filter(k => !k.startsWith('hab'));
+  const minsDone = all.reduce((a, k) => { try { return a + BR.mins(k.split('|')[1]); } catch (e) { return a; } }, 0);
+  return { streak, sess: all.length, minsDone, lastB: B.bolt[B.bolt.length - 1] };
+}
+function brProgress(){
+  const B = BS(), n = Math.max(0, brDayNum(brToday())), cur = Math.floor(n / 7), st = brStats();
+  const wkc = Array.from({ length: 12 }, (_, w) => { let c = 0, t = 0; for (let d = 0; d < 7; d++) { const { w: ww, d: dd } = brWD(w * 7 + d), p = BR.plan(ww, dd); t += p.am.length + p.mid.length + p.pm.length; c += (B.done[brDate(w * 7 + d)] || []).filter(k => !k.startsWith('hab') && !k.startsWith('post')).length; } return Math.min(1, c / t); });
+  const best = k => Math.max(0, ...B.holds.filter(x => x.k === k).map(x => x.v));
+  let h = `<div class="br-stats">${[[st.streak, 'day streak'], [st.sess, 'sessions done'], [st.minsDone, 'minutes breathed'], [st.lastB ? st.lastB.v + 's' : '—', 'latest BOLT score']].map(([v, l]) => `<div class="metric" style="grid-template-columns:1fr"><div class="val" style="text-align:left">${v}</div><div class="meta">${l}</div></div>`).join('')}</div>`;
+  h += `<div class="section-title br-h">Sessions per week</div><div class="card"><div class="br-bars">${wkc.map((v, i) => `<div class="${i === cur ? 'now' : ''}" title="Week ${i + 1}: ${Math.round(v * 100)}%"><i style="height:${v * 100}%"></i></div>`).join('')}</div><div class="br-barlab">${wkc.map((_, i) => `<span>${i + 1}</span>`).join('')}</div></div>`;
+  h += `<div class="section-title br-h">BOLT score</div><div class="card"><p class="mut" style="margin:0 0 8px;font-size:13px">Seconds you can pause after a normal exhale until a strong but manageable urge to breathe. Measured on day 7 each week with the breath-hold test, or enter it by hand.</p>${brChart(B.bolt)}
+    <form class="addm" id="br-boltf" style="border:0;padding:0;margin:10px 0 0"><div class="row"><input type="number" id="br-bolt" min="1" max="300" inputmode="numeric" placeholder="Seconds" aria-label="BOLT score in seconds"><button class="btn" type="submit">Add</button><button class="btn ghost" type="button" data-act="brplay" data-s="test">Run the test</button></div></form></div>`;
+  h += `<div class="section-title br-h">Comfortable pause</div><div class="card"><p class="mut" style="margin:0 0 8px;font-size:13px">The pause used in comfortable-pause training. Raise it 2–3 seconds every two or three days, as long as you can go back to normal breathing without a recovery gasp.</p>
+    <div class="set-row" style="border:0;padding:0"><label for="br-pause">Pause (seconds)</label><input type="number" id="br-pause" min="3" max="120" value="${B.pause}" inputmode="numeric" style="width:90px"></div></div>`;
+  h += `<div class="section-title br-h">Best holds</div><div class="br-stats three">${[['empty', 'empty, after power breathing'], ['full', 'full lungs, athletic sequence'], ['walk', 'walking hold']].map(([k, l]) => `<div class="metric" style="grid-template-columns:1fr"><div class="val" style="text-align:left">${best(k) ? best(k) + 's' : '—'}</div><div class="meta">${l}</div></div>`).join('')}</div>`;
+  return h;
+}
+
+/* ---------- BREATHWORK: guided pacer ---------- */
+const BP_LAB = { in: 'Inhale', out: 'Exhale', hold: 'Hold', empty: 'Hold empty', rest: 'Rest', fast: 'Fast breathing', openE: 'Hold empty', openH: 'Hold' },
+      BP_COL = { in: '--b-in', out: '--b-out', hold: '--b-hold', empty: '--b-hold', rest: '--b-rest', fast: '--b-in', openE: '--b-hold', openH: '--b-hold' },
+      BP_TONE = { in: 440, out: 294, hold: 349, empty: 262, rest: 392, fast: 494, openE: 262, openH: 349 };
+let BP = null, bpAudio = null, bpWake = null;
+document.body.insertAdjacentHTML('beforeend', `<div id="bplayer" hidden>
+  <div class="bp-top"><div class="eyebrow" id="bp-seg"></div><h2 id="bp-title"></h2><div id="bp-prog"><i></i></div><div class="mut num" id="bp-left" style="font-size:13px"></div></div>
+  <div id="bp-stage"><div id="bp-ring"><div id="bp-orb"></div><div id="bp-orbline"></div><div id="bp-count">0</div></div></div>
+  <div class="bp-bottom"><div id="bp-phase">Ready</div><p id="bp-cue" class="mut"></p>
+    <div class="bp-btns"><button class="btn" id="bp-main">Start</button><button class="btn ghost" id="bp-skip">Next part</button><button class="btn ghost" id="bp-sound">Sound on</button><button class="btn ghost" id="bp-end">End</button></div></div></div>`);
+const bp$ = id => document.getElementById(id);
+function bpTone(f){ if (!BS().sound || !bpAudio) return; try { const o = bpAudio.createOscillator(), g = bpAudio.createGain(); o.frequency.value = f; o.type = 'sine'; g.gain.setValueAtTime(0, bpAudio.currentTime); g.gain.linearRampToValueAtTime(.07, bpAudio.currentTime + .03); g.gain.exponentialRampToValueAtTime(.0001, bpAudio.currentTime + .5); o.connect(g).connect(bpAudio.destination); o.start(); o.stop(bpAudio.currentTime + .55); } catch (e) {} }
+function bpOrb(sc, col){ ['bp-orb', 'bp-orbline'].forEach(id => { bp$(id).style.transform = 'scale(' + sc + ')'; bp$(id).style.setProperty('--pc', 'var(' + col + ')'); }); }
+function bpOpen(s, key, date){
+  const segs = BR.build(s), steps = [];
+  segs.forEach(([nm, arr], si) => arr.forEach(st => steps.push(Object.assign({ seg: nm, si }, st))));
+  BP = { s, key, date, steps, i: -1, run: false, scale: .3, from: .3, t0: 0, el: 0, total: steps.reduce((a, b) => a + b.s, 0), spent: 0, nseg: segs.length };
+  bp$('bp-title').textContent = BR.title(s);
+  bp$('bp-seg').textContent = segs.length > 1 ? segs.map(x => x[0].split(' · ')[0]).join(' → ') : BR.spec(s).ex.tag;
+  bp$('bp-phase').textContent = 'Ready'; bp$('bp-phase').style.setProperty('--pc', 'var(--b-in)');
+  bp$('bp-cue').textContent = BR.spec(s).ex.how; bp$('bp-count').textContent = Math.round(BP.total / 60) + '′';
+  bp$('bp-main').textContent = 'Start'; delete bp$('bp-main').dataset.close; bp$('bp-skip').hidden = segs.length < 2;
+  bp$('bp-sound').textContent = BS().sound ? 'Sound on' : 'Sound off'; bp$('bp-prog').firstChild.style.width = '0'; bp$('bp-left').textContent = '';
+  bpOrb(.3, '--b-in'); bp$('bplayer').hidden = false; document.body.style.overflow = 'hidden';
+}
+function bpNext(){
+  if (!BP) return; const prev = BP.steps[BP.i]; if (prev) BP.spent += prev.s; BP.i++;
+  if (BP.i >= BP.steps.length) return bpFinish();
+  const st = BP.steps[BP.i]; BP.from = BP.scale; BP.t0 = performance.now(); BP.el = 0;
+  bp$('bp-phase').textContent = BP_LAB[st.t]; bp$('bp-phase').style.setProperty('--pc', 'var(' + BP_COL[st.t] + ')'); bp$('bp-cue').textContent = st.c || '';
+  if (BP.nseg > 1) bp$('bp-seg').textContent = st.seg;
+  bp$('bp-main').textContent = st.t.startsWith('open') ? 'Breathe' : 'Pause'; bpTone(BP_TONE[st.t]);
+}
+function bpFrame(now){
+  if (!BP) return;
+  if (BP.run) {
+    const st = BP.steps[BP.i]; BP.el = (now - BP.t0) / 1000;
+    const open = st.t.startsWith('open'), f = open ? 0 : Math.min(1, BP.el / st.s), ease = .5 - .5 * Math.cos(Math.PI * f);
+    let sc = BP.from;
+    if (st.t === 'in') sc = BP.from + ((st.to || 1) - BP.from) * ease;
+    else if (st.t === 'out') sc = BP.from + ((st.to || .3) - BP.from) * ease;
+    else if (st.t === 'fast') sc = .55 + .17 * Math.sin(2 * Math.PI * st.r * BP.el);
+    else if (st.t === 'rest') sc = BP.from + (.5 - BP.from) * Math.min(1, BP.el / 3) + .03 * Math.sin(BP.el * 1.1);
+    BP.scale = sc; bpOrb(sc.toFixed(3), BP_COL[st.t]);
+    const left = open ? BP.el : st.s - BP.el;
+    bp$('bp-count').textContent = open || st.s <= 90 ? Math.max(open ? 0 : 1, open ? Math.floor(left) : Math.ceil(left)) : Math.floor(left / 60) + ':' + pad(Math.floor(left % 60));
+    const done = BP.spent + (open ? 0 : BP.el); bp$('bp-prog').firstChild.style.width = Math.min(100, 100 * done / BP.total) + '%';
+    const rem = Math.max(0, BP.total - done); bp$('bp-left').textContent = Math.floor(rem / 60) + ':' + pad(Math.floor(rem % 60)) + ' left';
+    if (!open && BP.el >= st.s) { if (st.t === 'fast' || st.t === 'rest') BP.scale = .5; bpNext(); }
+  }
+  requestAnimationFrame(bpFrame);
+}
+function bpRelease(){ try { bpWake && bpWake.release(); } catch (e) {} bpWake = null; }
+function bpFinish(){
+  const p = BP; BP = null; if (p.key && p.date) brToggle(p.date, p.key, true); bpTone(523); setTimeout(() => bpTone(659), 250);
+  bp$('bp-phase').textContent = 'Done'; bp$('bp-cue').textContent = 'Sit for a moment and notice how you feel.'; bp$('bp-count').textContent = '✓';
+  bp$('bp-main').textContent = 'Close'; bp$('bp-main').dataset.close = '1'; bp$('bp-prog').firstChild.style.width = '100%'; bp$('bp-left').textContent = ''; bpRelease();
+}
+function bpClose(){ BP = null; bpRelease(); delete bp$('bp-main').dataset.close; bp$('bplayer').hidden = true; document.body.style.overflow = ''; render(); }
+bp$('bp-main').onclick = async () => {
+  if (bp$('bp-main').dataset.close) return bpClose();
+  if (!BP) return;
+  if (BP.i < 0) { try { bpAudio = bpAudio || new (window.AudioContext || window.webkitAudioContext)(); bpAudio.resume(); } catch (e) {} try { bpWake = await navigator.wakeLock.request('screen'); } catch (e) {} BP.run = true; bpNext(); requestAnimationFrame(bpFrame); return; }
+  const st = BP.steps[BP.i];
+  if (st.t.startsWith('open') && BP.run) {
+    const v = Math.round(BP.el), B = BS();
+    if (st.rec === 'pause') { if (v >= 3) B.pause = v; }
+    else if (st.rec === 'bolt') B.bolt.push({ d: brToday(), v });
+    else if (st.rec) B.holds.push({ d: brToday(), k: st.rec, v });
+    persist('breath'); BP.total += BP.el - st.s; st.s = BP.el; bpNext(); return;
+  }
+  BP.run = !BP.run; if (BP.run) BP.t0 = performance.now() - BP.el * 1000; bp$('bp-main').textContent = BP.run ? 'Pause' : 'Resume';
+};
+bp$('bp-skip').onclick = () => { if (!BP || BP.i < 0) return; const si = BP.steps[BP.i].si; let j = BP.i; while (j < BP.steps.length && BP.steps[j].si === si) j++; if (j >= BP.steps.length) return; BP.spent = BP.steps.slice(0, j).reduce((a, b) => a + b.s, 0) - BP.steps[j - 1].s; BP.i = j - 1; BP.scale = .4; BP.run = true; bpNext(); };
+bp$('bp-sound').onclick = () => { BS().sound = !BS().sound; bp$('bp-sound').textContent = BS().sound ? 'Sound on' : 'Sound off'; persist('breath'); };
+bp$('bp-end').onclick = bpClose;
+
+/* ---------- BREATHWORK: events ---------- */
+document.addEventListener('click', ev => {
+  const b = ev.target.closest('[data-act]'); if (!b) return;
+  const a = b.dataset.act;
+  if (a === 'brtog') { brToggle(b.dataset.date, b.dataset.k); render(); }
+  else if (a === 'brplay') bpOpen(b.dataset.s, b.dataset.k, b.dataset.date);
+  else if (a === 'bsub') { V.btab = b.dataset.v; render(); window.scrollTo(0, 0); }
+  else if (a === 'boff') { V.bOff = +b.dataset.d === 0 ? 0 : (V.bOff || 0) + (+b.dataset.d); render(); }
+  else if (a === 'brjump') { const w = +document.getElementById('br-jump').value, d = new Date(); d.setDate(d.getDate() - (w - 1) * 7); BS().start = iso(d); persist('breath'); V.btab = 'today'; V.bOff = 0; render(); toast('Breath week ' + w + ' starts today'); }
+  else if (a === 'bralign') { BS().start = S.profile.startDate; persist('breath'); render(); toast('Lined up with your training'); }
+  else if (a === 'bprog') { V.tab = 'breath'; V.btab = 'progress'; render(); window.scrollTo(0, 0); }
+});
+document.addEventListener('toggle', ev => { if (ev.target.classList && ev.target.classList.contains('br-day')) V.brOpen = ev.target.open; }, true);
+document.addEventListener('change', ev => {
+  if (ev.target.id === 'br-pause') { const v = +ev.target.value; if (v >= 3) { BS().pause = Math.round(v); persist('breath'); toast('Pause saved'); } }
+});
+document.addEventListener('submit', ev => {
+  if (ev.target.id !== 'br-boltf') return;
+  ev.preventDefault(); const v = +document.getElementById('br-bolt').value;
+  if (v > 0) { BS().bolt.push({ d: brToday(), v: Math.round(v) }); persist('breath'); render(); toast('BOLT score saved'); }
+});
+
+
 /* ---------- render + events ---------- */
 const ICONS = {
   today:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v4M12 3 9 6M12 3l3 3"/><path d="M8 21h8M12 21V11"/><path d="M5 13h14"/></svg>',
   progress:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><path d="M5 16l4-5 4 3 6-8"/></svg>',
+  breath:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10a3 3 0 1 0-3-3"/><path d="M3 12h15a3 3 0 1 1-3 3"/><path d="M3 16h6"/></svg>',
   guide:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/></svg>',
   supps:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="18" height="7" rx="3.5" transform="rotate(-35 12 12.5)"/><path d="M9.5 8.2l4 6"/></svg>',
   settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>',
@@ -743,8 +1309,8 @@ const ICONS = {
 function render(){
   const main = $('#main');
   const focusId = document.activeElement && document.activeElement.id;
-  main.innerHTML = V.tab === 'today' ? renderToday() : V.tab === 'progress' ? renderProgress() : V.tab === 'guide' ? renderGuide() : V.tab === 'supps' ? renderSupps() : renderSettings();
-  $('#tabs').innerHTML = [['today','Today'],['progress','Progress'],['supps','Supps'],['guide','Guide'],['settings','Settings']].map(([k,l]) => `<button class="tab ${V.tab===k?'on':''}" data-act="tab" data-v="${k}" aria-current="${V.tab===k?'page':'false'}">${ICONS[k]}<span>${l}</span></button>`).join('');
+  main.innerHTML = V.tab === 'today' ? renderToday() : V.tab === 'progress' ? renderProgress() : V.tab === 'guide' ? renderGuide() : V.tab === 'supps' ? renderSupps() : V.tab === 'breath' ? renderBreath() : renderSettings();
+  $('#tabs').innerHTML = [['today','Today'],['progress','Progress'],['breath','Breath'],['supps','Supps'],['guide','Guide'],['settings','Settings']].map(([k,l]) => `<button class="tab ${V.tab===k?'on':''}" data-act="tab" data-v="${k}" aria-current="${V.tab===k?'page':'false'}">${ICONS[k]}<span>${l}</span></button>`).join('');
   if (focusId) { const el = document.getElementById(focusId); if (el && el.tagName === 'INPUT' && el.type === 'text') { el.focus(); const n = el.value.length; try { el.setSelectionRange(n, n); } catch(e){} } }
 }
 function entry(code){
@@ -768,7 +1334,7 @@ document.addEventListener('click', ev => {
   else if (a === 'delm') { S.metrics.entries = S.metrics.entries.filter(e => e.id !== b.dataset.id); persist('metrics'); render(); toast('Entry deleted'); }
   else if (a === 'reset') { V.confirmReset = true; render(); }
   else if (a === 'reset-no') { V.confirmReset = false; render(); }
-  else if (a === 'reset-yes') { const keys = Object.keys(S.logs), months = Object.keys(S.supplog); S.logs = {}; S.metrics = { entries: [] }; S.supplog = {}; keys.forEach(k => persist('log-' + k)); months.forEach(m => persist('supplog-' + m)); persist('metrics'); V.confirmReset = false; render(); toast('Logs erased'); }
+  else if (a === 'reset-yes') { const keys = Object.keys(S.logs), months = Object.keys(S.supplog); S.logs = {}; S.metrics = { entries: [] }; S.supplog = {}; if (S.breath) { S.breath.done = {}; S.breath.bolt = []; S.breath.holds = []; persist('breath'); } keys.forEach(k => persist('log-' + k)); months.forEach(m => persist('supplog-' + m)); persist('metrics'); V.confirmReset = false; render(); toast('Logs erased'); }
   else if (a === 'backup') { doBackup(); }
   else if (a === 'rt') { const en = entry(b.dataset.c); const i = +b.dataset.i; en.dr = en.dr || []; const k = en.dr.indexOf(i); if (k >= 0) en.dr.splice(k, 1); else en.dr.push(i); en.t = Date.now(); pruneEntry(b.dataset.c); saveSession(); render(); }
   else if (a === 'imp-yes') { applyImport(V.pendingImport); V.pendingImport = null; render(); toast('Backup imported'); }
@@ -841,6 +1407,7 @@ function applyImport(o){
   S.logs = o.logs || {}; S.metrics = { entries: (o.metrics.entries || []) };
   S.supps = o.supps && Array.isArray(o.supps.items) ? o.supps : { items: [] };
   S.supplog = o.supplog || {};
+  S.breath = o.breath ? Object.assign(BR_DEF(), o.breath) : BR_DEF(); persist('breath');
   new Set([...oldLogs, ...Object.keys(S.logs)]).forEach(k => persist('log-' + k));
   new Set([...oldMonths, ...Object.keys(S.supplog)]).forEach(m => persist('supplog-' + m));
   persist('profile'); persist('metrics'); persist('supps');
