@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#15181d"><meta name="description" content="12-week handstand, movement and athleticism program with logging, skill ladder, breathwork and supplement tracker."><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><style>:root{color-scheme:light dark}body{margin:0}img{max-width:100%}[hidden]{display:none!important}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style><title>Movement Athlete</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#15181d"><meta name="description" content="12-week handstand, movement and athleticism program with logging, skill ladder, breathwork, meditation and supplement tracker."><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><style>:root{color-scheme:light dark}body{margin:0}img{max-width:100%}[hidden]{display:none!important}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style><title>Movement Athlete</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
 <style>
@@ -140,8 +140,8 @@ select,input[type=number],input[type=date]{border:1px solid var(--line);backgrou
 
 /* tab bar */
 .tabbar{position:fixed;left:0;right:0;bottom:0;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));z-index:5}
-.tabbar nav{max-width:640px;margin:0 auto;display:grid;grid-template-columns:repeat(6,1fr);gap:0}
-.tab{border:0;background:none;padding:6px 0;border-radius:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;font-weight:600;color:var(--mut);min-width:0}
+.tabbar nav{max-width:640px;margin:0 auto;display:grid;grid-template-columns:repeat(7,1fr);gap:0}
+.tab{border:0;background:none;padding:6px 0;border-radius:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10.5px;font-weight:600;color:var(--mut);min-width:0;letter-spacing:-.01em}
 .tab svg{width:22px;height:22px}
 .tab.on{color:var(--fg)} .tab.on svg{color:var(--accent)}
 .toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:9px 14px;border-radius:10px;font-size:13px;font-weight:600;z-index:6;opacity:0;transition:opacity .2s;pointer-events:none}
@@ -235,6 +235,92 @@ select,input[type=number],input[type=date]{border:1px solid var(--line);backgrou
 #bp-cue{max-width:40ch;min-height:3em;margin:4px auto 10px;font-size:14px}
 .bp-btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 .bp-bottom{display:flex;flex-direction:column;align-items:center}
+/* meditation (Deep Level) */
+.seg.seg5{grid-template-columns:repeat(5,1fr)}
+.seg.seg5 button{font-size:12.5px;padding:8px 2px}
+.md-hero{margin:8px 0 10px}
+.md-hero h2{font-family:var(--f-display);font-weight:800;font-size:27px;line-height:1.02;text-transform:uppercase;margin:4px 0 6px}
+.md-lede{font-size:14.5px;color:var(--mut);margin:0 0 8px}
+.mind .eyebrow{color:var(--accent)}
+.md-task{display:grid;grid-template-columns:30px 1fr;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.md-task:first-of-type,.md-day > summary + .md-task{border-top:0}
+.md-task .check{width:26px;height:26px;cursor:pointer;background:none;margin-top:2px}
+.md-task.done .md-t > b{text-decoration:line-through;color:var(--mut)}
+.md-t{min-width:0;font-size:14.5px}
+.md-when{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--sb);font-weight:700}
+.md-note{font-size:13px;margin-top:2px}
+.md-note a,.md-doc a{color:var(--sb)}
+.md-links{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.btn.md-s{padding:7px 11px;font-size:13px}
+.md-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.md-tile{display:flex;flex-direction:column;gap:2px;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer}
+.md-tile small{font-size:11.5px;color:var(--mut)}
+.md-tile b{font-size:15px;line-height:1.25}
+.md-tile .mut{font-size:13px}
+.md-phase{margin:20px 0 6px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--sb);font-weight:800}
+.md-wk{display:grid;grid-template-columns:48px 1fr auto;gap:12px;align-items:center;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:6px;cursor:pointer}
+.md-wk.cur{border-color:var(--accent)}
+.md-wk > span:nth-child(2){display:flex;flex-direction:column;gap:2px;min-width:0;font-size:14px}
+.md-wk .mut{font-size:12.5px}
+.md-n{font-family:var(--f-display);font-weight:800;font-size:26px;color:var(--accent);text-align:center;line-height:1}
+.md-n small{display:block;font:700 9.5px var(--f-body);letter-spacing:.12em;color:var(--mut);text-transform:uppercase}
+.md-days{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.md-days button{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--mut);font-weight:700;cursor:pointer}
+.md-days button.done{background:color-mix(in srgb,var(--good) 22%,transparent);border-color:var(--good);color:var(--fg)}
+.md-days button.on{border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 30%,transparent)}
+.md-notebox{border-left:3px solid var(--sb);padding:8px 12px;background:var(--surface2);border-radius:0 10px 10px 0;margin:10px 0;font-size:13.5px}
+.md-notebox.w{border-color:var(--warn)}
+.md-notebox b{color:var(--sb)} .md-notebox.w b{color:var(--warn)}
+.md-tags{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.md-tag{font-size:11.5px;padding:3px 10px;border-radius:999px;border:1px solid var(--line);color:var(--mut);background:none;white-space:nowrap;cursor:default}
+button.md-tag{cursor:pointer}
+.md-tag.a{border-color:var(--accent);color:var(--fg)}
+.md-tag.v{border-color:var(--sb);color:var(--sb)}
+.md-back{background:none;border:0;color:var(--mut);padding:8px 0 0;cursor:pointer;font-size:13.5px}
+.md-doc{font-size:14.5px}
+.md-doc h3{font-size:15.5px;margin:14px 0 6px}
+.md-doc h3:first-child{margin-top:0}
+.md-doc p{margin:0 0 8px}
+.md-doc ul{padding-left:18px}
+.md-steps{counter-reset:s;list-style:none;padding:0;margin:0}
+.md-steps li{counter-increment:s;position:relative;padding:2px 0 10px 38px;margin:0}
+.md-steps li::before{content:counter(s);position:absolute;left:0;top:0;width:26px;height:26px;border-radius:50%;border:1px solid var(--accent);color:var(--accent);display:grid;place-items:center;font-size:12.5px;font-weight:700}
+.mind .scroll,.md-scroll{overflow-x:auto}
+.mind table{width:100%;border-collapse:collapse;font-size:13.5px}
+.mind th,.mind td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.mind th{color:var(--mut);font-weight:700;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em}
+.mind code{font-family:var(--f-num);font-size:12px}
+.md-guide h1{font-family:var(--f-display);font-weight:800;font-size:28px;text-transform:uppercase;margin:4px 0 8px}
+.md-guide h2{font-size:17px;margin:16px 0 6px}
+.md-guide .lede{color:var(--mut)}
+.md-src summary{cursor:pointer}
+.md-src ul{font-size:12px;color:var(--mut);padding-left:16px;overflow-wrap:anywhere}
+.md-filter{display:flex;gap:6px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:none}
+.md-filter .chip{flex:none}
+.md-entry{border-top:1px solid var(--line);padding:10px 0}
+.md-entry:first-child{border-top:0}
+.md-dots{letter-spacing:2px;color:var(--accent)}
+.md-form label{display:block;font-size:12.5px;color:var(--mut);margin:10px 0 4px;font-weight:600}
+.md-form input[type=text],.md-form textarea,.md-form select{width:100%;border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:10px;padding:9px 11px;font:inherit;font-size:14px}
+.md-day{border-top:1px solid var(--line);margin-top:8px;padding-top:8px}
+.md-day > summary{cursor:pointer;display:flex;justify-content:space-between;gap:8px;font-weight:650;font-size:14px;list-style:none}
+.md-day > summary::-webkit-details-marker{display:none}
+.md-day > summary span:first-child::before{content:'▸ ';color:var(--mut)}
+.md-day[open] > summary span:first-child::before{content:'▾ '}
+.md-day > summary .num{font-size:12.5px}
+.mplayer{position:fixed;inset:0;z-index:20;background:radial-gradient(1200px 700px at 50% 30%,#2a2f3a 0%,#0e1014 70%);color:#eeeae2;display:flex;flex-direction:column;padding:calc(16px + env(safe-area-inset-top,0px)) 18px calc(18px + env(safe-area-inset-bottom,0px))}
+.mplayer[hidden]{display:none}
+.mp-h{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px;color:#c9c5bb}
+.mplayer .btn.ghost{background:rgba(255,255,255,.08);color:#eeeae2}
+.mp-bar{height:4px;background:rgba(255,255,255,.12);border-radius:9px;overflow:hidden;margin:10px 0 14px}
+.mp-bar i{display:block;height:100%;background:#e7c457;width:0}
+.mp-stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:22px;min-height:0}
+.mp-orb{width:min(46vw,210px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,rgba(231,196,87,.30),rgba(79,179,170,.10) 62%,transparent 72%);border:1px solid rgba(231,196,87,.4);font-family:var(--f-display);font-weight:800;font-size:clamp(2.6rem,12vw,4.4rem);color:#f3dc9a;transition:transform 4s ease-in-out}
+.mp-orb.in{transform:scale(1.18)} .mp-orb.out{transform:scale(.86)}
+.mp-say{font-size:clamp(1.1rem,3.6vw,1.5rem);line-height:1.45;max-width:30ch;min-height:4.4em;text-wrap:balance}
+.mp-sub{color:#aaa69c;font-size:14px;min-height:1.4em}
+.mp-ctl{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+@media (prefers-reduced-motion: reduce){.mp-orb{transition:none}}
 </style>
 </head><body><main class="wrap" id="main"></main>
 <div class="tabbar"><nav id="tabs" aria-label="Sections"></nav></div>
@@ -292,7 +378,7 @@ function dateOf(week, dayIdx){ const d = parseISO(S.profile.startDate); d.setDat
 /* ---------- state ---------- */
 const LS_KEY = 'ma2-state-v1';
 let S = { profile:{ startDate: iso(mondayOf(new Date())), bw:90 }, logs:{}, metrics:{ entries:[] }, supps:{ items:[] }, supplog:{} };
-function loadLocal(){ try { const r = localStorage.getItem(LS_KEY); if (r) { const o = JSON.parse(r); S.profile = Object.assign(S.profile, o.profile||{}); S.logs = o.logs||{}; S.metrics = o.metrics||{entries:[]}; S.supps = o.supps||{items:[]}; S.supplog = o.supplog||{}; S.breath = o.breath||null; return true; } } catch(e){} return false; }
+function loadLocal(){ try { const r = localStorage.getItem(LS_KEY); if (r) { const o = JSON.parse(r); S.profile = Object.assign(S.profile, o.profile||{}); S.logs = o.logs||{}; S.metrics = o.metrics||{entries:[]}; S.supps = o.supps||{items:[]}; S.supplog = o.supplog||{}; S.breath = o.breath||null; S.mind = o.mind||null; return true; } } catch(e){} return false; }
 function saveLocal(){ try { localStorage.setItem(LS_KEY, JSON.stringify(S)); } catch(e){} }
 const hadLocal = loadLocal();
 
@@ -310,7 +396,7 @@ async function flush(docId){
   if (q.busy) { q.again = true; return; }
   q.busy = true;
   try {
-    const body = docId === 'profile' ? S.profile : docId === 'metrics' ? S.metrics : docId === 'supps' ? S.supps : docId === 'breath' ? S.breath : docId.startsWith('supplog-') ? (S.supplog[docId.slice(8)] ? { days: S.supplog[docId.slice(8)] } : null) : S.logs[docId.slice(4)];
+    const body = docId === 'profile' ? S.profile : docId === 'metrics' ? S.metrics : docId === 'supps' ? S.supps : docId === 'breath' ? S.breath : docId === 'mind' ? S.mind : docId.startsWith('supplog-') ? (S.supplog[docId.slice(8)] ? { days: S.supplog[docId.slice(8)] } : null) : S.logs[docId.slice(4)];
     const ref = DB.collection('data/users/' + UID).doc(docId);
     if (body) await ref.set(JSON.parse(JSON.stringify(body))); else await ref.delete();
     setSync('ok');
@@ -336,17 +422,18 @@ async function initDb(){
       if (snap.empty && first && hadLocal) {
         // first time on the synced store: upload what this device has
         first = false; setSync('ok');
-        persist('profile'); persist('metrics'); persist('supps'); if (S.breath) persist('breath'); Object.keys(S.supplog).forEach(m => persist('supplog-' + m)); Object.keys(S.logs).forEach(k => persist('log-' + k));
+        persist('profile'); persist('metrics'); persist('supps'); if (S.breath) persist('breath'); if (S.mind) persist('mind'); Object.keys(S.supplog).forEach(m => persist('supplog-' + m)); Object.keys(S.logs).forEach(k => persist('log-' + k));
         return;
       }
       first = false;
       const logs = {};
-      let profile = null, metrics = null, supps = null, breath = null; const supplog = {};
+      let profile = null, metrics = null, supps = null, breath = null, mind = null; const supplog = {};
       snap.docs.forEach(d => {
         if (d.id === 'profile') profile = d.data();
         else if (d.id === 'metrics') metrics = d.data();
         else if (d.id === 'supps') supps = d.data();
         else if (d.id === 'breath') breath = d.data();
+        else if (d.id === 'mind') mind = d.data();
         else if (d.id.startsWith('supplog-')) supplog[d.id.slice(8)] = (d.data().days || {});
         else if (d.id.startsWith('log-')) logs[d.id.slice(4)] = d.data();
       });
@@ -357,6 +444,7 @@ async function initDb(){
         if (supps) S.supps = { items: JSON.parse(JSON.stringify(supps.items || [])) };
         S.supplog = JSON.parse(JSON.stringify(supplog));
         if (breath) S.breath = Object.assign(BR_DEF(), JSON.parse(JSON.stringify(breath)));
+        if (mind) S.mind = Object.assign(MD_DEF(), JSON.parse(JSON.stringify(mind)));
         seedCore();
         migrateCodes();
         saveLocal();
@@ -555,7 +643,7 @@ function renderToday(){
   if (dk === 'D7') {
     h += `<div class="rest-card"><div class="eyebrow">Sunday</div><h2>Rest</h2><p class="mut">Optional 10 min daily trio (Roye Gold): spinal waves 5 min, passive squat 2–5 min, passive hang 1 min. Go for a walk.</p></div>`;
     if (P.routines && P.routines.dw_flow) { const F = P.routines.dw_flow; h += `<details class="card" style="margin-top:10px"><summary style="cursor:pointer"><b>${esc(F[0])}</b><div class="mut" style="font-size:12.5px;margin-top:3px">${esc(F[1])}</div></summary><ul class="rt-list" style="margin-top:10px">${F[2].map(d => `<li class="rt-item" style="grid-template-columns:1fr;cursor:default"><span class="rt-txt"><b>${esc(d[0])}</b><span class="rt-dose">${esc(d[1])}</span>${d[2]?`<span class="mut">${esc(d[2])}</span>`:''}</span></li>`).join('')}</ul></details>`; }
-    h += breathCard(iso(dateOf(w, di)));
+    h += breathCard(iso(dateOf(w, di))) + mindCard(iso(dateOf(w, di)));
     return h;
   }
   const sess = sessionOf(w, dk);
@@ -630,7 +718,7 @@ function renderToday(){
   h += '</div>';
   const tot = sess.rows.filter(r => r[2].some(Boolean)).length, n = lg ? Object.keys(lg.entries).length : 0;
   h += `<div class="complete"><span><b class="num">${n}/${tot}</b> logged</span><span class="mut">Easy twice in a row steps it up · Hard twice or missed steps it down</span></div>`;
-  h += breathCard(iso(dateOf(w, di)));
+  h += breathCard(iso(dateOf(w, di))) + mindCard(iso(dateOf(w, di)));
   return h;
 }
 
@@ -655,7 +743,7 @@ function spark(m, ents){
 }
 function renderProgress(){
   const bst = brStats();
-  let h = `<div class="card brsum"><div><h3>Breathwork</h3><div class="mut" style="font-size:12.5px">${bst.streak}-day streak · ${bst.sess} sessions · BOLT ${bst.lastB ? bst.lastB.v + 's' : 'not tested yet'}</div></div><button class="btn ghost" data-act="bprog">Details</button></div>` + `<div class="section-title">Skill ladder</div><p class="mut" style="margin:0 0 8px;font-size:13.5px">Your level in each Handstand Phases element. Today's session uses it. Move up only when you meet the requirement.</p>`;
+  let h = `<div class="card brsum"><div><h3>Breathwork</h3><div class="mut" style="font-size:12.5px">${bst.streak}-day streak · ${bst.sess} sessions · BOLT ${bst.lastB ? bst.lastB.v + 's' : 'not tested yet'}</div></div><button class="btn ghost" data-act="bprog">Details</button></div>` + (() => { const ms = mdStats(); return `<div class="card brsum"><div><h3>Meditation</h3><div class="mut" style="font-size:12.5px">Deep Level week ${ms.c.w} · day ${ms.c.d} · ${ms.n}/84 days · ${ms.j} journal entr${ms.j === 1 ? 'y' : 'ies'}</div></div><button class="btn ghost" data-act="mview" data-v="today">Open</button></div>`; })() + `<div class="section-title">Skill ladder</div><p class="mut" style="margin:0 0 8px;font-size:13.5px">Your level in each Handstand Phases element. Today's session uses it. Move up only when you meet the requirement.</p>`;
   ['Balance','Movement','Specialist','Elements'].forEach(ph => {
     h += `<div class="eyebrow" style="margin:12px 0 6px">${ph}</div><div class="grid2">`;
     Object.values(EL).filter(e => e.phase === ph).forEach(e => {
@@ -708,6 +796,7 @@ function renderGuide(){
    <li>Tempo 3011: 3s down · 0 bottom · 1s up · 1s top.</li>
    <li>ATG: find the pain-free range first, then the pain-free load.</li>
    <li>Soreness lasting past 48h means too much volume.</li></ul></div>`;
+  h += `<div class="card"><h3>Meditation with your training</h3><ul><li>The Deep Level program is self-paced: tick a day and the next one appears. Today’s practice shows under your session and in the Mind tab.</li><li><b>Skill days</b> (Mon, Wed, Fri): an 8-minute mental rehearsal of the main skill adds practice without load.</li><li><b>Hard days:</b> sleep control in bed. <b>Low readiness or Sunday:</b> the golden-light body scan.</li><li><b>Fear of falling, the drop-back, a stubborn plateau:</b> the tapping script builder in Mind → Sessions → Tools.</li><li>Pair it with breathwork: a slow breath session, then straight to level. Never meditate or do breath holds between handstand sets.</li><li>Pain techniques change how pain feels, not its cause: training pain still means stop and flag it.</li></ul></div>`;
   h += `<div class="card"><h3>Breathwork with your training</h3><ul><li>The breath program runs on the same 12 weeks and three phases as your training: awareness, then reprogramming, then power and stress resilience. It starts on your program start date (change it under Breath → 12 weeks).</li><li><b>Training days:</b> finish with the 4-minute recovery holds. They bring your breathing down and add a little CO2-tolerance work to every session.</li><li><b>Power breathing, fast breathing and maximal holds:</b> at least 30 minutes before training, or after it. Never between handstand sets or right before inversions: the holds can leave you light-headed.</li><li><b>Low readiness:</b> do Coherent breathing instead of the power rounds. The Breath card offers the swap.</li><li><b>Sunday:</b> breath-hold test (BOLT score) and a longer sequence, which fits the rest day.</li><li>Breathe through your nose in the prep, the movement day and easy conditioning.</li></ul></div>`;
   if (P.howto) h += `<div class="card"><h3>How to run a session</h3>${P.howto.map(([k, v]) => `<div class="gl"><b>${esc(k)}</b>${esc(v)}</div>`).join('')}</div>`;
   if (P.dw) h += `<div class="card"><h3>Dylan Werner: how to practice</h3><ul>${P.dw.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>`;
@@ -1297,11 +1386,1204 @@ document.addEventListener('submit', ev => {
 });
 
 
+/* ---------- DEEP LEVEL LIBRARY (techniques, guided sessions, 12-week program, guide) ---------- */
+const DL = (function () {
+/* Guided sessions. Written for this app; they follow the structure of the methods in the library
+   (Silva 3-to-1 entry, countdown deepening, 1-to-5 count out, golden-light relaxation, tapping rounds)
+   without reproducing the recordings. Step kinds:
+   {say, d}  speak, then pause d seconds      {hold, d} silent practice time
+   {count:[from,to], every, sayNum}           {breath:n} n slow breath cycles */
+var OUT = [
+  { say: "In a moment I will count from one to five. At five you will open your eyes, wide awake, feeling fine, feeling better than before.", d: 3 },
+  { count: [1, 3], every: 3, sayNum: true },
+  { say: "At the count of five, eyes open, wide awake, feeling better than before.", d: 2 },
+  { count: [4, 5], every: 3, sayNum: true },
+  { say: "Eyes open. Wide awake. Feeling fine, and better than before.", d: 3 }
+];
+var ENTRY = [
+  { say: "Close your eyes. Turn them slightly upward, as if looking at a screen a little above eye level.", d: 4 },
+  { say: "Take a deep breath. As you exhale, mentally repeat and picture the number three, three times.", d: 9 },
+  { say: "Three is your level of physical relaxation. Let the body go.", d: 4 },
+  { say: "Take another deep breath. As you exhale, mentally repeat and picture the number two, three times.", d: 9 },
+  { say: "Two is your level of mental relaxation. Sounds no longer disturb you. They help you relax.", d: 4 },
+  { say: "Take another deep breath. As you exhale, mentally repeat and picture the number one, three times.", d: 9 },
+  { say: "You are at level one, your basic level. From here you can work on any purpose you choose.", d: 4 }
+];
+var DEEPEN = [
+  { say: "To go deeper, count with me from ten to one. With each number, feel yourself going deeper.", d: 2 },
+  { count: [10, 1], every: 3, sayNum: true },
+  { say: "You are at a deeper, healthier level of mind. Deeper than before.", d: 4 }
+];
+function countSession(n, days) {
+  var every = n >= 50 ? 2 : 3;
+  return {
+    group: "Morning countdown (weeks 1–6)", title: "Countdown " + n + " → 1", mins: Math.round((n * every + 150) / 60),
+    blurb: days + ". Count silently with the tone, picture success, count out.",
+    intro: "Do this soon after waking, sitting up. Eyes closed and turned slightly upward. Count silently with each soft tone.",
+    steps: [
+      { say: "Close your eyes. Turn them slightly upward, about twenty degrees. Take a deep breath, and as you exhale, relax your body.", d: 4 },
+      { say: "Count silently with each tone, from " + n + " down to one.", d: 2 },
+      { count: [n, 1], every: every },
+      { say: "Now picture yourself as a success. Recall the most recent time things went completely right. Where you were. What you did. How it felt.", d: 2 },
+      { hold: "Stay with the picture and the feeling.", d: 45 },
+      { say: "Repeat mentally: every day, in every way, I am getting better, better and better.", d: 8 }
+    ].concat(OUT)
+  };
+}
+var BODY = ["scalp", "forehead", "eyes and eyelids", "face and jaw", "throat", "shoulders", "arms and hands", "chest", "abdomen", "thighs", "knees", "calves", "feet and toes"];
+
+var SESSIONS = {
+  centering: {
+    group: "Relaxation", title: "Long relaxation (centering)", mins: 16,
+    blurb: "The full entry: body, mind, level one, deepening, your ideal place.",
+    steps: [
+      { say: "Find a comfortable position. Close your eyes.", d: 4 },
+      { say: "Take a deep breath. As you exhale, mentally repeat and picture the number three, three times.", d: 9 },
+      { say: "Three is physical relaxation. I will name each part of the body. Put your attention there and let it go.", d: 3 }
+    ].concat(BODY.map(function (b) { return { say: "Relax your " + b + ".", d: 9 }; })).concat([
+      { say: "This is level three. Whenever you picture the number three, your body will relax like this, and more each time you practice.", d: 5 },
+      { say: "Take a deep breath. As you exhale, mentally repeat and picture the number two, three times.", d: 9 },
+      { say: "Two is mental relaxation. Noises do not distract you. Picture a calm, passive scene. A quiet beach. A walk in the woods. Any place that is peaceful to you.", d: 3 },
+      { hold: "Rest in your peaceful scene.", d: 60 },
+      { say: "Take a deep breath. As you exhale, mentally repeat and picture the number one, three times.", d: 9 },
+      { say: "You are at level one, your center.", d: 4 }
+    ]).concat(DEEPEN).concat([
+      { say: "Relax your eyelids. Feel how relaxed they are. Let that feeling flow slowly down through your whole body, all the way to your toes.", d: 15 },
+      { say: "Now go to your ideal place of relaxation. See it, hear it, feel it around you. Stay there until you hear my voice again.", d: 2 },
+      { hold: "Your ideal place of relaxation.", d: 150 },
+      { say: "Relax. Take a deep breath, and as you exhale, go deeper.", d: 8 },
+      { say: "Repeat mentally. Every day, in every way, I am getting better, better and better.", d: 8 },
+      { say: "Positive thoughts bring me the benefits and advantages I desire.", d: 8 },
+      { say: "I am always in control at this level of mind, and at every other level.", d: 8 },
+      { say: "Each time you practice, you will reach this level faster and more easily.", d: 5 }
+    ]).concat(OUT)
+  },
+  short: {
+    group: "Relaxation", title: "Short relaxation (3 to 1)", mins: 6,
+    blurb: "The everyday entry once the long version is familiar.",
+    steps: ENTRY.concat(DEEPEN).concat([
+      { say: "Rest here. If thoughts come, let them pass and return to the feeling of being deeply relaxed.", d: 2 },
+      { hold: "Stay at your level.", d: 120 },
+      { say: "Repeat mentally. Every day, in every way, I am getting better, better and better.", d: 8 }
+    ]).concat(OUT)
+  },
+  golden: {
+    group: "Relaxation", title: "Golden light body scan", mins: 9,
+    blurb: "Warm light from feet to scalp — the relaxation used before lucid-dream work.",
+    intro: "Lie down or recline. This is the relaxation that opens the lucid-dream recordings in your library.",
+    steps: [{ breath: 3 }, { say: "Find the natural rhythm of your breath. Imagine breathing in light, and breathing out tension.", d: 10 },
+      { say: "Feel a warm golden light around your feet. It loosens every toe, the arches, the heels.", d: 14 }]
+      .concat(["ankles and calves", "knees and thighs", "hips and lower belly", "chest", "back and spine", "shoulders, arms and hands", "neck and jaw", "cheeks, eyes and forehead", "scalp"].map(function (b) { return { say: "The golden light rises into your " + b + ". Everything it touches lets go.", d: 14 }; }))
+      .concat([{ say: "Your whole body is warm, heavy and relaxed. Rest in it.", d: 2 }, { hold: "Rest in the warmth.", d: 150 }]).concat(OUT)
+  },
+  count100: countSession(100, "Days 1–10"),
+  count50: countSession(50, "Days 11–20"),
+  count25: countSession(25, "Days 21–30"),
+  count10: countSession(10, "Days 31–40"),
+  count5: countSession(5, "After day 40"),
+  screen: {
+    group: "Imagery", title: "Mental screen workout", mins: 8,
+    blurb: "Train clear, coloured pictures on the screen out in front of you.",
+    steps: ENTRY.concat([
+      { say: "With eyes closed and turned slightly upward, sense a screen out in front of you, about two metres away. Not on your eyelids. Out there.", d: 8 },
+      { say: "On the screen, picture a lemon. Bright yellow. See its texture, the small dimples in the skin.", d: 20 },
+      { say: "Turn it. Cut it open. See the juice. Smell it. Taste a drop.", d: 20 },
+      { say: "Clear the screen. Picture your front door. Its exact colour. The handle. Reach out and feel it.", d: 25 },
+      { say: "Clear the screen. Picture the face of someone you love, smiling. Notice the colour of their eyes.", d: 25 },
+      { say: "Clear the screen. Now something you have never seen: a blue horse standing in a field of red grass. This is imagination, where the first three were memory.", d: 25 },
+      { say: "Clear the screen. Each time you practice, your pictures become clearer and easier to hold.", d: 5 }
+    ]).concat(OUT)
+  },
+  mirror: {
+    group: "Programming", title: "Mirror of the Mind", mins: 9,
+    blurb: "Blue frame for the problem, white frame for the solution.",
+    intro: "Before you begin, choose one situation you want to change, and decide what the solved version looks like.",
+    steps: ENTRY.concat(DEEPEN).concat([
+      { say: "On your mental screen, create a full-length mirror with a blue frame.", d: 8 },
+      { say: "In the blue-framed mirror, see the situation as it is now. Look at it calmly and thoroughly. This is the only time you will study it.", d: 2 },
+      { hold: "Study the problem once, clearly.", d: 45 },
+      { say: "Now erase the problem image. Move the mirror to your left. Change the frame to white.", d: 8 },
+      { say: "In the white-framed mirror, see the situation solved. See yourself there. See what others are doing. Add colour, sound, and above all the feeling of it being done.", d: 2 },
+      { hold: "Live inside the solution.", d: 90 },
+      { say: "From now on, whenever you think of this project, you will see only the white-framed picture.", d: 6 }
+    ]).concat(OUT)
+  },
+  scenes: {
+    group: "Programming", title: "Three Scenes", mins: 9,
+    blurb: "Problem straight ahead, change to the left, result further left.",
+    intro: "Choose one project. Know the present situation and the result you want.",
+    steps: ENTRY.concat(DEEPEN).concat([
+      { say: "On your mental screen, straight ahead, picture the present situation. Make a good study of it, once.", d: 2 },
+      { hold: "First scene: how things are.", d: 40 },
+      { say: "Now move your attention about fifteen degrees to your left. In this second scene, picture the change taking place. See the corrective steps being carried out.", d: 2 },
+      { hold: "Second scene: the change happening.", d: 60 },
+      { say: "Move again to your left. In this third scene, the project is complete. See the finished result, bright and large, and feel what it is like.", d: 2 },
+      { hold: "Third scene: done.", d: 75 },
+      { say: "From now on, whenever you think of this project, picture the third scene, to your left.", d: 6 }
+    ]).concat(OUT)
+  },
+  rehearsal: {
+    group: "Programming", title: "Mental rehearsal", mins: 8,
+    blurb: "Run tomorrow’s performance in the place where it will happen.",
+    intro: "Choose one upcoming activity: a talk, a difficult conversation, a training session, an exam.",
+    steps: ENTRY.concat(DEEPEN).concat([
+      { say: "Project yourself to the place where you will perform. See the room or the ground. Notice the light, the sounds.", d: 20 },
+      { say: "Begin the activity exactly the way you want to. Notice how you feel as you start well.", d: 2 },
+      { hold: "Begin well.", d: 40 },
+      { say: "Continue through the middle. If something goes wrong, see yourself handle it calmly and carry on.", d: 2 },
+      { hold: "Carry it through.", d: 60 },
+      { say: "Finish. Feel the sense of accomplishment in your body. Let it be strong.", d: 2 },
+      { hold: "The feeling of having done it well.", d: 30 }
+    ]).concat(OUT)
+  },
+  sleep: {
+    group: "Sleep and dreams", title: "Sleep control (chalkboard)", mins: 12,
+    blurb: "Circle, X, erase, “deeper”, 100, 99, 98… Use in bed. No count out.",
+    intro: "Use this lying in bed, ready for sleep. The session ends in silence so you can drift off.",
+    steps: ENTRY.concat([
+      { say: "Picture a chalkboard. You have chalk in one hand and an eraser in the other.", d: 6 },
+      { say: "Draw a large circle. Inside it, draw a big X.", d: 8 },
+      { say: "Erase the X, starting from the centre, without touching the circle.", d: 10 },
+      { say: "To the right of the circle, write the word deeper. Each time you write it, you go deeper, toward natural, healthy sleep.", d: 10 },
+      { say: "Write one hundred inside the circle. Erase it carefully. Go over the word deeper.", d: 14 },
+      { say: "Ninety nine. Write it. Erase it. Deeper.", d: 14 },
+      { say: "Ninety eight. Write it. Erase it. Deeper.", d: 14 },
+      { say: "Continue on your own, slowly, number by number, until you fall asleep.", d: 2 },
+      { hold: "97… 96… 95… keep going.", d: 480 }
+    ])
+  },
+  dreamset: {
+    group: "Sleep and dreams", title: "Dream intention (recall and lucidity)", mins: 7,
+    blurb: "Set the intention to remember, or to notice you are dreaming.",
+    intro: "Use in bed with your journal and a pen within reach. The session ends in silence.",
+    steps: ENTRY.concat([
+      { say: "Tell yourself mentally: I want to remember my dreams, and I am going to remember my dreams.", d: 10 },
+      { say: "Recall a dream you have had, any dream. Step back into it for a moment.", d: 25 },
+      { say: "Now imagine noticing something odd in it, and realising: this is a dream. Feel the click of recognition.", d: 25 },
+      { say: "Repeat mentally: next time I am dreaming, I will remember that I am dreaming.", d: 12 },
+      { say: "Again. Next time I am dreaming, I will remember that I am dreaming.", d: 12 },
+      { say: "When you wake, lie still, keep your eyes closed, and collect the dream before you move. Now sleep, holding the intention.", d: 2 },
+      { hold: "Drift off with the intention.", d: 240 }
+    ])
+  },
+  incubate: {
+    group: "Sleep and dreams", title: "Talk-down and dream incubation", mins: 13,
+    blurb: "Breath, then a rehearsed lucid dream: doubt, test, steady, act.",
+    intro: "Use in bed, lights off. Fall asleep whenever sleep comes. The session ends in silence.",
+    steps: [
+      { say: "Settle into the position you sleep in. The day is over. Let your attention rest on the breath.", d: 12 },
+      { say: "On each breath, think: in. And: out. Softly.", d: 2 }, { hold: "In… out…", d: 90 },
+      { say: "If a thought has carried you off, notice it, let it fall away, and come back to the breath.", d: 2 }, { hold: "In… out…", d: 90 },
+      { say: "Now look into the darkness behind your eyelids. Whatever is there, watch it and relax further.", d: 40 },
+      { say: "Imagine you find yourself somewhere unfamiliar. Look around. Ask yourself: where am I? How did I get here?", d: 20 },
+      { say: "You cannot quite answer. You think: maybe I am dreaming.", d: 10 },
+      { say: "You pinch your nose and breathe in. The air comes through. I am dreaming.", d: 12 },
+      { say: "You stay calm. You rub your hands together and touch the ground. The scene becomes clear and steady.", d: 20 },
+      { say: "You remember your name, and where you sleep tonight. Your mind is clear.", d: 12 },
+      { say: "You try something small. Then something larger. Each time it works, your confidence grows.", d: 30 },
+      { say: "Now do the thing you most want to do in a lucid dream. See it, feel it.", d: 2 }, { hold: "Your dream plan.", d: 90 },
+      { say: "Tonight, when something is strange, you will ask: am I dreaming? And you will know. Now let go, and sleep.", d: 2 },
+      { hold: "Drift off.", d: 240 }
+    ]
+  },
+  wild: {
+    group: "Sleep and dreams", title: "WILD: mind awake, body asleep", mins: 22,
+    blurb: "Relax, watch the hypnagogic imagery, build a dream scene and step in.",
+    intro: "Best used during a nap or after about five hours of sleep. Lie on your back or in your usual sleeping position.",
+    steps: [{ breath: 3 }, { say: "Let a warm golden light rise slowly from your feet to your head, relaxing everything it touches.", d: 2 }, { hold: "Feet… legs… hips… chest… arms… face… scalp.", d: 120 },
+      { say: "Look into the darkness behind your eyelids. You may see dots, colours, a tunnel. Just watch.", d: 2 }, { hold: "Watch without grasping.", d: 90 },
+      { say: "I will count from ten to one. As I count, the imagery becomes richer.", d: 2 }, { count: [10, 1], every: 4, sayNum: true },
+      { say: "Now begin to shape a scene. Where would you like to be? Build it gently: the ground under your feet, the light, a sound, a smell.", d: 2 }, { hold: "Build the scene with all your senses.", d: 180 },
+      { say: "Keep the mind lightly busy in the scene while the body falls asleep. If you feel heaviness, vibration or a floating sensation, that is normal. Stay calm and stay in the scene.", d: 2 }, { hold: "Stay in the scene.", d: 300 },
+      { say: "I am aware. My mind is awake and my body is asleep. I know when I am dreaming.", d: 2 }, { hold: "Let the dream take over.", d: 420 }]
+  },
+  tap: {
+    group: "Tapping", title: "One tapping round, guided", mins: 5,
+    blurb: "Setup on the side of the hand, then eight points with timing.",
+    intro: "Decide the block you are working on and rate it from 0 to 10. Say your own words at each point; the voice only names the points.",
+    steps: [
+      { say: "Tap the side of your hand. Say three times: even though I have this block, I deeply and completely accept myself.", d: 22 },
+      { say: "Eyebrow. Say the block as it is.", d: 7 }, { say: "Side of the eye. This feeling.", d: 7 }, { say: "Under the eye. Say it as it is.", d: 7 }, { say: "Under the nose. This feeling.", d: 7 },
+      { say: "Chin. Say it as it is.", d: 7 }, { say: "Collarbone. This feeling.", d: 7 }, { say: "Under the arm. Say it as it is.", d: 7 }, { say: "Top of the head. This feeling.", d: 7 },
+      { say: "Second round. Eyebrow. What if this is just an old story?", d: 7 }, { say: "Side of the eye. What if something else is possible?", d: 7 }, { say: "Under the eye. I am open to seeing it differently.", d: 7 }, { say: "Under the nose. I am willing to let it go.", d: 7 },
+      { say: "Chin. Now say what you choose instead.", d: 8 }, { say: "Collarbone. Say what you choose.", d: 8 }, { say: "Under the arm. I give myself permission.", d: 7 }, { say: "Top of the head. Say what you choose.", d: 8 },
+      { breath: 2 }, { say: "Rate the feeling again from zero to ten. If it is above two, do another round on whatever remains.", d: 6 }
+    ]
+  },
+  awake: {
+    group: "Relaxation", title: "Energizer (awake control)", mins: 3,
+    blurb: "A two-minute reset when you are drowsy and need to be alert.",
+    steps: [
+      { say: "Close your eyes. Take a deep breath and mentally picture three, then two, then one.", d: 10 },
+      { say: "Tell yourself: I am drowsy and sleepy. I do not want to be drowsy and sleepy. I want to be wide awake, feeling fine.", d: 10 },
+      { say: "Rest for half a minute.", d: 2 }, { hold: "Rest.", d: 30 }
+    ].concat(OUT)
+  }
+};
+var QUICK = ["short", "centering", "mirror", "tap"];
+
+/* Technique library. Explanations are written for this app from the courses in the library. */
+var CATS = [
+  { id: "level", name: "Going to level", about: "Relaxing body and mind on purpose, and coming back out. Everything else depends on this." },
+  { id: "program", name: "Programming", about: "Using pictures and words at level to solve a problem or reach a goal." },
+  { id: "body", name: "Sleep, energy and body", about: "Formula-type techniques for sleep, alertness, pain and habits." },
+  { id: "tap", name: "Tapping and belief work", about: "Voicing a block while tapping, then choosing something better. Plus the belief inductions." },
+  { id: "dream", name: "Dreams and lucid dreaming", about: "Remembering dreams, asking them for answers, and waking up inside them." },
+  { id: "esp", name: "Intuition training", about: "The UltraMind projection exercises. Practise them as taught and keep score." }
+];
+var S1 = "SILVA / 01 Choose Success / ", S1X = S1 + "CHOOSE SUCCESS EXERCISES / ", S2 = "SILVA / 02 UltraMind ESP System / ", S2X = S2 + "ULTRAMIND ESP EXERCISES / ", S3 = "SILVA / 03 Silva Intuition Lifestyle - exercises only / ", SH = "SILVA / Silva.Mind.Body.Healing.Program2023 / ";
+var BOOK = S1 + "Choose Success Master Course.pdf";
+var L = "LUCID POWER MEDITATION / ";
+
+var TECHNIQUES = [
+  /* ---------------- LEVEL ---------------- */
+  { id: "long-relax", cat: "level", name: "Long relaxation (centering exercise)", time: "15–20 min", week: 1, session: "centering",
+    tag: "The full guided descent: body, mind, centre.",
+    what: "The foundation exercise of every Silva course. You relax the body part by part, calm the mind with a peaceful scene, and arrive at “level one”, the relaxed and inwardly alert state the method calls alpha.",
+    use: "Daily for the first two weeks, then about once a week for life. Return to it whenever your short entry stops feeling deep.",
+    steps: ["Sit comfortably, close your eyes, take a deep breath. On the exhale, mentally repeat and picture the number <b>3</b> three times. Three stands for physical relaxation.",
+      "Move your attention down the body and release each part in turn: scalp, forehead, eyelids, face, throat, shoulders, chest, abdomen, thighs, knees, calves, feet, toes. Take about ten seconds for each.",
+      "Deep breath; on the exhale picture the number <b>2</b> three times. Two stands for mental relaxation. Picture a tranquil, passive scene and rest in it. Noises now help you relax.",
+      "Deep breath; on the exhale picture the number <b>1</b> three times. You are at level one, your centre.",
+      "Deepen: count slowly from 10 to 1, feeling yourself go deeper on each number. Relax your eyelids and let that feeling spread down to your toes.",
+      "Go to your <i>ideal place of relaxation</i> and stay for a few minutes.",
+      "Repeat a few beneficial statements mentally (see <a href=\"#/t/statements\">Beneficial statements</a>).",
+      "Tell yourself that next time you will go deeper, faster. Then count yourself out from 1 to 5."],
+    why: "The three numbers are being conditioned. Each time you pair “3” with a relaxed body and “2” with a quiet mind, the numbers gain the power to bring those states back, which is what makes the short entry possible later.",
+    tips: ["Sit rather than lie down until you can stay awake reliably.", "Keep the eyes turned slightly upward behind closed lids, as if watching a cinema screen. The courses say this encourages the alpha rhythm.", "A slight smile helps the eyelids relax."],
+    traps: ["Checking whether you are “deep enough”. Depth comes from repetition, and checking pulls you back out.", "Skipping the count out. Always end with 1 to 5 unless you are going to sleep."],
+    src: [S1X + "01 LONG RELAXATION EXERCISE.mp3", S2X + "01 LONG RELAXATION TECHNIQUE.mp3", S2X + "10 LONG RELAXATION EXERCISE.mp3", BOOK + " (Appendix A)", "SILVA / 20 MINUTE SILVA METHOD MEDITATION….m4a"], rel: ["three-to-one", "deepening", "count-out"] },
+
+  { id: "three-to-one", cat: "level", name: "The 3-to-1 method", time: "1–5 min", week: 2, session: "short",
+    tag: "Three breaths, three numbers, and you are at level.",
+    what: "The standard way in. Once the long relaxation has given the numbers their meaning, three slow breaths are enough to reach level one. Every Silva formula begins with “enter level one with the 3 to 1 method”.",
+    use: "Before any programming technique, before sleep techniques, and as a short reset during the day.",
+    steps: ["Close your eyes and turn them slightly upward.", "Deep breath. While exhaling, mentally repeat and picture <b>3</b> three times. Feel the body relax.", "Deep breath. While exhaling, repeat and picture <b>2</b> three times. Feel the mind quieten.", "Deep breath. While exhaling, repeat and picture <b>1</b> three times. You are at level one.", "Optionally deepen with a 10-to-1 count, then do your work.", "Count out from 1 to 5."],
+    tips: ["After day 40 of the countdown, the courses shorten this again: a count from 5 to 1 is enough.", "Practise it with eyes open in a queue or before a call. You will not go as deep, but the calming effect carries over."],
+    traps: ["Saying the numbers without picturing them. See the digit each time.", "Breathing fast. The exhale should be long and unforced."],
+    src: [S2X + "02 SHORT RELAXATION TECHNIQUE.mp3", S2X + "09 ALPHA LEVEL & PGM ANYTHING.mp3", S3 + "01 Fundamentals of dynamic meditation.mp3"], rel: ["long-relax", "countdown"] },
+
+  { id: "countdown", cat: "level", name: "The 40-day morning countdown", time: "3–6 min", week: 1, session: "count100",
+    tag: "100 → 50 → 25 → 10, ten mornings each.",
+    what: "José Silva’s way to learn the alpha level without a teacher or a recording. You count backward in bed each morning, when the brain is already close to alpha, and the count gets shorter as the state gets easier to find.",
+    use: "Every morning for 40 days. After that, a count from 5 to 1 takes you to level.",
+    steps: ["On waking, go to the bathroom if you need to, then return to bed or sit up. Set an alarm for 15 minutes in case you doze.", "Close your eyes and turn them upward about 20 degrees.", "Count backward silently and slowly: about one number per second or two.", "At 1, hold a mental picture of yourself as a success. The easiest way is to recall the most recent time you were completely successful: the setting, what you did, how you felt.", "Repeat mentally: “Every day, in every way, I am getting better, better and better.”", "Tell yourself you will count from 1 to 5 and open your eyes wide awake, feeling better than before. Count, repeating the instruction at 3, and again at 5 with eyes open."],
+    extra: '<div class="scroll"><table><thead><tr><th>Mornings</th><th>Count from</th><th>Program week</th></tr></thead><tbody><tr><td>1–10</td><td>100 to 1</td><td>Week 1 – week 2 day 3</td></tr><tr><td>11–20</td><td>50 to 1</td><td>Week 2 day 4 – week 3 day 6</td></tr><tr><td>21–30</td><td>25 to 1</td><td>Week 3 day 7 – week 5 day 2</td></tr><tr><td>31–40</td><td>10 to 1</td><td>Week 5 day 3 – week 6 day 5</td></tr><tr><td>After 40</td><td>5 to 1</td><td>From week 6 day 6</td></tr></tbody></table></div>',
+    why: "Counting down is pacifying where counting up is activating. Morning is chosen because you are leaving sleep through alpha anyway, so you can linger there without falling asleep as you would at night.",
+    tips: ["The eight steps reduce to three: count down, imagine success, count out.", "If you lose your place, pick any nearby number and carry on."],
+    traps: ["Shortening the schedule. Silva: “People have a tendency to be impatient… please resist this temptation.”", "Doing it lying flat with the duvet over you. Sit up enough to stay awake."],
+    src: [BOOK + " (Appendix B: Forty-Day Countdown System)", S1 + "01 Your mind holds the secret to success + exercise 1.mp3"], rel: ["three-to-one", "count-out"] },
+
+  { id: "deepening", cat: "level", name: "Deepening and the ideal place of relaxation", time: "3–10 min", week: 2, session: "short",
+    tag: "10 to 1, the eyelids, and a place that is yours.",
+    what: "Three ways to go deeper once you are at level one. They are used inside almost every conditioning cycle in the courses.",
+    steps: ["<b>Count 10 to 1.</b> On each descending number feel yourself going deeper: “10, 9, feel going deeper… 8, 7, 6, deeper and deeper…”", "<b>Relax the eyelids.</b> Feel how relaxed they are, then let that feeling flow slowly downward through the whole body to the toes.", "<b>Ideal place of relaxation.</b> Count 1, 2, 3 and project yourself to a place where you are completely at ease, real or invented. Stay there in silence.", "For very deep sessions add a longer countdown: 25 to 1, 50 to 1 or 100 to 1."],
+    tips: ["Build the place over several sessions, one sense at a time. Keep it the same place so that it becomes a trigger.", "The cue word “relax”, said mentally, is conditioned in the recordings to stop unnecessary movement and thought. Use it."],
+    why: "Time in the silent place is where the state stabilises. The recordings suggest that the silence will feel long, which lets a short pause do a lot of work.",
+    src: [BOOK + " (Appendix A and C, “Deepening”)", S1 + "03 Stress & relaxation.mp3", S3 + "02 Stress management.mp3"], rel: ["long-relax", "hand-levitation"] },
+
+  { id: "count-out", cat: "level", name: "Coming out: the 1-to-5 count", time: "30 s", week: 1,
+    tag: "End every session the same way.",
+    what: "A fixed exit that brings you back alert and attaches a suggestion of feeling better to the end of every practice.",
+    steps: ["Tell yourself: “I will count from 1 to 5. At 5 I will open my eyes, wide awake, feeling fine and in perfect health, feeling better than before.”", "Count slowly: 1… 2… 3.", "At 3, repeat the reminder.", "Count 4… 5. Open your eyes.", "With eyes open, affirm: “I am wide awake, feeling fine, feeling better than before.”"],
+    tips: ["The same count, done at level, is the engine of awake control and headache control.", "Skip it only when you are using a technique to fall asleep."],
+    src: [BOOK + " (Appendix A, “To Come out of Levels”)"], rel: ["awake-control", "headache"] },
+
+  { id: "statements", cat: "level", name: "Beneficial statements and positive thinking", time: "1–2 min", week: 1,
+    tag: "Words repeated while relaxed create what they stand for.",
+    what: "Short sentences repeated mentally at level, plus the daytime habit of replacing negative phrases. Silva’s view is that words and pictures held while relaxed act as instructions to the mind.",
+    steps: ["At level, repeat slowly and mentally, for example: “Every day, in every way, I am getting better, better and better.” “Positive thoughts bring me the benefits and advantages I desire.” “I am always in control.”", "Add one statement of your own in the present tense, about how you want to be.", "During the day, notice phrases such as “I can’t stand this”, “I’m always tired”, “that makes me sick”. Stop, and restate the thought in terms of what you want.", "The recordings also install a protective statement: “Negative thoughts and negative suggestions have no influence over me at any level of the mind.”"],
+    tips: ["State what you want, not what you want to avoid. The picture the words create is what counts.", "One or two statements said with feeling do more than a long list."],
+    src: [S1 + "02 Positive thinking, positive statements.mp3", S3 + "03 Positive thinking.mp3", S3 + "04 Power of beliefs.mp3"], rel: ["tap-script", "induction"] },
+
+  { id: "mental-screen", cat: "level", name: "The mental screen and memory pegs", time: "5–10 min", week: 3, session: "screen",
+    tag: "Where every picture in the method is projected.",
+    what: "The mental screen is the area you perceive with eyes closed and turned about 20 degrees upward, sensed as being out in front of you and away from the body. Programming techniques project their images there. Memory pegs are a classic drill for strengthening it.",
+    steps: ["Close your eyes and turn them slightly upward. Do not use the eyelids as the screen; sense the screen out in front of you.", "Project a simple, familiar object and concentrate on <b>true colour</b>. A lemon, an orange, a red apple.", "Change it: rotate it, enlarge it, change its colour. Add touch, smell and taste.", "Practise <i>visualisation</i> (recalling something you have seen) and <i>imagination</i> (creating something you have never seen) separately.", "Memory pegs: learn ten number-pictures and run through them on the screen: 1 tea, 2 Noah (a man with a long white beard), 3 May (a calendar), 4 ray (sun rays), 5 law (a police officer), 6 jaw, 7 key (a large gold key), 8 fee (a price tag), 9 bay, 10 toes.", "To remember a list, link each item to its peg in a vivid, absurd picture."],
+    why: "The pegs follow the phonetic number system (1 = t, 2 = n, 3 = m, 4 = r, 5 = l, 6 = j, 7 = k, 8 = f, 9 = b, 10 = t+s), so they can be extended. In the course their main job is exercise: projecting them repeatedly builds the faculty that the mirror and three scenes rely on.",
+    tips: ["If you do not see clearly, describe the object to yourself and “know” it is there. The UltraMind recordings say sensing counts.", "Colour is the detail the scripts stress most."],
+    src: [S1 + "06 Mental screen & memory pegs.mp3", S1X + "04 MENTAL SCREEN & MEMORY PEGS.mp3", S3 + "17 Memory and how to enhance.mp3", S2X + "04 MENTAL:3 SCENES TECHNIQUE.mp3 (opens with the mental screen)"], rel: ["mirror", "three-scenes", "enhanced-awareness"] },
+
+  { id: "golden-light", cat: "level", name: "Golden light body scan", time: "8–10 min", week: 4, session: "golden",
+    tag: "A warm light rises from feet to scalp.",
+    what: "The relaxation that opens the lucid-dream recordings. It works upward from the feet, uses breath and warmth instead of numbers, and suits lying down.",
+    steps: ["Lie down or recline. Breathe in through the nose and out through the mouth a few times, imagining light coming in and tension leaving.", "Feel a warm golden light around the feet, relaxing each toe, the arch, the heel.", "Let it rise: ankles, calves, knees, thighs, hips and lower abdomen.", "Chest, back and spine, shoulders, down the arms to the fingers.", "Neck, jaw, cheeks, eyes, forehead, scalp. You may feel tingling.", "Rest in the whole-body warmth, or go on to hypnagogic imagery."],
+    tips: ["Use this at night and the 3-2-1 scan by day, so that one cues sleep and the other cues alert relaxation."],
+    src: [L + "l.p.m.s01e02… (WILD meditation, first seven minutes)", L + "l.p.m.s01e01… (MILD meditation, opening relaxation)"], rel: ["hypnagogia", "wild", "long-relax"] },
+
+  /* ---------------- PROGRAMMING ---------------- */
+  { id: "laws", cat: "program", name: "Laws of programming and choosing a goal", time: "10 min, once per goal", week: 5,
+    tag: "Possible, good for all concerned, helps at least two people.",
+    what: "The filter the UltraMind recordings recite before every programming exercise, and the course’s advice on picking goals.",
+    steps: ["Write the situation as it is now, in plain facts.", "Write the result you want as a scene you could photograph.", "Check it: would you accept this being done to you? Is it within the possible? Does it make things better? Is it best for everyone concerned? Does it help at least two people?", "If it fails a test, change the goal until it passes. Often this means making it smaller or adding who else benefits.", "Program the <i>end result</i>. Leave the route open."],
+    why: "The remote-viewing guidebook warns that goals which are too grand at the start can be an unconscious way of sabotaging yourself. The “two or more people” rule also keeps motivation from being purely self-centred, which the courses say makes programming work better.",
+    tips: ["Silva asks you to include your own needs too. Helping others does not mean leaving yourself out."],
+    src: [S2 + "02 Developing and maintaining the correct attitude.mp3", S2 + "The Silva Ultramind ESP System.pdf", "SILVA / UltraMind's Remote Viewing & Influencing.pdf (Session 3)"], rel: ["mirror", "three-scenes", "purpose"] },
+
+  { id: "mirror", cat: "program", name: "Mirror of the Mind", time: "8–10 min", week: 5, session: "mirror",
+    tag: "Blue frame for the problem, white frame for the solution.",
+    what: "The classic Silva problem-solving technique. You look at the problem once in a blue-framed mirror, then replace it with the solution in a white-framed mirror and return only to that.",
+    use: "Any situation you want changed: a goal, a habit, a relationship, a fear.",
+    steps: ["Enter level one with the 3-to-1 method.", "On your mental screen create a full-length mirror with a <b>blue</b> frame. It can grow to hold a person, a group or a whole scene.", "Project the problem into it and make a good study of it.", "Erase the problem image. Move the mirror to your <b>left</b> and change the frame to <b>white</b>.", "Create the solution image in the white-framed mirror: the situation as you want it, with you in it.", "From then on, whenever you think of the project, see the white-framed solution."],
+    why: "Studying the problem once makes the goal concrete. Returning to it would rehearse the problem, so every later session, and every stray thought in the day, goes to the solution.",
+    tips: ["For body weight the course adds labels: stamp the target weight in one corner of the white mirror and the clothing size in the other.", "Add feeling. The scripts for rehearsal say to notice how you feel as you succeed; do the same here."],
+    traps: ["Going back to the blue frame to “check”. After the first session, glance at it only to note what has changed.", "A vague solution. If you could not photograph it, sharpen it."],
+    src: [S1 + "09 Mirror of the mind, solving problems:fears.mp3", S1X + "05 MIRROR OF THE MIND CONDITIONING EXERCISE.mp3", S3 + "14 Mirror of the mind.mp3", "SILVA / Silva Life System Mirror Of The Mind Exercise Silva Method.m4a"], rel: ["three-scenes", "habit", "laws"] },
+
+  { id: "three-scenes", cat: "program", name: "Three Scenes Technique", time: "8–10 min", week: 7, session: "scenes",
+    tag: "Problem ahead, change to the left, result further left.",
+    what: "The UltraMind version of the mirror. It adds a middle scene in which you act, and it places time in space: the present straight ahead, the future to your left.",
+    steps: ["Enter your level.", "<b>Scene 1</b>, directly in front: the problem or present situation. Recall the details and study it. If you have programmed this before, note what has changed since last time.", "<b>Scene 2</b>, about 15° to your left: picture yourself taking action to correct it, and the correction beginning to take place.", "<b>Scene 3</b>, another 15° to the left: the solution. Imagine many people benefiting; the more the better.", "Any time afterwards that you think of the project, visualise scene 3."],
+    why: "The recordings teach that in the inner dimension the past is to your right, the present centred and the future to your left. Whatever you make of that, a fixed place for “done” makes the solution image quick to find.",
+    tips: ["Scene 2 is the difference from the mirror. Put real steps in it, the ones you intend to take this week.", "A variation in the healing course uses two scenes, present condition and healthy result, for people in medical treatment."],
+    src: [S2X + "04 MENTAL:3 SCENES TECHNIQUE.mp3", S2 + "04 Removing impediments to your success.mp3", SH + "BONUS … / Silva's Two Scenes Technique"], rel: ["mirror", "mental-video", "best-time"] },
+
+  { id: "mental-video", cat: "program", name: "Mental Video", time: "8 min at bedtime + 3 days of watching", week: 6,
+    tag: "Film the problem, film the solution, hand it over in your sleep.",
+    what: "A bedtime technique for getting guidance on a problem. You make two mental films and go to sleep intending to deliver them to what the course calls your tutor or higher intelligence.",
+    steps: ["During the day, at ordinary waking level, make a mental video of the problem: what is actually happening.", "In bed, ready for sleep, enter level one.", "Review the problem video once.", "Mentally convert the problem into a <i>project</i>.", "Create a video of the solution with a step-by-step procedure of how you want it resolved.", "Go to sleep intending to deliver the video while you sleep. Take for granted that it will be delivered.", "For the next three days, look for indications that point to the solution: an idea, a remark, a coincidence.", "Whenever you think of the project, think of the solution video in the past tense, as already done."],
+    tips: ["Write the indications down. Most are small and easy to dismiss.", "The course uses the same technique nightly for the question “what is my purpose?”"],
+    honest: "You do not need to share the course’s belief in a spiritual tutor to use this. Stating a problem clearly, imagining it solved and then sleeping on it is a sound way to get ideas, and looking for clues for three days makes you notice options you would have missed.",
+    src: [S2X + "03 MENTAL VIDEO TECHNIQUE.mp3", S2 + "03 Guidance from higher intelligence.mp3", "SILVA / UltraMind's Remote Viewing & Influencing.pdf (Sessions 3–4)"], rel: ["glass-water", "dream-solve", "purpose"] },
+
+  { id: "rehearsal", cat: "program", name: "Mental rehearsal", time: "5–10 min", week: 6, session: "rehearsal",
+    tag: "Perform it in your mind, in the place where it will happen.",
+    what: "You project yourself to the location of an upcoming activity and run it the way you want it to go, paying attention to how success feels.",
+    use: "Sport and movement skills, presentations, interviews, exams, difficult conversations.",
+    steps: ["Enter level one.", "Project yourself mentally to the place where you will perform.", "Imagine yourself performing the way you desire, improving and completing the task successfully.", "Notice how you feel as you begin, as you progress, and as you finish with a sense of accomplishment."],
+    tips: ["Rehearse from inside your own body, in real time, with the actual movements.", "Include one thing going wrong and yourself recovering smoothly.", "Pair it with physical practice. Imagery adds to training; it does not replace it."],
+    src: [S1 + "11 Mental rehearsal technique.mp3", S1X + "07 MENTAL REHEARSAL EXERCISE.mp3", S2X + "05 MENTAL REHEARSAL:BEST TIME TO PRGM:INSTANT RAPPORT TECHNIQUES.mp3"], rel: ["three-fingers", "rapport"] },
+
+  { id: "three-fingers", cat: "program", name: "Three Fingers Technique", time: "Instant, after programming", week: 4,
+    tag: "A physical trigger for focus, memory and calm.",
+    what: "You join the tips of the thumb and first two fingers of either hand. Programmed at level, the gesture becomes a trigger that, in the course’s words, adjusts the mind to a deeper level of awareness for stronger programming and easier recall.",
+    steps: ["<b>Install it:</b> at level, join the three fingers and tell yourself that whenever you do this, your mind adjusts to a deeper level of awareness.", "<b>To study:</b> enter level, tell yourself you will count 1 to 3, open your eyes and read the lesson (name it), with superior concentration and understanding, and that noises will help you concentrate. Read. Then return to level and tell yourself you will recall it at any time with the three fingers.", "<b>For a lecture:</b> same programming beforehand, then keep the fingers together, eyes open, while you listen.", "<b>To store a state</b> (the “alpha anchor” of the Intuition Lifestyle course): at level, imagine a situation that calls for a particular resource such as calm or confidence. See yourself in it with that state, step into the image and feel it fully. Join the fingers and tell yourself: “Whenever I have a need or desire to feel this way, think this way or have this resource, all I need to do is use my three fingers, and it will be so.”", "<b>In an exam, three cycles:</b> first pass, answer what you know and skip the rest. Second pass with the three fingers, staying a little longer on each. Third pass: close your eyes, picture your teacher on the mental screen, ask, clear your mind, then start thinking again and write what comes."],
+    tips: ["The healing course fires this same trigger at the peak of every imagery exercise, so that the feeling can be recalled later.", "Reinforce the trigger at level once a week.", "Anchor at the moment the feeling is strongest."],
+    src: [S1 + "07 3fingers technique, speed learning, test taking.mp3", S1 + "08 3 FINGERS TECHNIQUE PROGRAMMING.mp3", S3 + "16 Alpha anchor - Trigger mechanism.mp3", S3 + "18 Lifetime learning.mp3"], rel: ["rehearsal", "rapport"] },
+
+  { id: "glass-water", cat: "program", name: "Glass of water technique", time: "2 min at night, 1 min in the morning", week: 6,
+    tag: "Half tonight, half tomorrow, and a question in between.",
+    what: "A simple ritual for asking for a solution. The question is set while drinking half a glass of water before sleep and closed by drinking the rest on waking.",
+    steps: ["Choose one clearly worded problem.", "At bedtime fill a glass with water. Close your eyes, turn them slightly upward, and drink about half while telling yourself mentally: “This is all I need to do to find the solution to the problem I have in mind.”", "Put the glass down and go to sleep.", "On waking, drink the rest in the same way, eyes closed and turned up, repeating the sentence.", "Expect the answer in a dream that night, or as a flash of insight or a coincidence during the following day or days."],
+    tips: ["One problem per glass.", "Note what you dreamt and anything during the day that seems to bear on the question."],
+    honest: "The water has no special property. The ritual fixes a question in mind at the two moments when you are closest to sleep, which is when the courses say programming takes best.",
+    src: [S3 + "13 Glass of water technique.mp3"], rel: ["mental-video", "dream-solve"] },
+
+  { id: "best-time", cat: "program", name: "Best time to program", time: "5 min, in the night", week: 7,
+    tag: "Let yourself be woken at the right moment.",
+    what: "An UltraMind refinement: you program yourself to wake automatically at the best moment of the night for programming, then do your technique.",
+    steps: ["Ready for bed, sit up or sit on the edge of the bed. Close your eyes and turn them up about 20°, lower the head about 20°, and enter your level.", "Tell yourself: “I want to wake up automatically at the best time to program, and I am going to wake up automatically at the best time to program.”", "Stay at level, lie down and go to sleep from level.", "When you wake, in the night or in the morning, sit up, take the same position, enter your level, and do your programming (three scenes, broadcasting, rapport)."],
+    tips: ["Keep it short when you wake, five minutes at most, so you can fall asleep again.", "Skip this when you are sleep-deprived."],
+    src: [S2X + "05 MENTAL REHEARSAL:BEST TIME TO PRGM:INSTANT RAPPORT TECHNIQUES.mp3", S2X + "07 BEST TIME TO PGM AND BROADCASTING TECHNIQUES.mp3"], rel: ["three-scenes", "broadcasting", "clock"] },
+
+  { id: "habit", cat: "program", name: "Habit control", time: "5–10 min", week: 7,
+    tag: "Analyse at level, change in small programmed steps.",
+    what: "Silva’s formulas for eating and smoking, which generalise to any habit: study it at level, picture the result in the white-framed mirror, and program gradual changes.",
+    steps: ["Enter level and analyse the habit: when, where and why it happens.", "<b>Eating:</b> mentally mark a big red NO over the foods that cause the problem. Program that hunger between meals vanishes with a piece of carrot, celery or apple, or with three deep breaths. Program yourself to leave something on the plate.", "See yourself in the blue-framed mirror as you are; then in the white-framed mirror as you want to be, with weight and clothing size stamped in the corners. Recall the white image whenever you think of weight or sit down to eat.", "<b>Smoking:</b> find when you smoke the first cigarette and program it one hour later; repeat. Or program one per hour on the hour, then only on even hours. Or mark a date 30 days ahead as the day you stop, and reinforce it daily at level.", "Program that three deep breaths stop the immediate urge."],
+    tips: ["For another habit, keep the structure: a replacement action for the urge, a gradual schedule, and a white-frame image.", "Attach a reason beyond yourself. The script says: stop for the sake of your loved ones."],
+    src: [S1 + "12 Habits.mp3", S1X + "08 WEIGHT & HABIT EXERCISE.mp3", S3 + "15 Habit management.mp3"], rel: ["mirror", "tap-script"] },
+
+  /* ---------------- BODY ---------------- */
+  { id: "sleep-control", cat: "body", name: "Sleep control (the chalkboard)", time: "5–15 min, in bed", week: 3, session: "sleep",
+    tag: "Circle, X, erase, “deeper”, 100, 99, 98…",
+    what: "A formula for falling asleep without medication. A monotonous, slightly fiddly imagined task occupies the mind while each repetition is paired with going deeper.",
+    steps: ["In bed, enter level one with 3-2-1.", "Visualise a chalkboard, chalk in one hand, eraser in the other.", "Draw a large circle. Draw a big X inside it.", "Erase the X from the centre outward, taking care not to erase the circle.", "To the right of the circle write the word <b>Deeper</b>.", "Write 100 in the circle. Erase it carefully. Go over the word “Deeper”.", "Continue with 99, 98, 97… until you are asleep."],
+    why: "The task is too dull to keep you awake and just demanding enough to keep worries out. “Deeper” is being conditioned as a cue toward sleep.",
+    tips: ["Few people get below 80 once the habit is formed.", "The formula includes two reassurances: you will wake at once if someone calls you or there is danger, and you will wake at your usual time."],
+    src: [S1 + "04 Sleep control, chalboard xdeeper,100deeper, awake control.mp3", S1X + "02 SLEEP:TO AWAKE:AWAKE CONTROL TECHNIQUES.mp3", S3 + "07 Sleep management.mp3"], rel: ["clock", "dream-recall"] },
+
+  { id: "clock", cat: "body", name: "Clock technique (to-awake control)", time: "2 min, in bed", week: 3,
+    tag: "Wake at a chosen time without an alarm.",
+    what: "You set an imagined clock at level and sleep from there. The course treats it as a first practical proof of mind control.",
+    steps: ["In bed, enter level one.", "Visualise a clock. Move its hands to the time you want to wake.", "Tell yourself: “This is the time I want to awaken, and this is the time I am going to awaken.”", "Stay at level and fall asleep from level."],
+    tips: ["Keep a backup alarm a few minutes later until it works three times running.", "Choose a time that gives you a full night."],
+    src: [S3 + "08 Clock technique.mp3", S1X + "02 SLEEP:TO AWAKE:AWAKE CONTROL TECHNIQUES.mp3"], rel: ["sleep-control", "best-time", "wbtb"] },
+
+  { id: "awake-control", cat: "body", name: "Awake control (energizing)", time: "2–3 min", week: 4, session: "awake",
+    tag: "State it, count 1 to 5, come out alert.",
+    what: "A short formula to shake off drowsiness and stay awake longer when you need to.",
+    steps: ["If you are driving, pull over and stop the engine first.", "Enter level one.", "Tell yourself: “I am drowsy and sleepy. I don’t want to be drowsy and sleepy. I want to be wide awake, feeling fine and in perfect health.”", "Say you will count 1 to 5 and at 5 open your eyes wide awake, not drowsy.", "Count slowly, repeat the reminder at 3, finish at 5 and affirm it with eyes open."],
+    tips: ["The same pattern, “I have X, I don’t want X, at five I will be Y”, is reused for headaches.", "It buys time. It is not a replacement for sleep."],
+    src: [S3 + "09 Energizing technique.mp3", S1 + "04 Sleep control, chalboard xdeeper,100deeper, awake control.mp3"], rel: ["count-out", "headache"] },
+
+  { id: "headache", cat: "body", name: "Headache control", time: "2 min (tension) · 3 × 2 min (migraine)", week: 7,
+    tag: "Name it, refuse it, count out without it.",
+    what: "A formula that uses the count out to leave a headache behind. One application for tension headaches; three applications five minutes apart for migraine.",
+    steps: ["Enter level one.", "Tell yourself: “I have a headache; I feel a headache. I don’t want to have a headache; I don’t want to feel a headache.”", "“I am going to count from 1 to 5, and at 5 I will open my eyes, wide awake, feeling fine. I will then have no headache.”", "Count 1, 2, 3. At 3 remind yourself: “at 5 I will have no <i>discomfort</i> in my head.” The word changes from ache to discomfort on purpose.", "Count 4, 5, open your eyes and affirm: “I have no discomfort in my head. And this is so.”", "Migraine: repeat three times, five minutes apart. Each application takes away part of it."],
+    honest: "Tension headaches often respond to relaxation, so this is worth trying. The book itself adds that controls for health problems are applied under a doctor’s supervision. New, severe or changing headaches need a medical check, not a formula.",
+    src: [S1 + "05 Dream control and headache control techniques.mp3", S1X + "03 DREAM:HEADACHE CONTROL CONDITIONING EXERCISE.mp3", S3 + "12 Headache management.mp3", S3 + "11 Pain self management.mp3"], rel: ["glove", "awake-control"] },
+
+  { id: "hand-levitation", cat: "body", name: "Hand levitation", time: "8 min", week: 7,
+    tag: "A deepening method you can watch working.",
+    what: "With eyes open, you let your stronger hand become light and rise to your face during a 10-to-1 count. When it touches, you close your eyes and are at a deeper level than usual.",
+    steps: ["Sit upright with room to raise your arm, hands palms-down on your lap. Keep your eyes open and on your stronger hand.", "<b>10:</b> look at the hand. <b>9:</b> make it feel very sensitive; cause one finger to move, then the fingers to separate, and the hand to start rising.", "<b>8–5:</b> let hand and arm become lighter and lighter, as if lifted by a balloon, rising toward the face past the halfway point.", "<b>4–2:</b> higher and lighter, very near the face.", "<b>1:</b> the back of the hand touches your face. Close your eyes, take a deep breath, and as you exhale return the hand to your lap.", "Deepen with 10 to 1 and continue with your practice."],
+    why: "You start the movement deliberately and then allow it. Watching your own hand respond to an idea is persuasive, and the courses use it as the doorway to the pain-control work.",
+    tips: ["Let it be slow. A full minute or two for the rise is normal.", "If it stalls, help it a little and let go again."],
+    src: [S1 + "10 Hand levitation (relax) & Glove anesthesia (healing).mp3", S1X + "06 HAND LEVITATION & GLOVE ANESTHESIA CONDITIONING EXERCISE.mp3", BOOK + " (Appendix D)"], rel: ["glove", "deepening"] },
+
+  { id: "glove", cat: "body", name: "Glove anaesthesia", time: "10 min", week: 7,
+    tag: "Make one hand cold and numb, then move the feeling.",
+    what: "Pain-control training. You develop a sensation in your weaker hand that is different from normal, coolness, tingling or numbness, and then learn to transfer it.",
+    steps: ["Enter level (hand levitation works well).", "Imagine placing your <b>stronger</b> hand in a container of hot water. Recall a real time you did this. Take it out and rest it.", "Imagine placing your <b>other</b> hand in ice water with cracked ice. Recall a real memory. Feel the ice between your fingers; let the hand grow colder.", "While it cools, occupy your mind with the ten memory pegs on your mental screen.", "Lift the cold hand and hold it above and behind your head without touching, letting it dry and get colder.", "Bring it down and test it with the other hand for coldness and reduced feeling.", "Remove the effect: rub the hand three times from wrist to fingertips with the other hand.", "With practice: place the anaesthetised hand on the other hand for a few seconds to transfer the feeling, then onto any part of the body. Eventually, concentrate on a discomfort and say mentally “gone”."],
+    tips: ["Any sensation that differs from normal counts: cool, tingling, wooden, gloved, absent.", "Always restore normal feeling at the end."],
+    honest: "Suggested numbness is a real and well-known effect of deep relaxation, and it varies widely between people. Pain is information. Use this for discomfort you already understand, and see a doctor for pain you do not.",
+    src: [S1 + "10 Hand levitation (relax) & Glove anesthesia (healing).mp3", S1X + "06 HAND LEVITATION & GLOVE ANESTHESIA CONDITIONING EXERCISE.mp3", S3 + "11 Pain self management.mp3"], rel: ["hand-levitation", "headache"] },
+
+  { id: "health-image", cat: "body", name: "Ideal health image (and the healing scenes)", time: "10–20 min", week: 7,
+    tag: "Shrink the old picture, step into the healthy one, anchor it.",
+    what: "The central exercise of the Mind Body Healing course. You look honestly at your present state of health once, let that picture shrink away, and replace it with a vivid image of yourself in full health that you step into and anchor with your trigger.",
+    use: "As a daily support for recovery, energy or fitness goals, alongside whatever medical care you are receiving.",
+    steps: ["Enter level and deepen. Relax each part of the body, imagining its tissues working in a normal, healthy, rhythmic way.", "On the mental screen, project yourself as you are now in the area of health, small and in <b>grey tones</b>. Study it honestly: which thoughts, beliefs and habits keep it in place?", "Let that image get smaller and smaller until it <b>poofs</b> away.", "Bring in a new image, <b>colourful and dynamic</b>: you in excellent health. Describe it to yourself: posture, skin, eyes, energy, how you move, what you are wearing.", "Layer onto it mental, emotional and spiritual wellbeing; watch the image grow richer.", "Make it bigger, let it come toward you and <b>wrap around you</b> until you are inside it. Feel it. Hear what people say about how well you look. Notice what evidence tells you it is real.", "Use your three-fingers trigger: “Whenever I need to feel this way, all I need to do is use my trigger, and it will be so.”", "Project it forward one, five, ten years. Finish with a strong feeling of gratitude, and experience it as already done. From now on, when you think of your health, think of this image."],
+    extra: '<div class="note"><b>Healing scenes for people in treatment.</b> A variation uses the three scenes: the present condition (once); then the correction, your treatment or procedure, working well and giving measurable signs of progress; then yourself fully well, stepped into and anchored. On later sessions use only the correction scene and the result scene, until you get real, measurable feedback.</div>',
+    tips: ["“Breathe deeply, slowly, consciously and rhythmically” runs through the whole course. Keep that breath going.", "The Health Booster recording combines a long body relaxation with this image and is the best single track to start with."],
+    honest: "Calm, hopeful imagery can ease stress, pain and the experience of treatment, and it helps people stick to healthy habits. It does not cure disease. The course’s sales text claims far more than that; the book’s own rule is the one to follow: health applications are done under a doctor’s supervision.",
+    src: [SH + "BONUS … / Health Booster / 04 Health Booster exercise.mp3", SH + "BONUS … / Silva's Two Scenes Technique / two_scenes_exercise_track_02.mp3", SH + "Module 11 / cd_11_track_03.mp3", SH + "06 MEDITATION 01.mp3"], rel: ["three-scenes", "three-fingers", "glove"] },
+
+  /* ---------------- TAPPING ---------------- */
+  { id: "tap-points", cat: "tap", name: "The tapping sequence", time: "3–6 min", week: 5, session: "tap",
+    tag: "Side of the hand, then eight points from eyebrow to crown.",
+    what: "Tapping (EFT) means saying a troubling thought aloud while tapping lightly with two fingers on a fixed series of points. The videos in your library follow the standard sequence and ask you to repeat each phrase after the presenter.",
+    steps: ["Name the issue and rate how strong it feels, 0 to 10.", "<b>Setup:</b> tap the side of the hand (the “karate chop” point) and say the setup statement three times: “Even though [the problem], I deeply and completely love and accept myself.”", "Tap about five to seven times on each point while saying one short phrase per point.", "After a round or two, take a deep breath in and let it out, “releasing the old energy”. Breathe again.", "Rate the feeling again. Repeat on what remains."],
+    extra: '<ul class="pts"><li><b>Side of hand</b><br>Fleshy edge below the little finger. Setup only.</li><li><b>1 · Eyebrow</b><br>Inner end of the eyebrow (“inside of the eye”).</li><li><b>2 · Side of eye</b><br>On the bone at the outer corner.</li><li><b>3 · Under eye</b><br>On the bone below the pupil.</li><li><b>4 · Under nose</b><br>Between nose and upper lip.</li><li><b>5 · Chin</b><br>The crease below the lower lip.</li><li><b>6 · Collarbone</b><br>Just below the knob of the collarbone.</li><li><b>7 · Under arm</b><br>About a hand’s width below the armpit.</li><li><b>8 · Top of head</b><br>The crown.</li></ul>',
+    tips: ["Use either hand and either side. Firm enough to feel, never painful.", "Say the words aloud if you can. Honest wording matters more than the exact point."],
+    honest: "Some studies find tapping lowers anxiety; whether the points add anything beyond saying a fear aloud while calming yourself is disputed. That combination is useful either way.",
+    src: ["EFT ABUNDANCE 21D - 100K / Tapping only / 01.mp4 – 21.mp4", "EFT ABUNDANCE 21D - 100K / 100K / 100K 01–05.mp4"], rel: ["tap-script", "tap-21", "tap-goal"] },
+
+  { id: "tap-script", cat: "tap", name: "Writing a tapping script", time: "5 min to write, 6 min to tap", week: 6,
+    tag: "Accept it, voice it, question it, choose.",
+    what: "Every video in the series has the same four-part shape. Once you see it you can write a script for any block.",
+    steps: ["<b>Accept.</b> Setup statement, three times, with the block in your own blunt words: “Even though I feel stressed and anxious whenever I think about money, I deeply and completely love and accept who I am and how I feel right now.”", "<b>Voice it.</b> One or two rounds stating the negative as it feels, with no softening: “There’s never enough.” “I’m not good enough.” “All the evidence I have is of lack.”", "<b>Question it.</b> A pivot round of “what if”: “What if I got it wrong? What if that’s just a story? What if they were wrong all along?”", "<b>Choose.</b> Rounds of “I choose…”, “I’m open to…”, “I give myself permission to…”: the belief you prefer, in words you can almost believe.", "Two deep breaths. Re-rate. Note the number."],
+    why: "Starting with the negative is deliberate. Affirmations laid over an unspoken objection tend to bounce off; here the objection is spoken and accepted first, and the positive comes in through a question.",
+    tips: ['Use the <a href="#/tap">script builder</a> to lay out your rounds.', "“Choose” and “open to” are easier to say truthfully than “I am”.", "If the number does not move, get more specific: a particular memory, person or bill."],
+    src: ["EFT ABUNDANCE 21D - 100K / Tapping only / 03.mp4 (stress about money)", "… / 11.mp4 (deserving)", "… / 14.mp4 (spiritual versus wealthy)"], rel: ["tap-points", "statements"] },
+
+  { id: "tap-21", cat: "tap", name: "The 21-day abundance sequence", time: "4–9 min a day", week: 8,
+    tag: "Twenty-one themes, from resistance to gratitude.",
+    what: "The “Tapping only” folder is a three-week course. Each day takes one belief about money and worth. Some days clear a negative, some install a positive, and the order matters.",
+    steps: ["Do one video a day, in order, repeating the phrases aloud while tapping.", "Before pressing play, rate how true the day’s negative feels for you. Re-rate afterwards.", "If a day hits hard, repeat it the next day before moving on."],
+    extra: '<div class="scroll"><table><thead><tr><th>Days</th><th>Themes</th></tr></thead><tbody>' +
+      '<tr><td>1–2</td><td>Lifelong resistance to abundance → opening to it (“I was born abundant”)</td></tr>' +
+      '<tr><td>3</td><td>Stress and anxiety about money; the “evidence” of lack</td></tr>' +
+      '<tr><td>4</td><td>Releasing conditioning; reconnecting with your own capability</td></tr>' +
+      '<tr><td>5</td><td>Shame, anger and overwhelm about debt → becoming solution-focused</td></tr>' +
+      '<tr><td>6–7</td><td>Acknowledging blocks and “transmuting” them; switching from no to yes</td></tr>' +
+      '<tr><td>8</td><td>Two parts: fear of failure and powerlessness, then stepping into your power</td></tr>' +
+      '<tr><td>9–10</td><td>Abundance as a birthright; a playful gratitude refrain when a bill arrives</td></tr>' +
+      '<tr><td>11–12</td><td>“I don’t deserve it” → permission to have and receive</td></tr>' +
+      '<tr><td>13</td><td>Gratitude in advance</td></tr>' +
+      '<tr><td>14–15</td><td>The conflict “you can’t be spiritual and wealthy” → wealth used to live your mission and help others</td></tr>' +
+      '<tr><td>16–21</td><td>Consolidation of the same ground: receiving, worth, trust and gratitude</td></tr></tbody></table></div>',
+    tips: ["Week 8 of the program compresses this into seven days. Do the full 21 afterwards if tapping suits you.", "Swap “abundance” for your actual goal whenever the word feels abstract."],
+    honest: "The series speaks of the universe delivering wealth. Take from it what it reliably does: it surfaces beliefs such as “I don’t deserve it” that quietly limit what you attempt. Money follows from what you then do.",
+    src: ["EFT ABUNDANCE 21D - 100K / Tapping only / 01.mp4 … 21.mp4"], rel: ["tap-script", "induction"] },
+
+  { id: "tap-goal", cat: "tap", name: "Tapping on a stretch goal (the 100K arc)", time: "4–6 min a day for 5 days", week: 5,
+    tag: "Impossible → undeserving → open → action → trust.",
+    what: "A five-part series built around one outrageous target. Each part meets the next objection the mind raises. The arc works for any ambitious goal.",
+    steps: ["<b>Day 1 · “It seems impossible.”</b> Say how ridiculous the goal sounds. Then: “I’m open to releasing the beliefs that tell me I can’t. What if it is possible?”", "<b>Day 2 · “I don’t deserve it.”</b> “I haven’t earned it; I’m not enough.” Then: “What if I don’t have to earn worthiness? I choose to know I was born deserving.”", "<b>Day 3 · Open to receive.</b> “I’m open to it arriving from multiple sources, with ease. I’m open to all the opportunities and possibilities.”", "<b>Day 4 · Action.</b> “I’m committed to acting on the inspiration I receive. Big results take big energy. I’m willing to do my due diligence and risk assessment.”", "<b>Day 5 · Trust.</b> “I don’t know how, and I trust it is unfolding. I relax and allow.”"],
+    tips: ["Use your own goal and your own number.", "Day 4 is the one that changes outcomes. Write down one action each time you finish it."],
+    honest: "No technique can promise a sum of money by a date, and you should be wary of anyone who does. Used on a goal you are also working toward, the arc is a good way to notice which objection, impossibility, worth, receiving, effort or trust, is the one stopping you.",
+    src: ["EFT ABUNDANCE 21D - 100K / 100K / 100K 01.mp4 – 100K 05.mp4"], rel: ["tap-script", "laws", "mirror"] },
+
+  { id: "induction", cat: "tap", name: "Belief inductions (language loops)", time: "5 or 20 min", week: 8,
+    tag: "One strange, open question, repeated while you are relaxed.",
+    what: "The six recordings in the IL folder call themselves “mind-bending language loops”. Each relaxes you briefly, then repeats a single long, deliberately tangled question aimed at one block to abundance. You are not meant to answer it. Trying to follow it loosens the fixed way you think about the subject.",
+    use: "After tapping, or on its own when one of the six blocks is clearly yours. The 5-minute loop is the daily dose; the 20-minute loop is the same question for a deeper session.",
+    steps: ["Pick the block that fits (table below). Sit comfortably, eyes closed. Never while driving.", "Breathe and relax; let the background sound focus your attention inward. Being at level makes it stronger.", "Let the question be asked again and again. Consider it; do not force an answer. Notice images, memories and feelings that surface.", "At the end, come back slowly: breathing, hands and feet, a stretch, eyes open.", "Write down anything that occurred to you, and one action if there is one."],
+    extra: '<div class="scroll"><table><thead><tr><th>#</th><th>The block</th><th>What the loop asks, in plain words</th></tr></thead><tbody>' +
+      '<tr><td>1</td><td>Ignoring the knock on the door</td><td>Who are you, that is worth more than everything you have so far considered, and deserves it now?</td></tr>' +
+      '<tr><td>2</td><td>Preferring to be right than rich</td><td>Recall a time you insisted on being right and lost the moment. Are you secure enough in being right to let others be “less than wrong” when it is not critical?</td></tr>' +
+      '<tr><td>3</td><td>Refusing to stretch your dreams</td><td>Beyond what you think you want, what else would be far more rewarding, the essence inside each goal?</td></tr>' +
+      '<tr><td>4</td><td>A thin inner blueprint</td><td>Given all you are and all you think you can be, what else did you think you were not, that is more than all of this?</td></tr>' +
+      '<tr><td>5</td><td>Walking around with your eyes shut</td><td>Consider your whole goal until you notice there is more in it, and around it, than you thought: unexpected opportunity, everywhere.</td></tr>' +
+      '<tr><td>6</td><td>Needing to take more action</td><td>Aside from everything not yet done, what is the one thing you can do now, not later, to get one step closer?</td></tr></tbody></table></div>',
+    why: "The sentences are built so that the mind cannot settle on one meaning. It is a hypnotic-language device: while you search for sense, the embedded suggestions (you are worth more, there is more, start now) meet less resistance.",
+    tips: ["Without the audio: go to level, read the plain-words question once, close your eyes and turn it over for five minutes.", "Loop 6 pairs naturally with day 4 of the stretch-goal tapping arc.", "One loop a day. They are meant to work in the background afterwards."],
+    honest: "These are suggestion recordings. Their realistic effect is a shift in how you look at a goal, and the test of that is whether you do something different afterwards.",
+    src: ["IL Abundance Inductions / 01 … 06 / 5 Minute Loop", "IL Abundance Inductions / 01 … 06 / 20 Minute Loop"], rel: ["tap-21", "statements", "tap-goal"] },
+
+  /* ---------------- DREAMS ---------------- */
+  { id: "dream-recall", cat: "dream", name: "Dream recall (dream control, steps 1–2)", time: "2 min at night, 3 min on waking", week: 4, session: "dreamset",
+    tag: "First one dream, then all of them.",
+    what: "Silva’s dream control begins with memory. You program yourself at level to remember a dream, and you write it down at once.",
+    steps: ["Put paper and pen, or this journal, within reach.", "In bed, enter level one.", "<b>Step 1:</b> tell yourself, “I want to remember a dream, and I am going to remember a dream.” Go to sleep from level.", "When you wake, in the night or the morning, write the dream down immediately.", "When step 1 works reliably, move to <b>step 2:</b> “I want to remember my dreams, and I am going to remember my dreams.” Expect to wake several times with clear recollections."],
+    tips: ["On waking, do not move and do not open your eyes. Ask what you were just doing and let the scene come back, then write.", "Write in the present tense and give each dream a title.", "Fragments and feelings count."],
+    src: [S1 + "05 Dream control and headache control techniques.mp3", S1X + "03 DREAM:HEADACHE CONTROL CONDITIONING EXERCISE.mp3", S3 + "10 Dream control.mp3"], rel: ["dream-solve", "mild", "reality-check"] },
+
+  { id: "dream-solve", cat: "dream", name: "Problem-solving dreams (dream control, step 3)", time: "3 min at night", week: 8,
+    tag: "Ask for a dream that contains the answer.",
+    what: "Once recall is steady, you ask for a dream on a specific problem, and for the ability to remember and understand it.",
+    steps: ["Enter level one in bed.", "Tell yourself: “I want to have a dream that will contain information to solve the problem I have in mind.” State the problem.", "Add: “I will have such a dream, remember it, and understand it.”", "Sleep from level.", "On waking, write the dream, then ask at level what it means in relation to your question."],
+    tips: ["Dreams answer in images and puns. Ask what the main image reminds you of.", "Combine it with the glass of water on the same night."],
+    honest: "Dream incubation is an old and reasonable practice: you prime a question and harvest associations. Treat what comes as ideas to examine, not instructions.",
+    src: [S1 + "05 Dream control and headache control techniques.mp3", S3 + "10 Dream control.mp3"], rel: ["dream-recall", "glass-water", "mental-video"] },
+
+  { id: "reality-check", cat: "dream", name: "Reality checks and dream signs", time: "10 × 15 s through the day", week: 9,
+    tag: "Ask “am I dreaming?” and mean it.",
+    what: "A daytime habit that carries over into dreams. You question your state several times a day with a simple test; eventually you do it in a dream, the test fails, and you become lucid.",
+    steps: ["Read your dream journal and list your <b>dream signs</b>: recurring places, people, themes or oddities.", "Ten times a day, and whenever something odd happens or a dream sign appears, stop and sincerely ask: “Am I dreaming?”", "Test it. Look at the palms of your hands, or try to push a finger through your palm: the two checks suggested in the MILD recording. Or pinch your nose and try to breathe in, the check used in the narrated dreams. Or read some text, look away and look back.", "Look around for anything out of place, and recall how you got here.", "Conclude out loud or mentally: “I am awake” or “this is a dream”."],
+    tips: ["Tie checks to triggers: doorways, your phone, your hands.", "A check done on autopilot will be done on autopilot in the dream. Take five real seconds."],
+    src: [L + "l.p.m.s01e01… (dream signs and the palm check)", L + "l.p.m.s01e04… (nose-pinch check inside a narrated dream)"], rel: ["mild", "stabilize", "dream-recall", "incubation"] },
+
+  { id: "mild", cat: "dream", name: "MILD: remembering to recognise the dream", time: "5–10 min as you fall asleep", week: 9, session: "dreamset",
+    tag: "Rehearse a dream and set the intention to notice next time.",
+    what: "Mnemonic induction of lucid dreams, developed by Stephen LaBerge. It uses the kind of memory that lets you remember to do something later.",
+    steps: ["As you fall asleep, or better after waking from a dream in the night, recall a recent dream in detail.", "Find a dream sign in it, something that should have told you it was a dream.", "Replay the dream in imagination, but this time notice the sign and become lucid. Carry on as you would like to.", "Repeat with full intention: “Next time I am dreaming, I will remember that I am dreaming.”", "Keep that the last thing in your mind as you fall asleep."],
+    tips: ["Most effective combined with wake-back-to-bed.", "The guided MILD recording adds one step first: choose a recurring dream sign and decide that the next time you see it you will become lucid.", "Plan the dream in advance: what you will see, whom you will meet, how you will fly. Next time you are lucid you will have a plan."],
+    src: [L + "l.p.m.s01e01… (guided MILD, then affirmations to fall asleep to)"], rel: ["wbtb", "reality-check", "incubation", "wild"] },
+
+  { id: "incubation", cat: "dream", name: "Sleep talk-down and dream incubation", time: "15–40 min, falling asleep", week: 9, session: "incubate",
+    tag: "Settle the mind, then rehearse the lucid dream you want.",
+    what: "Two of the lucid-dream recordings pair a “sleep talk-down” with a narrated dream. First the mind is quietened; then, on the edge of sleep, you follow a story in which you notice you are dreaming, test it, steady the scene and try something. The images are meant to resurface later in the night.",
+    steps: ["Lie down in the position you sleep in. Lights off.", "<b>Talk-down.</b> Rest attention on the breath wherever you feel it most. Label it softly, “in, out”, or count breaths. When a thought arises, notice it arise and fall away, and return without scolding yourself.", "Optional <b>reverse psychology</b> from one recording: keep your eyes open and let yourself stay awake for the first ten minutes. Trying to stay awake often makes sleep come faster once you close them.", "Look at your visual field behind closed eyes: darkness, colour, perhaps early imagery.", "<b>Incubation.</b> Imagine arriving somewhere unfamiliar. Ask: <i>Where am I? How did I get here?</i> Find you cannot answer. Think: <i>maybe I am dreaming.</i>", "Do the nose-pinch check: pinch your nose and breathe in. You can. Say “I’m dreaming.”", "Ground yourself: touch a surface, feel its texture. Check that you remember your name and where you live; the recording calls this a high level of lucidity.", "Do something small, then something bigger. In the recording: make a pebble vanish behind your hand, move a boulder with a blink, then lift it into the air. Confidence grows by steps.", "Remind yourself “I’m dreaming” as you go. Let yourself fall asleep at any point; do not wait for the end."],
+    why: "It is MILD in story form. Rehearsing the exact sequence, doubt, test, stabilise, act, makes each step more likely to happen by itself when a real dream offers the chance.",
+    tips: ["Write your own script around your dream signs and the thing you most want to try.", "The other narrated dream is set in the empty space between dreams. Its lesson: if a scene dissolves into a void, stay calm, rub the ground, expect a new scene, and walk through the door when it appears."],
+    src: [L + "l.p.m.s01e04… (talk-down with eyes open; incubation: levitation)", L + "l.p.m.s01e05… (breath talk-down; incubation: the place between dreams)"], rel: ["mild", "stabilize", "reality-check"] },
+
+  { id: "wbtb", cat: "dream", name: "Wake-back-to-bed", time: "15–30 min awake after ~5 h sleep", week: 9,
+    tag: "Aim your attempt at the dream-rich end of the night.",
+    what: "Dream periods grow longer toward morning. You sleep about five hours, wake briefly, then return to sleep with a lucid-dream technique.",
+    steps: ["Set an alarm for about five hours after you fall asleep, or use the clock technique.", "Get up for 15 to 30 minutes. Keep the lights low. Read your dream journal or about lucid dreaming.", "Return to bed and use MILD, or start a WILD recording.", "Sleep as long as you can afterwards."],
+    tips: ["Weekends only, to begin with.", "The WILD recording in your library says it can be used at a nap, at bedtime, or five hours into the night; the last is the most effective."],
+    traps: ["Staying up so long or so brightly that you cannot fall asleep again.", "Doing it every night. Two nights a week is plenty."],
+    src: [L + "l.p.m.s01e01… (suggests replaying the affirmation section after five hours)", L + "l.p.m.s01e02… (WILD meditation introduction)"], rel: ["mild", "wild", "clock"] },
+
+  { id: "hypnagogia", cat: "dream", name: "Hypnagogic imagery", time: "10–15 min", week: 10, session: "golden",
+    tag: "Watch the pictures that come before sleep.",
+    what: "Between waking and sleep, images appear spontaneously: dots, colours, tunnels, faces, landscapes. Learning to watch them calmly is the core skill for entering a dream consciously.",
+    steps: ["Relax fully with the golden light body scan.", "Look into the darkness behind your eyelids, into the distance.", "Notice whatever appears: a point, a glow, a tunnel. Travel into it with your gaze.", "Let shapes morph. Allow the mind to “let go and co-create”: neither force nor follow a train of thought.", "When the imagery becomes scene-like, you are at the threshold. Either rest there or continue into WILD."],
+    tips: ["A count from 10 to 1 with the suggestion that the imagery will increase is used in the recording, and it helps.", "If you keep falling asleep, try sitting slightly reclined, or do it at a nap."],
+    src: [L + "l.p.m.s01e02… (minutes 7–12)", L + "l.p.m.s01e05… (watching the visual field during the talk-down)"], rel: ["wild", "golden-light", "deepening"] },
+
+  { id: "wild", cat: "dream", name: "WILD: wake-initiated lucid dream", time: "20–40 min", week: 10, session: "wild",
+    tag: "Keep the mind awake while the body falls asleep.",
+    what: "You pass from waking directly into a dream without losing awareness. The guided version in your library relaxes the body, opens the hypnagogic imagery, has you build a dream scene, and then lets affirmations run as you cross over.",
+    steps: ["Choose your moment: a nap, bedtime, or best, after five hours of sleep.", "Relax completely (golden light).", "Watch the hypnagogic imagery. Count 10 to 1 to let it strengthen.", "Begin to shape it into the dream you want: imagine the sights, smells, tastes and touch, and feel the emotions as if it were happening now. Know why you want this dream.", "Stay lightly busy creating the scene so that you do not slip into unconscious sleep, while the body goes to sleep by itself.", "At some point the scene surrounds you and has depth. You are in. Move into it."],
+    tips: ["The balance is delicate: too much effort keeps you awake, too little and you are gone. Expect many near misses.", "Sensations of heaviness, vibration, floating or being unable to move mean the body is asleep. Stay calm and stay with the scene."],
+    honest: "WILD is the hardest lucid-dream method and many skilled lucid dreamers rarely manage it. MILD with wake-back-to-bed is the reliable route; treat WILD as an advanced experiment.",
+    src: [L + "l.p.m.s01e02… (guided WILD, two hours with repeating affirmations)"], rel: ["hypnagogia", "trapdoor", "wbtb", "stabilize"] },
+
+  { id: "trapdoor", cat: "dream", name: "The trapdoor (sinking entry)", time: "20–40 min", week: 10,
+    tag: "Grow heavy, sink through the bed, open the door underneath.",
+    what: "A guided way into a dream that uses the heaviness of the falling-asleep body. You memorise your room, grow heavier with a countdown, sink through the mattress and dive through a trapdoor into a landscape. It is an easier-to-picture alternative to the scene-building in WILD.",
+    steps: ["Lie on your back, arms at your sides, palms down. Without moving your head, look around the room. Close your eyes and follow the breath. Open them and study one object; close them. Repeat once more, then keep them closed.", "Let a wave of relaxation rise from the feet to the scalp. Feel the head sink into the pillow.", "Imagine a trapdoor in the floor under your bed that opens onto another world: tall grass, trees, birdsong, a warm breeze. Make it as real as the room you just looked at.", "Count 10 to 1, becoming heavier on each number, and begin to sink through the bed until you reach the floor.", "Turn to face the door. Open it; warm golden light on your face. Dive through as into water, and fly over the landscape.", "Land. If things are hazy, declare “clarity now”. Do a reality check. Pick up a stone or a stick and feel its texture to make the scene solid.", "Explore while the affirmations, or your own, carry you into sleep."],
+    tips: ["Opening and closing the eyes at the start gives you a fresh memory of the room, which makes “sinking out of it” more convincing.", "If you roll over and fall asleep halfway, that is fine. The imagery still seeds the night’s dreams."],
+    src: [L + "l.p.m.s01e03… (guided trapdoor meditation, then lucidity and sleep affirmations)"], rel: ["wild", "hypnagogia", "stabilize"] },
+
+  { id: "stabilize", cat: "dream", name: "Staying lucid", time: "The first ten seconds", week: 9,
+    tag: "Calm down, touch something, state your intention.",
+    what: "Most first lucid dreams end within seconds from excitement. A short routine keeps the dream going.",
+    steps: ["Stay calm. Say to yourself, “this is a dream”, quietly.", "Rub your hands together or touch a surface, and look closely at its detail. You can also say a command aloud, as the MILD recording suggests: “Stability now” or “I am grounded.”", "If the scene fades into a void, stay calm, kneel and rub the ground, and expect a new scene to form. It usually does within a minute or two.", "State what you intend to do, then do it. Have one plan ready before you sleep.", "On waking, lie still and record it at once."],
+    tips: ["Good first plans: fly a short distance, ask a dream figure a question, rehearse a skill.", "Ways to fly, from the recording: jump upward, use a swimming motion, or simply command “fly now”.", "Keep emotion level. One narrated dream reminds you not to let excitement get the better of you."],
+    src: [L + "l.p.m.s01e01… (stability commands, flying)", L + "l.p.m.s01e05… (the void between dreams)", L + "l.p.m.s01e04… (starting small, then scaling up)"], rel: ["reality-check", "mild"] },
+
+  /* ---------------- INTUITION ---------------- */
+  { id: "enhanced-awareness", cat: "esp", name: "Enhanced awareness (projection into objects)", time: "12–15 min", week: 11,
+    tag: "A garden, a flower, a room, and the inside of things.",
+    what: "An imagination exercise that sharpens every sense and introduces “projection”: imagining yourself inside an object and testing what it is like there.",
+    steps: ["Enter your level.", "At a count of three, project yourself to a <b>garden</b>. Look around.", "Pick a flower. Hold it at arm’s length: feel, size, shape, colour. Bring it close. Smell it.", "Touch your forehead and project yourself <b>into the flower</b>. Test for light, temperature, odour, and solidity, by knocking on the inside with your fist and listening.", "Touch your forehead and come out. Set the flower aside.", "Listen: the softest sound in the garden, then the loudest. Feel the temperature, the ground, your clothing. Pick a fruit and taste it.", "At a count of three, project to a <b>room you know well</b>. Notice what is in front, to each side and behind. Pick up a small object, examine it, project into it, make the same four tests, and come out.", "Notice the sounds and smells of the room and the contact of your body with the furniture. Count out."],
+    why: "The course presents this as training to use your senses more fully so that you find more options when solving problems. It is also the first step of the Silva case-working sequence, which goes on to metals, plants, animals and people.",
+    tips: ["Use your physical hand for the gestures, as the recording directs. It anchors the imagery.", "Afterwards, check one detail of the real room against what you imagined."],
+    src: [S2X + "08 ENHANCED AWARENESS EXERCISE.mp3", S2 + "08 Finding your purpose in life thru developing yur psychic ability.mp3", S3 + "05 Your inner potential.mp3"], rel: ["mental-screen", "psychometry", "remote-viewing"] },
+
+  { id: "mentor", cat: "esp", name: "Mental mentor, laboratory and counsellors", time: "10–15 min", week: 11,
+    tag: "An inner workplace and advisers you can consult.",
+    what: "Three related tools. The mental mentor is an imagined copy of a teacher you admire. The laboratory is an inner room equipped for problem solving. The counsellors are two advisers you meet there.",
+    steps: ["<b>Mental mentor.</b> At level, think of someone who taught and guided you. Project them on the mental screen: height, features, hair, the way they move and talk.", "Imagine the figure stepping away from the screen and becoming fully alive. From now on you can talk with them, ask how they would handle something, and let them encourage you while you perform.", "<b>Laboratory.</b> Enter level, then count 10 to 1 to reach a deeper, “creative” level. Create a room of any size, shape and colours you like, leaving one wall blank.", "Furnish it one item at a time, declaring each “an accomplished fact”: an armchair, a desk, a clock, a perpetual calendar that can show any past, present or future date, an information system holding information for solving problems of all kinds, and tools, instruments and remedies of every sort.", "<b>Counsellors.</b> Seated in your chair, imagine a compartment whose door slides down a few inches at a time. Reveal your first counsellor slowly: hair, forehead, face, shoulders, then the whole figure. If nothing appears by itself, create it. The figure steps out fully alive; greet them and ask their name. Repeat for the second. The recording introduces a man and a woman, each “a genius in every field”.", "<b>Routine.</b> To work: 3 to 1, then 10 to 1 to the laboratory. Greet your counsellors, state the problem, ask, and wait quietly. Thank them, then come out counting 1 to 10 and 1 to 3, or fall asleep from there at night.", "The recording closes by projecting blue-white light with your counsellors toward someone who needs support, then forming a circle of energy and placing yourself, and finally the Earth, at its centre."],
+    tips: ["Keep the laboratory the same from visit to visit.", "Answers often arrive as a phrase or image just after you stop trying."],
+    honest: "Consulting an imagined adviser is a recognised way to reach what you already know but have not put into words. The courses also describe counsellors in spiritual terms; either reading lets you use the technique.",
+    src: [S1 + "13 Call on Expert help whenever you need it.mp3", S1X + "09 MENTAL MENTOR CONDITIONING EXERCISE.mp3", S3 + "19 Laboratory.mp3", S3 + "20 Counselors.mp3"], rel: ["mental-video", "purpose"] },
+
+  { id: "psychometry", cat: "esp", name: "Psychometry, pendulum and dowsing", time: "10 min", week: 11,
+    tag: "Holding an object and asking about its owner.",
+    what: "The UltraMind course teaches that objects carry impressions of people who have handled them, and that you can also store an intention in an object. It adds the pendulum and dowsing rods as ways to get yes/no answers.",
+    steps: ["Take an object that has been in someone’s possession. Hold it in your left hand.", "Enter your level and decide what you are asking about: physical, mental or emotional.", "Relax and think about the person. Ask a question.", "Clear your mind for a moment, then “start thinking again” and take the first impression that comes.", "<b>Programming an object:</b> the workbook suggests choosing an object linked to a habit you want to change and stating into it, at level, the change you want, so that it reminds you each time you touch it.", "<b>Pendulum:</b> hold it loosely, enter level, decide which swing means yes and which no, ask, and watch."],
+    tips: ["Test with objects from people you can check with afterwards, and write your impressions down before asking them."],
+    honest: "Controlled tests have not shown that objects transmit information, and pendulum movement is produced by tiny unconscious muscle movements of your own. That makes a pendulum a possible window on what you already feel about a question, and nothing more. Do not use it to decide health or money matters.",
+    src: [S2X + "06 PSYCHOMETRY TECHNIQUE.mp3", S2 + "06 Detecting and using psychic information.mp3"], rel: ["enhanced-awareness", "remote-viewing"] },
+
+  { id: "rapport", cat: "esp", name: "Instant rapport", time: "4 min of programming, then one gesture", week: 11,
+    tag: "Little finger to palm before you meet someone.",
+    what: "A trigger for meetings. You program in advance that when you fold your little finger to touch your palm, the other person will sense that you are there to help and can be trusted.",
+    steps: ["The night before, use the best-time-to-program technique.", "When you wake, sit up and enter your level.", "Fold the little finger of either hand, or both, to touch the palm.", "Think about the meeting and tell yourself: “Whenever I fold my little finger to touch my palm, as I am doing now, the person I am meeting will sense that I am there to help them, will know they can trust me, and we will have instant rapport.”", "In the meeting, make the gesture discreetly as you greet them."],
+    tips: ["The workbook also uses the gesture to “awaken your intuitive radar” during the day.", "It works only if the premise is true. Go in to help."],
+    honest: "What the gesture demonstrably changes is you: it reminds you of your intention, and people respond to someone who is calm and plainly on their side.",
+    src: [S2X + "05 MENTAL REHEARSAL:BEST TIME TO PRGM:INSTANT RAPPORT TECHNIQUES.mp3", S2 + "05 Interacting with people.mp3"], rel: ["three-fingers", "rehearsal", "best-time"] },
+
+  { id: "broadcasting", cat: "esp", name: "Broadcasting", time: "5 min, in the night", week: 11,
+    tag: "Imagine sending a message and seeing it received.",
+    what: "Silva’s name for communicating by thought. At the best time to program, you imagine broadcasting a message and picture the person or people receiving it and responding.",
+    steps: ["Decide on one short, constructive message and whom it is for.", "Use the best-time-to-program technique at bedtime.", "The first time you wake, sit up and enter your level.", "Imagine broadcasting the message.", "Picture the person or people receiving it and responding in any ways you can imagine.", "Go back to sleep. Afterwards, say it to them in the ordinary way too."],
+    tips: ["Keep it within the laws of programming: something you would be glad to receive yourself.", "The workbook asks you to write three messages, broadcast each, and record what happened."],
+    honest: "There is no good evidence that thoughts travel this way. The exercise does make you compose the message carefully and imagine the other person’s reaction, which usually improves the real conversation.",
+    src: [S2X + "07 BEST TIME TO PGM AND BROADCASTING TECHNIQUES.mp3", S2 + "07 Coincidences and advanced communications skills.mp3"], rel: ["best-time", "rapport"] },
+
+  { id: "remote-viewing", cat: "esp", name: "Remote viewing, with a score sheet", time: "5–10 min per test", week: 11,
+    tag: "Describe a hidden target, write it down, then check.",
+    what: "The UltraMind material describes projecting your awareness to a distant place or situation to sense what is there. This app adds what the workbook also asks for: written records, so that you know your real hit rate.",
+    steps: ["Set up a blind target. Easy versions: ask someone to put an object in a box; guess who will message you next; sense whether a person is at home before calling (an example from the course); or use a random photo you have not seen.", "Enter your level. State what you want to perceive.", "Imagine projecting yourself to the target. Notice first impressions through every sense: shapes, colours, textures, temperature, mood.", "Clear your mind for a moment, then let impressions come again.", "Come out and <b>write or sketch them before you check</b>.", "Check, and log hit, partial or miss.", "After a correct hunch, go to level and review how it felt, so that you can tell that feeling from wishful thinking next time."],
+    tips: ["The course insists intuition is for constructive use, not ego or games. Keep the tests light and useful.", "Do at least 20 trials before drawing any conclusion, and be strict about what counts as a hit."],
+    honest: "Decades of laboratory work have not produced a reliable remote-viewing effect. With honest scoring most people land near chance. The practice is still worth something: it trains you to notice faint impressions and to separate a calm hunch from hope or fear.",
+    src: ["SILVA / UltraMind's Remote Viewing & Influencing.pdf", S2 + "08 Finding your purpose in life thru developing yur psychic ability.mp3", S1 + "14 Developing your God given ESP.mp3", "SILVA / Silva Ultramind Syst.mp3 (long recording, not transcribed)"], rel: ["enhanced-awareness", "psychometry"] },
+
+  { id: "purpose", cat: "esp", name: "Guidance for purpose", time: "8 min at bedtime, for several nights", week: 12,
+    tag: "Ask what you are here to do, then watch.",
+    what: "The closing exercise of both UltraMind courses: use the mental video every night to ask for guidance on your purpose, and look for indications.",
+    steps: ["During the day, list what you have been drawn to since childhood, and the personal needs you want met.", "At bedtime, enter level and make a mental video of your life as it is.", "Make a second video of yourself doing work that improves things for others and meets your own needs. Leave the details open.", "Go to sleep intending to deliver it and to receive guidance.", "For three days, watch for indications. Write them down.", "Follow the course’s key steps: go to level daily, focus on the ideal outcome, be patient, and ask at level what you can do to improve conditions for others."],
+    tips: ["The remote-viewing guidebook warns against equating purpose with money.", "Repeat for a week. The answer tends to arrive as a direction, not a job title."],
+    src: [S2 + "08 Finding your purpose in life thru developing yur psychic ability.mp3", "SILVA / UltraMind's Remote Viewing & Influencing.pdf (Sessions 15–16)"], rel: ["mental-video", "laws", "mentor"] }
+];
+
+/* 12-week program. Each week: daily tasks (every day) + extra tasks on listed days. */
+function cd(n) { return { when: "Morning, on waking", tech: "countdown", session: "count" + n, mins: n >= 50 ? (n === 100 ? 6 : 4) : 3, title: "Countdown " + n + " → 1" }; }
+function cdx(n, days) { var t = cd(n); t.days = days; return t; }
+var J = { when: "Evening", title: "Journal: one honest line about today’s practice", mins: 2, note: 'Depth 1–5, what you noticed. <a href="#/journal">Open journal</a>' };
+
+var PROGRAM = [
+  { phase: "Phase 1 · Find your level (weeks 1–4)", title: "Learn to let go", short: "Countdown each morning, long relaxation each evening.",
+    focus: "Nothing in this library works until the body can relax on purpose and the mind can stay quietly awake while it does. This week you practise only that.",
+    learn: ["The 40-day morning countdown, starting from 100.", "Progressive relaxation from scalp to toes (level 3), a calm scene (level 2), and the centre (level 1).", "Coming out cleanly with the 1-to-5 count.", "The habit of logging every session."],
+    techs: ["countdown", "long-relax", "count-out", "statements"],
+    daily: [cd(100), { when: "Evening", tech: "long-relax", mins: 16, note: "Seated, not in bed, so that you stay awake." }, J],
+    extra: [
+      { days: [1], when: "Any time", title: "Read the guide: how this works, and what is and is not established", mins: 6, note: '<a href="#/guide">Open the guide</a>' },
+      { days: [1], when: "Any time", title: "Write down three areas of life you want to change", mins: 5, note: "Career, relationships, health, fitness, inner life, intuition. The Silva workbooks open the same way. Keep the list in your journal." },
+      { days: [3, 5], when: "During the day", tech: "statements", title: "Catch one negative phrase and replace it", mins: 1 },
+      { days: [7], when: "Evening", title: "Week review: read your seven journal lines", mins: 5, note: "Which session was deepest, and what was different about it?" }
+    ],
+    check: "You can feel a clear difference between how your body feels before and after the long relaxation, on most days.",
+    trouble: "Falling asleep is the usual problem. Sit upright, practise earlier in the evening, and keep the eyes turned slightly upward. Restlessness usually fades after four or five sessions; do not shorten the session because of it." },
+
+  { phase: "Phase 1 · Find your level (weeks 1–4)", title: "The 3-to-1 entry", short: "Shorten the way in. Add an ideal place of relaxation.",
+    focus: "You link the relaxation you have built to three numbers, so that 3, 2, 1 becomes a fast, reliable way in. The countdown drops to 50 on day 4.",
+    learn: ["Entering level one with three breaths and three numbers.", "Deepening: 10 to 1, relaxing the eyelids, the ideal place of relaxation.", "Positive statements at level, where they sink in."],
+    techs: ["three-to-one", "deepening", "statements", "countdown"],
+    daily: [{ when: "Midday or after work", tech: "three-to-one", session: "short", mins: 6 }, J],
+    extra: [cdx(100, [1, 2, 3]), cdx(50, [4, 5, 6, 7]),
+      { days: [1, 3, 5, 7], when: "Evening", tech: "long-relax", mins: 16 },
+      { days: [2, 4, 6], when: "Evening", tech: "deepening", session: "short", mins: 8, title: "Build your ideal place of relaxation", note: "After the 10-to-1 count, stay in your place. Add one sense each time: sight, then sound, then touch." }],
+    check: "Three breaths with 3-2-1 now bring a noticeable drop in tension, even with your eyes open at your desk.",
+    trouble: "If 3-2-1 feels empty, you are going too fast. Give each number a full, slow exhale and actually picture the digit." },
+
+  { phase: "Phase 1 · Find your level (weeks 1–4)", title: "Build the mental screen", short: "Clear, coloured pictures. Sleep on command.",
+    focus: "Every programming technique that follows is done with pictures on a screen out in front of you. This week you train the pictures, and you start using your level at night.",
+    learn: ["Locating the mental screen: eyes up about 20 degrees, image out away from the body.", "The difference between visualisation (memory) and imagination (creation).", "Sleep control with the chalkboard, and waking at a chosen time with the clock."],
+    techs: ["mental-screen", "sleep-control", "clock", "countdown"],
+    daily: [{ when: "Midday or after work", tech: "mental-screen", session: "screen", mins: 8 }, J],
+    extra: [cdx(50, [1, 2, 3, 4, 5, 6]), cdx(25, [7]),
+      { days: [1, 2, 3, 4], when: "In bed", tech: "sleep-control", mins: 10 },
+      { days: [5, 6, 7], when: "In bed", tech: "clock", mins: 3, note: "Set a backup alarm ten minutes later until you trust it." },
+      { days: [3, 6], when: "Any time", title: "Memory-peg drill: picture the ten peg images in order", mins: 4, tech: "mental-screen", note: "Tea, Noah, May, ray, law, jaw, key, fee, bay, toes." }],
+    check: "You can hold a simple object on the screen for about 20 seconds and change its colour at will.",
+    trouble: "Many people do not “see” vividly. That is fine: the instruction in the courses is to sense or know the image is there. Describe it to yourself in words, add touch and sound, and let the picture come by itself." },
+
+  { phase: "Phase 1 · Find your level (weeks 1–4)", title: "Anchors and dream recall", short: "Three fingers, awake control, first dream work.",
+    focus: "You install a physical trigger for your level, learn the two-minute energiser, and begin remembering dreams, which prepares the lucid-dream weeks.",
+    learn: ["The Three Fingers Technique as a trigger for focus and recall.", "Awake control for drowsiness.", "Dream control step 1: remember one dream. Step 2: remember several.", "The golden-light body scan."],
+    techs: ["three-fingers", "awake-control", "dream-recall", "golden-light", "countdown"],
+    daily: [cd(25), { when: "Midday", tech: "three-fingers", session: "short", mins: 6, title: "Enter level, then program the three-fingers trigger", note: "At level, join thumb and first two fingers and tell yourself what the trigger will do for you." },
+      { when: "In bed", tech: "dream-recall", session: "dreamset", mins: 7 }, { when: "On waking", title: "Before moving: recall and write the dream", mins: 3, note: 'Even a fragment or a mood counts. Log it as type “Dream”.' }],
+    extra: [{ days: [2, 5], when: "Afternoon slump", tech: "awake-control", mins: 3 }, { days: [6], when: "Evening", tech: "golden-light", mins: 9 },
+      { days: [7], when: "Evening", title: "Phase review: compare today’s depth with week 1", mins: 5 }],
+    check: "You have at least three dream entries, and the three-fingers gesture brings a small but real shift toward calm focus.",
+    trouble: "No dreams yet? Wake without an alarm if you can, do not move, and ask “what was I just doing?” Recall is a habit that usually switches on within one to two weeks." },
+
+  { phase: "Phase 2 · Program and clear (weeks 5–8)", title: "Program one goal", short: "Mirror of the Mind daily. Learn the tapping points.",
+    focus: "You choose one real goal and work it every day with the Mirror of the Mind, while learning tapping to deal with the objections that come up.",
+    learn: ["The laws of programming: possible, good for everyone concerned, helps at least two people.", "Mirror of the Mind: blue frame once, white frame from then on.", "The tapping sequence and the five-day arc from the 100K series: impossible → undeserving → open → action → trust."],
+    techs: ["laws", "mirror", "tap-points", "tap-goal", "countdown"],
+    daily: [{ when: "Midday or evening", tech: "mirror", mins: 9, note: "Same goal all week. After day 1, skip quickly past the blue frame." }, J],
+    extra: [cdx(25, [1, 2]), cdx(10, [3, 4, 5, 6, 7]),
+      { days: [1], when: "Any time", tech: "laws", title: "Choose the goal and test it against the laws of programming", mins: 10, note: "Write the present situation and the solved picture in your journal (type “Programming goal”)." },
+      { days: [2], when: "Any time", tech: "tap-points", session: "tap", mins: 6, title: "Learn the tapping points on a small annoyance" },
+      { days: [3], when: "Any time", tech: "tap-goal", session: "tap", mins: 6, title: "Tap: “this goal seems impossible”" },
+      { days: [4], when: "Any time", tech: "tap-goal", session: "tap", mins: 6, title: "Tap: “I don’t deserve it / I haven’t earned it”" },
+      { days: [5], when: "Any time", tech: "tap-goal", session: "tap", mins: 6, title: "Tap: “I am open to receiving it, from many directions”" },
+      { days: [6], when: "Any time", tech: "tap-goal", session: "tap", mins: 6, title: "Tap: “I am committed to acting on the ideas I get”" },
+      { days: [7], when: "Any time", tech: "tap-goal", session: "tap", mins: 6, title: "Tap: “I trust the process and keep going”" }],
+    check: "When the goal comes to mind during the day, the white-framed picture appears without effort, and you have taken at least one concrete action toward it.",
+    trouble: "If the solution image feels false, the goal may be outside what Silva called the possibility area. Shrink it to the next believable step and program that." },
+
+  { phase: "Phase 2 · Program and clear (weeks 5–8)", title: "Rehearse and ask", short: "Mental rehearsal, the mental video, the glass of water.",
+    focus: "Day 40 of the countdown arrives on day 5. From then on you enter with 5 to 1. You add rehearsal for performance and two night-time techniques for getting answers.",
+    learn: ["Mental rehearsal in the actual location, with the feeling of success.", "Mental video: problem film, solution film, hand it over, watch for three days.", "Glass of water: half at night, half in the morning.", "Finishing the 40-day countdown."],
+    techs: ["rehearsal", "mental-video", "glass-water", "tap-script", "countdown"],
+    daily: [{ when: "Midday or evening", tech: "rehearsal", mins: 8, note: "Pick whatever is coming up next: a meeting, a training session, a conversation." }, J],
+    extra: [cdx(10, [1, 2, 3, 4, 5]), cdx(5, [6, 7]),
+      { days: [1], when: "Before bed", tech: "mental-video", mins: 8, title: "Mental video on one open problem", note: "At beta, write the problem down first. Then do the technique in bed." },
+      { days: [2, 3, 4], when: "During the day", tech: "mental-video", title: "Watch for indications and note them", mins: 2 },
+      { days: [4, 5, 6], when: "Before bed and on waking", tech: "glass-water", mins: 3 },
+      { days: [2, 4, 6], when: "Any time", tech: "tap-script", mins: 6, title: "Tap on whatever objection is loudest this week", note: '<a href="#/tap">Build the script</a>' },
+      { days: [7], when: "Evening", tech: "mirror", session: "mirror", mins: 9, title: "Mirror of the Mind: refresh last week’s goal" }],
+    check: "You have completed 40 mornings (or close to it) and at least one rehearsal was followed by a performance that felt familiar when you did it for real.",
+    trouble: "If no “indication” came after the mental video, check that the question was specific and that you actually reviewed the day for clues. Repeat it on the same problem rather than a new one." },
+
+  { phase: "Phase 2 · Program and clear (weeks 5–8)", title: "Three scenes and the body", short: "The UltraMind programming method. Hand levitation, glove anaesthesia.",
+    focus: "The Three Scenes Technique replaces the mirror as your main programming tool. You also train two classic depth-and-control exercises that prove to you your mind can change what your body feels.",
+    learn: ["Three scenes: problem ahead, change 15° left, result further left.", "Hand levitation as a deepening method.", "Glove anaesthesia and the headache formula.", "Best time to program: waking in the night to do your programming."],
+    techs: ["three-scenes", "hand-levitation", "glove", "headache", "best-time", "habit", "health-image"],
+    daily: [{ when: "Morning", tech: "three-scenes", mins: 9, note: "Enter with 5 to 1 now. One project for the whole week." }, J],
+    extra: [{ days: [1, 2, 3], when: "Evening", tech: "hand-levitation", mins: 8 }, { days: [4, 5, 6, 7], when: "Evening", tech: "glove", mins: 10 },
+      { days: [1], when: "Any time", tech: "headache", title: "Read and memorise the headache formula", mins: 4 },
+      { days: [3, 5], when: "Any time", tech: "habit", mins: 6, title: "Habit control: one habit, one small change" },
+      { days: [6, 7], when: "Night", tech: "best-time", mins: 5, title: "Best time to program: wake in the night and run your three scenes" },
+      { days: [2, 7], when: "Optional", tech: "health-image", mins: 12, title: "Optional: ideal health image", note: "Worth adding if a health or fitness goal is on your list." }],
+    check: "Your “cold” hand feels clearly different from the other one, and thinking of your project now brings up the third scene on the left.",
+    trouble: "Nothing happens in hand levitation? Start the movement deliberately with one finger, as the script itself says, then let it continue. It is a cooperation, not a test." },
+
+  { phase: "Phase 2 · Program and clear (weeks 5–8)", title: "Clear the blocks", short: "A seven-day tapping sequence plus belief inductions.",
+    focus: "A week on resistance. Each day takes one theme from the 21-day tapping series and pairs it with a short induction on the matching belief, while the three scenes keep the goal in view.",
+    learn: ["Writing your own setup statement and rounds.", "The six abundance blocks named in the induction series, and how to listen to an induction.", "Dream control step 3: asking a dream for a solution."],
+    techs: ["tap-script", "tap-21", "induction", "dream-solve", "three-scenes"],
+    daily: [{ when: "Morning", tech: "three-scenes", mins: 6, title: "Three scenes, short form: go straight to scene three" }, J],
+    extra: [
+      { days: [1], when: "Any time", tech: "tap-21", session: "tap", mins: 8, title: "Tap: resistance — “I’ve been blocking this my whole life”" },
+      { days: [2], when: "Any time", tech: "tap-21", session: "tap", mins: 8, title: "Tap: stress and the “evidence” of lack" },
+      { days: [3], when: "Any time", tech: "tap-21", session: "tap", mins: 8, title: "Tap: fear of failing — then the power round" },
+      { days: [4], when: "Any time", tech: "tap-21", session: "tap", mins: 8, title: "Tap: “I don’t deserve it”" },
+      { days: [5], when: "Any time", tech: "tap-21", session: "tap", mins: 8, title: "Tap: a belief conflict, e.g. “good people aren’t wealthy”" },
+      { days: [6], when: "Any time", tech: "tap-21", session: "tap", mins: 8, title: "Tap: permission — “I give myself permission to have this”" },
+      { days: [7], when: "Any time", tech: "tap-21", session: "tap", mins: 8, title: "Tap: gratitude for what is on its way" },
+      { days: [1, 2, 3, 4, 5, 6], when: "Evening", tech: "induction", mins: 5, title: "Five-minute induction on one abundance block", note: "One block per day, in order. Play the 5-minute loop from your library, or go to level and turn over the plain-words question from the technique page." },
+      { days: [5, 6, 7], when: "In bed", tech: "dream-solve", mins: 5 }],
+    check: "At least two tapping themes dropped by four or more points on the 0–10 scale, and you can name the block that is most yours.",
+    trouble: "If a theme brings up something heavy or old, stop and do the long relaxation instead. The UltraMind workbook’s own advice applies: painful memories that keep surfacing are a reason to see a licensed therapist." },
+
+  { phase: "Phase 3 · Dreams and deep states (weeks 9–10)", title: "Lucid dreaming foundations", short: "Journal, reality checks, MILD, wake-back-to-bed.",
+    focus: "Lucid dreaming is a skill of memory and attention. This week you build the daytime habits and the bedtime intention; next week you try entering a dream directly.",
+    learn: ["Dream signs and reality checks.", "MILD: rehearse a recent dream and set the intention to recognise the next one.", "Dream incubation: falling asleep while rehearsing a lucid dream.", "Wake-back-to-bed after about five hours.", "Keeping a dream stable once you are lucid."],
+    techs: ["dream-recall", "reality-check", "mild", "incubation", "wbtb", "stabilize"],
+    daily: [{ when: "On waking", tech: "dream-recall", title: "Write the dream before you move", mins: 4 }, { when: "Ten times through the day", tech: "reality-check", mins: 2 }, { when: "In bed", tech: "mild", session: "dreamset", mins: 7 }],
+    extra: [{ days: [3], when: "Evening", title: "Read back two weeks of dreams and list your dream signs", mins: 10, tech: "reality-check" },
+      { days: [6, 7], when: "After ~5 hours of sleep", tech: "wbtb", mins: 15, note: "Only on nights when you can sleep in." },
+      { days: [4], when: "Any time", tech: "stabilize", title: "Read: what to do in the first ten seconds of lucidity", mins: 4 },
+      { days: [2, 5], when: "In bed, instead of the short intention", tech: "incubation", mins: 13, title: "Talk-down and dream incubation", note: "Or play one of the two incubation recordings from your library." }],
+    check: "Reality checks have started to feel sincere rather than mechanical, and dream recall is at one dream or more on most mornings.",
+    trouble: "If the practice is costing you sleep, drop wake-back-to-bed and keep only the journal and MILD. Protecting sleep comes first." },
+
+  { phase: "Phase 3 · Dreams and deep states (weeks 9–10)", title: "The edge of sleep", short: "Hypnagogic imagery, WILD, and deeper levels.",
+    focus: "You learn to stay aware while the body falls asleep. The same borderland is what the Silva material calls the deeper, theta-range levels, so the skill serves both.",
+    learn: ["Watching hypnagogic imagery without grabbing it.", "WILD: building a dream scene and stepping in.", "The trapdoor: sinking through the bed into a dream.", "Extended deepening for very deep relaxation.", "Using the deep state to ask a question and wait."],
+    techs: ["hypnagogia", "wild", "trapdoor", "deepening", "golden-light", "mild"],
+    daily: [{ when: "On waking", tech: "dream-recall", title: "Dream journal", mins: 4 }, { when: "In bed", tech: "mild", session: "dreamset", mins: 7 }],
+    extra: [{ days: [1, 2, 3], when: "Afternoon rest or early evening", tech: "hypnagogia", session: "golden", mins: 12, title: "Golden light, then watch the imagery" },
+      { days: [4, 5], when: "Nap, or after ~5 hours of sleep", tech: "wild", mins: 22 },
+      { days: [6, 7], when: "Nap, or after ~5 hours of sleep", tech: "trapdoor", session: "wild", mins: 22, title: "The trapdoor entry (or repeat WILD)", note: "Read the steps first, or play the trapdoor recording from your library." },
+      { days: [1, 3], when: "Evening", tech: "deepening", session: "centering", mins: 20, title: "Deep session: long relaxation, then add a 25-to-1 countdown before the ideal place" }],
+    check: "You have watched imagery form by itself at least twice, and you can lie still for 20 minutes without the mind either racing or going out.",
+    trouble: "Heaviness, buzzing, a feeling of falling or brief sleep paralysis can appear at this edge. They are harmless and pass in seconds; breathe slowly and either continue or wiggle a finger to end it." },
+
+  { phase: "Phase 4 · Intuition and integration (weeks 11–12)", title: "The intuition lab", short: "Projection exercises, tested honestly.",
+    focus: "The UltraMind courses train what Silva called effective sensory projection. You will practise the exercises as taught and keep score, so that you learn what your own hunches are worth.",
+    learn: ["Enhanced awareness: projecting into a flower, an object, a room.", "The mental mentor and inner counsellors.", "Psychometry, instant rapport, broadcasting.", "A simple remote-viewing test with written predictions and feedback."],
+    techs: ["enhanced-awareness", "mentor", "psychometry", "rapport", "broadcasting", "remote-viewing"],
+    daily: [{ when: "Morning", tech: "three-to-one", session: "short", mins: 6, title: "Enter level and hold your goal’s result for one minute" }, { when: "Any time", tech: "remote-viewing", mins: 6, title: "One blind test, written down before you check", note: 'Log it as “Intuition test” with hit, partial or miss.' }],
+    extra: [{ days: [1, 2, 3], when: "Evening", tech: "enhanced-awareness", mins: 12 }, { days: [3, 4], when: "Evening", tech: "mentor", mins: 10 },
+      { days: [5], when: "Any time", tech: "psychometry", mins: 10 }, { days: [6], when: "Before a meeting", tech: "rapport", mins: 4 }, { days: [6, 7], when: "Night", tech: "broadcasting", mins: 6 },
+      { days: [7], when: "Evening", title: "Count your week: hits, partials, misses", mins: 5, note: "Then, as the course advises, go to level and recall how the correct hunches felt compared with the wrong ones." }],
+    check: "You have seven written tests with outcomes, and an opinion based on your own numbers.",
+    trouble: "Trying hard makes this worse. The instruction in the recordings is to ask, clear the mind for a moment, then “start thinking again” and take the first thing that comes." },
+
+  { phase: "Phase 4 · Intuition and integration (weeks 11–12)", title: "Purpose and your own practice", short: "Ask the big question. Design what you will keep.",
+    focus: "The last week uses the mental video on the largest question the courses pose, then turns twelve weeks of experiments into a daily practice of about fifteen minutes.",
+    learn: ["Guidance for purpose with the mental video.", "Choosing the three or four techniques that earned their place.", "A maintenance rhythm: daily level, weekly long relaxation, programming on demand."],
+    techs: ["purpose", "mental-video", "three-scenes", "long-relax"],
+    daily: [{ when: "Morning", tech: "three-scenes", mins: 6, title: "5 to 1, then three scenes on your current project" }, J],
+    extra: [{ days: [1, 2, 3], when: "Before bed", tech: "purpose", mins: 8 }, { days: [2, 3, 4], when: "During the day", title: "Watch for indications; list what you have always been drawn to", mins: 5, tech: "purpose" },
+      { days: [4], when: "Evening", tech: "long-relax", mins: 16, title: "Long relaxation: rate the depth and compare with week 1" },
+      { days: [5], when: "Any time", title: "Read your whole journal. Mark what worked.", mins: 15 },
+      { days: [6], when: "Any time", title: "Write your maintenance plan", mins: 10, note: "Suggested: 15 minutes at level every morning; one long relaxation a week; three scenes for each new project; tapping when a block shows up; dream journal if you enjoy it." },
+      { days: [7], when: "Any time", title: "Set the next 12-week goal and program it", mins: 10, tech: "three-scenes" }],
+    check: "You have a written plan you would actually follow, and one goal already in the third scene.",
+    trouble: "If the plan is longer than fifteen minutes a day, cut it. The practice that survives is the one that fits on a busy day." }
+];
+
+var GUIDE =
+'<div class="eyebrow">Guide</div><h1>How this works</h1>' +
+'<p class="lede">Your library holds four families of material. They look different, but they share one sequence: relax deeply, hold a clear picture or statement, and repeat. This app teaches that sequence in order.</p>' +
+'<h2>The five skills</h2><div class="scroll"><table><thead><tr><th>Skill</th><th>What you learn</th><th>Where it comes from</th></tr></thead><tbody>' +
+'<tr><td><b>1. Going to level</b></td><td>Relaxing body and mind on purpose and staying awake there.</td><td>Silva centering exercise, 40-day countdown, golden-light relaxation</td></tr>' +
+'<tr><td><b>2. Programming</b></td><td>Holding a problem once, then only the solution: mirror, three scenes, mental video, rehearsal.</td><td>Silva Choose Success, UltraMind ESP, Intuition Lifestyle</td></tr>' +
+'<tr><td><b>3. Clearing blocks</b></td><td>Voicing a limiting belief while tapping, then choosing a better one. Listening to belief inductions.</td><td>EFT Abundance 21-day series, 100K series, IL Abundance Inductions</td></tr>' +
+'<tr><td><b>4. Dream work</b></td><td>Remembering dreams, asking them questions, becoming lucid.</td><td>Silva dream control, Lucid Power Meditation</td></tr>' +
+'<tr><td><b>5. Intuition</b></td><td>Projection exercises, mentors, rapport, broadcasting, remote viewing.</td><td>UltraMind ESP, Remote Viewing &amp; Influencing</td></tr></tbody></table></div>' +
+'<h2>The model the courses use</h2><p>The Silva material describes four brain rhythms and builds everything on the second one.</p>' +
+'<div class="scroll"><table><thead><tr><th>Rhythm</th><th>Cycles per second</th><th>The courses’ description</th></tr></thead><tbody>' +
+'<tr><td>Beta</td><td>14 and up</td><td>Outer, waking level. Good for action.</td></tr><tr><td>Alpha</td><td>7–14</td><td>Relaxed inner level. Described as the best level for thinking and for programming.</td></tr>' +
+'<tr><td>Theta</td><td>4–7</td><td>Deeper level, edge of sleep. Used for body control and deep-rooted habits.</td></tr><tr><td>Delta</td><td>below 4</td><td>Deep sleep.</td></tr></tbody></table></div>' +
+'<p>“Going to level” means reaching that relaxed, inward, awake state deliberately. The cues are always the same: eyes closed and turned about 20 degrees upward, a slow exhale, a downward count.</p>' +
+'<h2>When and how long</h2><ul><li><b>Best:</b> in the morning just after waking. <b>Second:</b> at night before sleep. <b>Third:</b> after lunch.</li><li>Five minutes is good, ten is very good, fifteen is excellent. Once a day is good, twice very good, three times excellent.</li><li>Do not rush the 40-day countdown. Silva’s instruction is explicit: resist the temptation to move faster.</li><li>Never practise while driving or doing anything that needs your eyes.</li></ul>' +
+'<h2>The laws of programming</h2><p>The UltraMind recordings repeat these before every programming exercise. They are a good filter for any goal.</p><ol><li>Do to others only what you would like others to do to you.</li><li>The solution must be within the area of the possible.</li><li>It must help make the world a better place to live.</li><li>It must be the best for everyone concerned.</li><li>It must help at least two people.</li></ol>' +
+'<h2>What is established and what is tradition</h2><p>A learner deserves to know which is which. The app teaches everything in the library as it is taught, and marks the difference.</p>' +
+'<div class="scroll"><table><thead><tr><th>Area</th><th>Status</th></tr></thead><tbody>' +
+'<tr><td>Relaxation, slow breathing, body scans</td><td>Well supported for reducing stress and helping sleep.</td></tr>' +
+'<tr><td>Mental rehearsal and imagery</td><td>Well supported for skill and performance, most of all when combined with real practice.</td></tr>' +
+'<tr><td>Lucid dreaming (MILD, wake-back-to-bed, reality checks)</td><td>Lucid dreaming is verified in sleep laboratories; these induction methods have research support. Results vary a lot between people.</td></tr>' +
+'<tr><td>Brain-rhythm explanations</td><td>Alpha activity does rise with eyes-closed relaxation. The claim that the techniques work <i>because</i> of a 10-cycle rhythm is the method’s teaching, not a settled finding.</td></tr>' +
+'<tr><td>Tapping (EFT)</td><td>Some studies report reduced anxiety; how it works, and whether the tapping itself matters, is debated. It will not make money appear. Treat it as a way to loosen a belief so that you act.</td></tr>' +
+'<tr><td>Pain and headache control, healing imagery</td><td>Relaxation and suggestion can change how pain is felt. They do not replace diagnosis or treatment. The Silva book itself says health applications are done under a doctor’s supervision.</td></tr>' +
+'<tr><td>ESP, remote viewing, broadcasting, psychometry, dowsing</td><td>Not supported by controlled research. Practise them as attention and imagination training, keep written scores, and do not base health, money or relationship decisions on them alone.</td></tr></tbody></table></div>' +
+'<h2>Safety</h2><ul><li>The UltraMind workbook carries its own warning: people who are delusional or severely emotionally disturbed should not do these exercises without close supervision, and painful memories that surface are a reason to seek a licensed therapist. That warning applies to this app as well.</li><li>If you have a health problem, keep your doctor and your treatment. Use the techniques alongside them.</li><li>Lucid-dream methods that interrupt sleep are optional. Skip them when you are short of sleep.</li><li>Money goals: the tapping series asks you to do your own due diligence before acting on any “opportunity”. Keep that line.</li></ul>' +
+'<h2>What is in your library</h2><div class="scroll"><table><thead><tr><th>Folder</th><th>Contents</th><th>Used in</th></tr></thead><tbody>' +
+'<tr><td><code>SILVA / 01 Choose Success</code></td><td>15 lessons, 9 conditioning exercises and the 172-page Master Course book: the core Silva formulas.</td><td>Weeks 1–7</td></tr>' +
+'<tr><td><code>SILVA / 02 UltraMind ESP System</code></td><td>8 lessons, 10 exercises, workbook: mental video, three scenes, rapport, psychometry, broadcasting, enhanced awareness.</td><td>Weeks 6–7, 11–12</td></tr>' +
+'<tr><td><code>SILVA / 03 Silva Intuition Lifestyle</code></td><td>20 exercises: clock, energizing, glass of water, mirror, alpha anchor, laboratory, counsellors.</td><td>Weeks 3–7, 11</td></tr>' +
+'<tr><td><code>SILVA / Silva Mind Body Healing Program</code></td><td>11 modules plus bonus exercises: two scenes, health booster, theta exercise.</td><td>Optional, week 7 onward</td></tr>' +
+'<tr><td><code>SILVA</code> (loose files)</td><td>Audiobooks, lectures and stand-alone guided meditations, and the Remote Viewing &amp; Influencing guidebook.</td><td>Background listening</td></tr>' +
+'<tr><td><code>EFT ABUNDANCE 21D - 100K</code></td><td>21 daily tapping videos and a 5-part stretch-goal series.</td><td>Weeks 5, 6, 8</td></tr>' +
+'<tr><td><code>IL Abundance Inductions</code></td><td>Six belief inductions, each as a 5-minute and a 20-minute loop.</td><td>Week 8</td></tr>' +
+'<tr><td><code>LUCID POWER MEDITATION</code></td><td>Guided MILD and WILD meditations with sleep affirmations, and sleep talk-downs with narrated dream incubations.</td><td>Weeks 9–10</td></tr></tbody></table></div>';
+
+return { CATS: CATS, TECHNIQUES: TECHNIQUES, SESSIONS: SESSIONS, QUICK: QUICK, PROGRAM: PROGRAM, GUIDE: GUIDE };
+})();
+
+/* ---------- DEEP LEVEL (meditation): state ---------- */
+const MD_DEF = () => ({ done: {}, journal: [], set: { voice: true, rate: 0.85, pace: 1 } });
+function MS(){
+  if (!S.mind) S.mind = MD_DEF();
+  const M = S.mind; M.done = M.done || {}; M.journal = M.journal || []; M.set = Object.assign({ voice: true, rate: 0.85, pace: 1 }, M.set || {});
+  return M;
+}
+const mdTech = id => DL.TECHNIQUES.find(t => t.id === id) || null;
+const mdCat = id => DL.CATS.find(c => c.id === id) || { name: id };
+function mdDayTasks(w, d){ const wk = DL.PROGRAM[w - 1], out = wk.daily.slice(); (wk.extra || []).forEach(x => { if (x.days.indexOf(d) >= 0) out.push(x); }); return out; }
+const mdKey = (w, d, i) => w + '-' + d + '-' + i;
+function mdDayDone(w, d){ const t = mdDayTasks(w, d); if (!t.length) return false; for (let i = 0; i < t.length; i++) if (!MS().done[mdKey(w, d, i)]) return false; return true; }
+function mdWeekCount(w){ let n = 0; for (let d = 1; d <= 7; d++) if (mdDayDone(w, d)) n++; return n; }
+function mdCurrent(){ for (let w = 1; w <= DL.PROGRAM.length; w++) for (let d = 1; d <= 7; d++) if (!mdDayDone(w, d)) return { w, d }; return { w: DL.PROGRAM.length, d: 7, finished: true }; }
+function mdTotal(){ let n = 0; for (let w = 1; w <= DL.PROGRAM.length; w++) n += mdWeekCount(w); return n; }
+function mdToggle(k){ const D = MS().done; if (D[k]) delete D[k]; else D[k] = 1; persist('mind'); }
+
+/* ---------- DEEP LEVEL: pieces ---------- */
+function mdTaskHTML(w, d, compact){
+  return mdDayTasks(w, d).map((t, i) => {
+    const k = mdKey(w, d, i), T = t.tech ? mdTech(t.tech) : null, on = !!MS().done[k], sess = t.session || (T && T.session);
+    let links = '';
+    if (T && !compact) links += `<button class="btn ghost md-s" data-act="mtech" data-id="${T.id}">How to do it</button>`;
+    if (sess) links += `<button class="btn md-s" data-act="mplay" data-id="${sess}">▶ Guided</button>`;
+    return `<div class="md-task ${on ? 'done' : ''}"><button class="check ${on ? 'on' : ''}" data-act="mtog" data-k="${k}" aria-pressed="${on}" aria-label="Mark done">${on ? '✓' : ''}</button>
+      <div class="md-t"><div class="md-when">${esc(t.when)}${t.mins ? ' · ' + t.mins + ' min' : ''}</div><b>${esc(t.title || (T && T.name) || '')}</b>${t.note && !compact ? `<div class="mut md-note">${t.note}</div>` : ''}${links ? `<div class="md-links">${links}</div>` : ''}</div></div>`;
+  }).join('');
+}
+const mdList = (a, ordered) => a && a.length ? (ordered ? '<ol class="md-steps">' : '<ul>') + a.map(x => '<li>' + x + '</li>').join('') + (ordered ? '</ol>' : '</ul>') : '';
+const mdTile = (act, id, small, title, blurb) => `<button class="md-tile" data-act="${act}" data-id="${id}"><small>${esc(small)}</small><b>${esc(title)}</b><span class="mut">${esc(blurb)}</span></button>`;
+// training uses: how the meditation library serves the movement program
+const MD_TRAIN = [
+  ['rehearsal', 'rehearsal', 'Mental rehearsal of a skill', 'Before a skill session or a test day, run the main skill at level: the entry, the hold, a calm save when it tips. Imagery helps most on top of real practice, and it adds reps without loading the wrists.'],
+  ['three-fingers', null, 'Three Fingers before a max attempt', 'Once the trigger is installed (Deep Level week 4), join thumb and two fingers before a max hold, a test or a press attempt.'],
+  ['sleep-control', 'sleep', 'Sleep after heavy days', 'On nights after the hard sessions, use sleep control in bed. Recovery happens in sleep.'],
+  ['awake-control', 'awake', 'Afternoon slump before training', 'Two minutes of awake control instead of another coffee.'],
+  ['tap-script', null, 'Tapping for fear and plateaus', 'Fear of falling out of a handstand, of the drop-back, or a plateau that has started to feel personal. Build a script in Sessions → Tools.'],
+  ['golden-light', 'golden', 'Golden-light body scan for recovery', 'Sunday, or any evening when readiness is low.'],
+  ['mirror', 'mirror', 'Program a training goal', 'Use the mirror or three scenes on one 12-week target, for example a 10-second one-arm handstand or a floor press.'],
+  ['glove', null, 'Pain techniques, with care', 'Glove anaesthesia and the headache formula change how pain is felt; they do not fix the cause. Pain in training still means stop and flag it in the session.'],
+];
+
+/* ---------- DEEP LEVEL: card on today's session ---------- */
+function mindCard(date){
+  if (date !== iso(new Date())) return '';
+  const c = mdCurrent(), wk = DL.PROGRAM[c.w - 1], tasks = mdDayTasks(c.w, c.d), mv = mvOn(date);
+  const done = tasks.filter((t, i) => MS().done[mdKey(c.w, c.d, i)]).length;
+  const open = V.mdOpen != null ? V.mdOpen : !(mv && mv.train);
+  let h = `<div class="card brcard"><div class="br-head"><h3>Meditation · ${esc(wk.title)}</h3><span class="mut num">${done}/${tasks.length}</span></div>`;
+  h += `<div class="mut" style="font-size:12.5px;margin:-2px 0 6px">Deep Level week ${c.w} · day ${c.d} · self-paced</div>`;
+  h += `<details class="md-day" ${open ? 'open' : ''}><summary><span>Today's practice</span><span class="mut num">~${tasks.reduce((a, t) => a + (t.mins || 0), 0)} min</span></summary>${mdTaskHTML(c.w, c.d, true)}</details>`;
+  if (mv && mv.train && [0, 2, 4].includes(mv.dayIdx)) h += `<div class="br-note info">Skill day: an 8-minute mental rehearsal of today’s main skill adds practice without load. <button class="chip" data-act="mplay" data-id="rehearsal" style="margin-top:6px">▶ Mental rehearsal</button></div>`;
+  if (mv && mv.ready === 'low') h += `<div class="br-note">Low readiness: add a short relaxation or the golden-light body scan tonight. <button class="chip" data-act="mplay" data-id="golden" style="margin-top:6px">▶ Golden light · 9 min</button></div>`;
+  h += `<button class="btn ghost" data-act="tab" data-v="mind" style="margin-top:8px">Open Mind tab</button></div>`;
+  return h;
+}
+
+/* ---------- DEEP LEVEL: tab ---------- */
+function renderMind(){
+  const v = V.mview || 'today';
+  const seg = { today: 'today', guide: 'today', program: 'program', week: 'program', library: 'library', tech: 'library', sessions: 'sessions', tap: 'sessions', count: 'sessions', journal: 'journal' }[v] || 'today';
+  let h = `<div class="top"><div class="wk-title"><small>Deep Level · meditation</small>Mind</div></div>`;
+  h += `<div class="seg seg5" role="tablist">${[['today', 'Today'], ['program', 'Program'], ['library', 'Library'], ['sessions', 'Sessions'], ['journal', 'Journal']].map(([k, l]) => `<button class="${seg === k ? 'on' : ''}" data-act="mview" data-v="${k}" role="tab" aria-selected="${seg === k}">${l}</button>`).join('')}</div>`;
+  h += '<div class="mind">';
+  h += v === 'program' ? mdProgram() : v === 'week' ? mdWeek(V.mweek, V.mday) : v === 'library' ? mdLibrary() : v === 'tech' ? mdTechView(V.mtech) : v === 'sessions' ? mdSessions() : v === 'tap' ? mdTap() : v === 'count' ? mdCount() : v === 'journal' ? mdJournal() : v === 'guide' ? mdGuide() : mdToday();
+  return h + '</div>';
+}
+function mdToday(){
+  const c = mdCurrent(), wk = DL.PROGRAM[c.w - 1], n = mdTotal(), started = n > 0 || Object.keys(MS().done).length > 0;
+  let h = '';
+  if (!started) h += `<div class="md-hero"><div class="eyebrow">Welcome</div><h2>Learn to go deep — and use it.</h2><p class="md-lede">Deep Level teaches the core skills from your meditation library, one layer at a time: relaxing to the alpha level, programming goals with mental imagery, releasing blocks with tapping, lucid dreaming, and intuition training. Twelve weeks, about 20–30 minutes a day.</p><div class="confirm" style="flex-wrap:wrap"><button class="btn" data-act="mweek" data-w="1">Start week 1</button><button class="btn ghost" data-act="mview" data-v="guide">Read the 5-minute guide</button></div></div>`;
+  else if (c.finished) h += `<div class="md-hero"><div class="eyebrow">Program complete</div><h2>Twelve weeks done.</h2><p class="md-lede">Keep the maintenance practice you designed in week 12, and revisit any technique from the library.</p></div>`;
+  else h += `<div class="md-hero"><div class="eyebrow">Week ${c.w} · Day ${c.d}</div><h2>${esc(wk.title)}</h2><p class="md-lede">${wk.focus}</p></div>`;
+  h += `<div class="card"><div class="br-head"><h3>${c.finished ? 'Last session' : 'Today’s practice'}</h3><span class="mut num">${n} / 84 days</span></div><div class="bar" style="margin:8px 0 4px"><i style="width:${(n / 84 * 100).toFixed(1)}%"></i></div>${mdTaskHTML(c.w, c.d)}
+    <div class="confirm" style="flex-wrap:wrap"><button class="btn ghost md-s" data-act="mweek" data-w="${c.w}">See the whole week</button><button class="btn ghost md-s" data-act="mview" data-v="journal">Write in journal</button><button class="btn ghost md-s" data-act="mview" data-v="guide">Guide</button></div></div>`;
+  h += `<div class="br-note info" style="margin:10px 0">Pair it with your breathwork: finish a breath session, then go straight to level. Slow breathing makes the 3-to-1 entry easier. Keep power breathing and meditation apart from handstand sets.</div>`;
+  h += `<div class="section-title br-h">Quick sessions</div><div class="md-grid">${DL.QUICK.map(q => { const X = DL.SESSIONS[q]; return mdTile('mplay', q, X.mins + ' min · guided', X.title, X.blurb); }).join('')}</div>`;
+  h += `<div class="section-title br-h">Use it for your training</div><div class="card">${MD_TRAIN.map(([tid, sess, title, txt]) => `<div class="gl"><b>${esc(title)}</b>${esc(txt)}<div class="md-links" style="margin-top:6px">${mdTech(tid) ? `<button class="btn ghost md-s" data-act="mtech" data-id="${tid}">How to do it</button>` : ''}${sess ? `<button class="btn md-s" data-act="mplay" data-id="${sess}">▶ Guided</button>` : ''}${tid === 'tap-script' ? `<button class="btn md-s" data-act="mview" data-v="tap">Build a script</button>` : ''}</div></div>`).join('')}</div>`;
+  return h;
+}
+function mdProgram(){
+  const c = mdCurrent();
+  let h = `<div class="md-hero"><div class="eyebrow">12-week program</div><h2>From first relaxation to a practice of your own</h2><p class="md-lede">Each week adds one layer. The morning countdown follows José Silva’s 40-day schedule (100 → 50 → 25 → 10, then 5 to 1), so depth builds before you rely on it. Days are not tied to the calendar: finish a day, tick it, move on.</p></div>`;
+  let last = '';
+  DL.PROGRAM.forEach((wk, i) => {
+    if (wk.phase !== last) { h += `<div class="md-phase">${esc(wk.phase)}</div>`; last = wk.phase; }
+    const n = mdWeekCount(i + 1);
+    h += `<button class="md-wk ${c.w === i + 1 && !c.finished ? 'cur' : ''}" data-act="mweek" data-w="${i + 1}"><span class="md-n"><small>Week</small>${i + 1}</span><span><b>${esc(wk.title)}</b><span class="mut">${esc(wk.short)}</span></span><span class="mut num">${n === 7 ? '✓' : n + '/7'}</span></button>`;
+  });
+  h += `<div class="card" style="margin-top:14px"><h3>Already partway through?</h3><p class="mut" style="margin:0 0 8px;font-size:13px">Progress from the separate Deep Level app does not carry over. Open the week you are on and use “Start from this week”.</p><button class="btn ghost" data-act="mview" data-v="guide">Read the guide</button></div>`;
+  return h;
+}
+function mdWeek(w, d){
+  w = Math.max(1, Math.min(DL.PROGRAM.length, +w || 1));
+  const wk = DL.PROGRAM[w - 1], c = mdCurrent();
+  d = +d || (c.w === w ? c.d : 1);
+  let h = `<button class="md-back" data-act="mview" data-v="program">← Program</button><div class="md-hero"><div class="eyebrow">${esc(wk.phase)} · Week ${w}</div><h2>${esc(wk.title)}</h2><p class="md-lede">${wk.focus}</p></div>`;
+  h += `<div class="card"><h3>What you are learning</h3><ul>${wk.learn.map(x => '<li>' + x + '</li>').join('')}</ul><div class="md-tags">${wk.techs.map(id => { const T = mdTech(id); return T ? `<button class="md-tag a" data-act="mtech" data-id="${id}">${esc(T.name)}</button>` : ''; }).join('')}</div></div>`;
+  h += `<div class="section-title br-h">Day by day</div><div class="md-days">`;
+  for (let i = 1; i <= 7; i++) h += `<button class="${mdDayDone(w, i) ? 'done ' : ''}${i === d ? 'on' : ''}" data-act="mday" data-w="${w}" data-d="${i}" aria-label="Day ${i}">${i}</button>`;
+  h += `</div><div class="card"><h3>Day ${d}</h3>${mdTaskHTML(w, d)}</div>`;
+  h += `<div class="md-notebox"><b>End-of-week check.</b> ${wk.check}</div>`;
+  if (wk.trouble) h += `<div class="md-notebox w"><b>If it is not working.</b> ${wk.trouble}</div>`;
+  if (w > 1 && !(c.w >= w)) h += V.mjump === w
+    ? `<div class="banner warn"><div><b>Mark weeks 1–${w - 1} as done?</b>Week ${w} becomes your current week. You can untick days later.<div class="confirm"><button class="btn" data-act="mjump-yes" data-w="${w}">Start from week ${w}</button><button class="btn ghost" data-act="mjump-no">Cancel</button></div></div></div>`
+    : `<div class="confirm"><button class="btn ghost" data-act="mjump" data-w="${w}">Start from this week</button></div>`;
+  h += `<div class="confirm" style="justify-content:space-between;margin-top:14px">${w > 1 ? `<button class="btn ghost md-s" data-act="mweek" data-w="${w - 1}">← Week ${w - 1}</button>` : '<span></span>'}${w < DL.PROGRAM.length ? `<button class="btn ghost md-s" data-act="mweek" data-w="${w + 1}">Week ${w + 1} →</button>` : ''}</div>`;
+  return h;
+}
+function mdLibrary(){
+  const f = V.mfilt || 'all';
+  let h = `<div class="md-hero"><div class="eyebrow">Technique library</div><h2>${DL.TECHNIQUES.length} techniques, explained plainly</h2><p class="md-lede">Each page says what the technique is for, gives the exact steps, and points to the recordings in your library that guide it.</p></div>`;
+  h += `<div class="md-filter"><button class="chip ${f === 'all' ? 'on' : ''}" data-act="mfilt" data-v="all">All</button>${DL.CATS.map(c => `<button class="chip ${f === c.id ? 'on' : ''}" data-act="mfilt" data-v="${c.id}">${esc(c.name)}</button>`).join('')}</div>`;
+  DL.CATS.forEach(c => {
+    if (f !== 'all' && f !== c.id) return;
+    h += `<div class="section-title br-h">${esc(c.name)}</div><p class="mut" style="margin:0 0 8px;font-size:13.5px">${esc(c.about)}</p><div class="md-grid">${DL.TECHNIQUES.filter(t => t.cat === c.id).map(t => mdTile('mtech', t.id, t.time + (t.week ? ' · week ' + t.week : ''), t.name, t.tag)).join('')}</div>`;
+  });
+  return h;
+}
+function mdTechView(id){
+  const t = mdTech(id); if (!t) return mdLibrary();
+  const c = mdCat(t.cat);
+  let h = `<button class="md-back" data-act="mview" data-v="library">← Techniques</button><div class="md-hero"><div class="eyebrow">${esc(c.name)}</div><h2>${esc(t.name)}</h2><p class="md-lede">${t.what}</p>
+    <div class="md-tags"><span class="md-tag">${esc(t.time)}</span>${t.week ? `<button class="md-tag v" data-act="mweek" data-w="${t.week}">Taught in week ${t.week}</button>` : ''}${t.needs ? `<span class="md-tag">Needs: ${esc(t.needs)}</span>` : ''}</div></div>`;
+  if (t.session) h += `<p><button class="btn" data-act="mplay" data-id="${t.session}">▶ Start guided session</button></p>`;
+  const doc = [];
+  if (t.use) doc.push(`<h3>When to use it</h3><p>${t.use}</p>`);
+  doc.push(`<h3>How to do it</h3>${mdList(t.steps, true)}`);
+  if (t.extra) doc.push(t.extra);
+  if (t.why) doc.push(`<h3>Why it is built this way</h3><p>${t.why}</p>`);
+  if (t.tips) doc.push(`<h3>Getting better at it</h3>${mdList(t.tips)}`);
+  if (t.traps) doc.push(`<h3>Common mistakes</h3>${mdList(t.traps)}`);
+  if (t.honest) doc.push(`<div class="md-notebox w"><b>Straight talk.</b> ${t.honest}</div>`);
+  h += `<div class="card md-doc">${doc.join('')}</div>`;
+  if (t.src) h += `<details class="card md-src"><summary><b>In your library</b> <span class="mut">(${t.src.length} recordings)</span></summary><p class="mut" style="font-size:13px">Recordings that guide or explain this technique (folder DEEP MEDITATION):</p>${mdList(t.src.map(esc))}</details>`;
+  if (t.rel) h += `<div class="section-title br-h">Related</div><div class="md-tags">${t.rel.map(r => { const T = mdTech(r); return T ? `<button class="md-tag a" data-act="mtech" data-id="${r}">${esc(T.name)}</button>` : ''; }).join('')}</div>`;
+  return h;
+}
+function mdSessions(){
+  const M = MS();
+  let h = `<div class="md-hero"><div class="eyebrow">Guided practice</div><h2>Press play, close your eyes</h2><p class="md-lede">Sessions read the prompts aloud with your device’s voice and keep time for you. Turn the voice off if you prefer to read, or slow the pace as you go deeper.</p></div>`;
+  h += `<div class="card"><label class="pain" style="color:var(--fg);margin-bottom:8px"><input type="checkbox" id="md-sv" ${M.set.voice ? 'checked' : ''}> Voice guidance</label>
+    <div class="set-row"><label for="md-sr">Voice speed</label><select id="md-sr">${[['0.7', 'Slow'], ['0.85', 'Calm'], ['1', 'Normal']].map(([v, l]) => `<option value="${v}" ${String(M.set.rate) === v ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
+    <div class="set-row"><label for="md-sp">Pauses</label><select id="md-sp">${[['0.75', 'Shorter'], ['1', 'Standard'], ['1.4', 'Longer']].map(([v, l]) => `<option value="${v}" ${String(M.set.pace) === v ? 'selected' : ''}>${l}</option>`).join('')}</select></div></div>`;
+  const groups = {};
+  Object.keys(DL.SESSIONS).forEach(k => { const g = DL.SESSIONS[k].group; (groups[g] = groups[g] || []).push(k); });
+  Object.keys(groups).forEach(g => { h += `<div class="section-title br-h">${esc(g)}</div><div class="md-grid">${groups[g].map(k => { const X = DL.SESSIONS[k]; return mdTile('mplay', k, X.mins + ' min', X.title, X.blurb); }).join('')}</div>`; });
+  h += `<div class="section-title br-h">Tools</div><div class="md-grid">${mdTile('mview', 'tap', 'Builder', 'Tapping script builder', 'Turn any block into a setup statement and a three-round tapping script.').replace('data-id="tap"', 'data-v="tap"')}${mdTile('mview', 'count', 'Trainer', 'Countdown trainer', 'Silent, paced countdown from 100, 50, 25, 10 or 5.').replace('data-id="count"', 'data-v="count"')}</div>`;
+  return h;
+}
+function mdTap(){
+  return `<button class="md-back" data-act="mview" data-v="sessions">← Sessions</button><div class="md-hero"><div class="eyebrow">Tool</div><h2>Tapping script builder</h2><p class="md-lede">Write the block in your own words. The builder arranges it the way the 21-day tapping series does: accept it, voice it, question it, then choose something better.</p></div>
+    <form class="card md-form" id="md-tapf"><label for="md-tb">The block, as you would honestly say it</label><input type="text" id="md-tb" placeholder="e.g. I’m scared of falling out of the handstand">
+    <label for="md-tf">The feeling it gives you</label><input type="text" id="md-tf" placeholder="e.g. tight, anxious">
+    <label for="md-tg">What you would rather believe</label><input type="text" id="md-tg" placeholder="e.g. I know how to bail safely and I can stay calm up there">
+    <label for="md-ti">How strong is it right now? (0–10)</label><input type="text" id="md-ti" inputmode="numeric" placeholder="7">
+    <div class="confirm"><button class="btn" type="submit">Build my script</button></div></form><div id="md-tout">${V.mtapOut || ''}</div>`;
+}
+function mdBuildTap(){
+  const val = id => (document.getElementById(id).value || '').trim();
+  const b = (val('md-tb') || 'this block').replace(/\.$/, ''), f = val('md-tf') || 'uncomfortable', g = (val('md-tg') || 'I can let this go').replace(/\.$/, ''), n = val('md-ti') || '?';
+  let lb = b.charAt(0).toLowerCase() + b.slice(1); if (/^i\b/i.test(b)) lb = 'I' + b.slice(1);
+  const PTS = ['Eyebrow', 'Side of eye', 'Under eye', 'Under nose', 'Chin', 'Collarbone', 'Under arm', 'Top of head'];
+  const r1 = [lb, 'All this ' + f + ' feeling', 'I really feel it', lb, 'It feels true', 'I have evidence for it', 'This ' + f + ' feeling', 'It is here right now'];
+  const r2 = ['What if I got it wrong?', 'What if this is just an old story?', 'Maybe it kept me safe once', 'I don’t need it to keep me safe now', 'What if something else is possible?', 'I’m open to seeing it differently', 'I can loosen my grip on this', 'I’m willing to let it go'];
+  const r3 = ['I choose to believe: ' + g, g, 'I give myself permission', g, 'It feels lighter to think this way', 'I’m open to it', g, 'And I’m ready to act on it'];
+  const round = (t, a) => `<h3>${t}</h3><div class="md-scroll"><table><tbody>${a.map((x, i) => `<tr><th>${PTS[i]}</th><td>${esc(x)}</td></tr>`).join('')}</tbody></table></div>`;
+  V.mtapOut = `<div class="card md-doc"><div class="eyebrow">Your script · starting intensity ${esc(n)}/10</div><h3>Setup — tap the side of the hand, say three times</h3><p>“Even though ${esc(lb)}, and I feel ${esc(f)} about it, I deeply and completely love and accept myself.”</p>${round('Round 1 — say it as it is', r1)}${round('Round 2 — open the door', r2)}${round('Round 3 — choose', r3)}<p class="mut">Tap each point 5–7 times while saying the line aloud. Finish with two slow breaths, then rate the intensity again. If it is above 2, repeat round 1 with whatever is left (“this remaining…”).</p><button class="btn" data-act="mplay" data-id="tap">▶ Guided tapping round</button></div>`;
+}
+function mdCount(){
+  const days = { 100: 'Days 1–10', 50: 'Days 11–20', 25: 'Days 21–30', 10: 'Days 31–40', 5: 'After day 40' };
+  return `<button class="md-back" data-act="mview" data-v="sessions">← Sessions</button><div class="md-hero"><div class="eyebrow">Tool</div><h2>Countdown trainer</h2><p class="md-lede">The morning exercise of the first six weeks. Eyes closed and turned slightly upward, count silently with the tone. The session finishes with the 1-to-5 count out.</p></div>
+    <div class="md-grid">${[100, 50, 25, 10, 5].map(n => mdTile('mplay', 'count' + n, DL.SESSIONS['count' + n].mins + ' min', n + ' → 1', days[n])).join('')}</div>`;
+}
+function mdJournal(){
+  const M = MS(), types = ['Session', 'Dream', 'Programming goal', 'Tapping', 'Intuition test', 'Insight'];
+  let h = `<div class="md-hero"><div class="eyebrow">Journal</div><h2>Write it down while it is fresh</h2><p class="md-lede">Every source in your library insists on this. Depth, dreams and results are easy to forget and easy to exaggerate; a log keeps you honest and shows progress.</p></div>`;
+  h += `<form class="card md-form" id="md-jf"><div class="row" style="display:flex;gap:10px;flex-wrap:wrap"><div style="flex:1;min-width:140px"><label for="md-jt">Type</label><select id="md-jt">${types.map(t => `<option>${t}</option>`).join('')}</select></div>
+    <div style="flex:1;min-width:140px"><label for="md-jd">Depth / clarity (1–5)</label><select id="md-jd"><option value="0">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div></div>
+    <label for="md-jn">Technique or title</label><input type="text" id="md-jn" placeholder="e.g. Morning countdown 50→1">
+    <label for="md-jx">What happened · what you noticed · what followed</label><textarea id="md-jx" rows="4"></textarea>
+    <div class="confirm" style="flex-wrap:wrap"><button class="btn" type="submit">Save entry</button><button class="btn ghost" type="button" data-act="mjexp">Export as text</button></div></form>`;
+  h += `<div class="section-title br-h">Entries (${M.journal.length})</div>`;
+  if (!M.journal.length) h += `<p class="mut">Nothing yet. Your first entry can be one line: how relaxed did you get today?</p>`;
+  else h += `<div class="card">${M.journal.slice().reverse().map((e, i) => { const idx = M.journal.length - 1 - i; return `<div class="md-entry"><div class="br-head"><div><span class="md-tag v">${esc(e.type)}</span> <b>${esc(e.name || '')}</b></div><span class="mut num" style="font-size:12px">${esc(e.date)}${e.depth > 0 ? ` · <span class="md-dots">${'●'.repeat(e.depth)}${'○'.repeat(5 - e.depth)}</span>` : ''}</span></div><div style="white-space:pre-wrap;margin-top:6px;font-size:14px">${esc(e.text)}</div>${V.mjdel === idx ? `<div class="confirm"><button class="btn" style="background:var(--bad);color:#fff" data-act="mjdel-yes" data-i="${idx}">Delete</button><button class="btn ghost" data-act="mjdel-no">Keep</button></div>` : `<button class="btn ghost md-s" data-act="mjdel" data-i="${idx}" style="margin-top:8px">Delete</button>`}</div>`; }).join('')}</div>`;
+  h += `<p class="mut" style="font-size:12.5px">Entries sync with the rest of your app data and are included in your backup.</p>`;
+  return h;
+}
+function mdGuide(){
+  return `<button class="md-back" data-act="mview" data-v="today">← Today</button><div class="card md-doc md-guide">${DL.GUIDE}</div><p class="mut" style="font-size:12.5px">Deep Level is a study companion built from your own course library (Silva Method courses, a 21-day tapping series, hypnotic inductions and guided lucid-dream meditations). It explains the techniques in its own words and does not include the recordings. It is not medical or financial advice.</p>`;
+}
+function mdStats(){ const c = mdCurrent(); return { c, n: mdTotal(), j: MS().journal.length }; }
+
+/* ---------- DEEP LEVEL: guided player (device voice + tones) ---------- */
+document.body.insertAdjacentHTML('beforeend', '<div id="mplayer" class="mplayer" hidden></div>');
+const MP = { el: document.getElementById('mplayer'), i: 0, timer: null, paused: true, steps: null, id: null, total: 0, lock: null, ac: null };
+function mpExpand(X){
+  const out = [];
+  X.steps.forEach(s => {
+    if (s.count) { const st = s.count[0] > s.count[1] ? -1 : 1; for (let n = s.count[0]; n !== s.count[1] + st; n += st) out.push({ num: n, d: s.every || 2, text: s.text || '', sayNum: !!s.sayNum, word: s.words && s.words[n] }); }
+    else if (s.breath) { for (let b = 0; b < s.breath; b++) { out.push({ text: 'Breathe in', d: 4, orb: 'in', quiet: b > 0 }); out.push({ text: 'Breathe out, and let go', d: 6, orb: 'out', quiet: b > 0 }); } }
+    else out.push({ text: s.say || s.hold || '', d: s.d || 6, hold: !!s.hold, sub: s.sub || '' });
+  });
+  return out;
+}
+function mdOpen(id){
+  const X = DL.SESSIONS[id]; if (!X) return;
+  MP.id = id; MP.steps = mpExpand(X); MP.i = 0; MP.paused = true; MP.total = MP.steps.reduce((a, s) => a + s.d, 0);
+  MP.el.hidden = false; document.body.style.overflow = 'hidden';
+  MP.el.innerHTML = `<div class="mp-h"><span>${esc(X.title)}</span><button class="btn ghost md-s" data-mp="close">Close ✕</button></div><div class="mp-bar"><i></i></div>
+    <div class="mp-stage"><div class="mp-orb" aria-hidden="true"></div><div class="mp-say" aria-live="polite">${esc(X.intro || 'Find a comfortable position. Press Begin when you are ready.')}</div><div class="mp-sub"></div></div>
+    <div class="mp-ctl"><button class="btn ghost" data-mp="back">⟲ Back</button><button class="btn" data-mp="go">Begin</button><button class="btn ghost" data-mp="skip">Skip ⟶</button><button class="btn ghost" data-mp="voice">${MS().set.voice ? 'Voice on' : 'Voice off'}</button></div>`;
+}
+function mdClose(){
+  if (MP.el.hidden) return;
+  clearTimeout(MP.timer); try { speechSynthesis.cancel(); } catch (e) {}
+  if (MP.lock) { try { MP.lock.release(); } catch (e) {} MP.lock = null; }
+  MP.el.hidden = true; document.body.style.overflow = ''; render();
+}
+function mpSpeak(t, cb){
+  const M = MS();
+  if (!M.set.voice || !('speechSynthesis' in window) || !t) return cb && cb();
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(t); u.rate = M.set.rate; u.pitch = 0.9; u.lang = 'en-US';
+    let fired = false; const done = () => { if (!fired) { fired = true; cb && cb(); } };
+    u.onend = done; u.onerror = done; setTimeout(done, 1500 + t.length * 110);
+    speechSynthesis.speak(u);
+  } catch (e) { cb && cb(); }
+}
+function mpTone(f){
+  try {
+    MP.ac = MP.ac || new (window.AudioContext || window.webkitAudioContext)();
+    const o = MP.ac.createOscillator(), g = MP.ac.createGain(); o.frequency.value = f || 220; o.type = 'sine';
+    g.gain.setValueAtTime(0.0001, MP.ac.currentTime); g.gain.exponentialRampToValueAtTime(0.08, MP.ac.currentTime + 0.03); g.gain.exponentialRampToValueAtTime(0.0001, MP.ac.currentTime + 0.5);
+    o.connect(g); g.connect(MP.ac.destination); o.start(); o.stop(MP.ac.currentTime + 0.55);
+  } catch (e) {}
+}
+const mp$ = s => MP.el.querySelector(s);
+function mpShow(){
+  const s = MP.steps[MP.i], orb = mp$('.mp-orb');
+  const elapsed = MP.steps.slice(0, MP.i).reduce((a, x) => a + x.d, 0);
+  mp$('.mp-bar i').style.width = (elapsed / MP.total * 100).toFixed(1) + '%';
+  orb.className = 'mp-orb' + (s.orb ? ' ' + s.orb : '');
+  orb.textContent = s.num != null ? s.num : '';
+  mp$('.mp-say').textContent = s.word || s.text || '';
+  mp$('.mp-sub').textContent = s.sub || (s.hold ? 'Silence · ' + Math.round(s.d * MS().set.pace) + ' s' : '');
+}
+function mpRun(){
+  if (MP.paused || MP.el.hidden) return;
+  if (MP.i >= MP.steps.length) return mpFinish();
+  const s = MP.steps[MP.i]; mpShow();
+  const wait = () => { clearTimeout(MP.timer); MP.timer = setTimeout(() => { MP.i++; mpRun(); }, s.d * 1000 * (s.num != null ? 1 : MS().set.pace)); };
+  if (s.num != null) { if (s.sayNum && MS().set.voice) mpSpeak(String(s.num) + (s.word ? '. ' + s.word : '')); else mpTone(s.num === 1 ? 330 : 196); wait(); }
+  else if (s.quiet || s.hold) { if (s.hold && s.text) mpSpeak(s.text, wait); else wait(); }
+  else mpSpeak(s.text, wait);
+}
+function mpFinish(){
+  mp$('.mp-bar i').style.width = '100%'; mp$('.mp-orb').textContent = '✓';
+  mp$('.mp-say').textContent = 'Session complete. Wide awake, feeling better than before.';
+  mp$('.mp-sub').textContent = 'Take a moment, then note what you noticed in the journal.';
+  mp$('[data-mp="go"]').textContent = 'Done'; MP.paused = true; MP.i = MP.steps.length; mpTone(330);
+}
+MP.el.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return; const a = b.dataset.mp;
+  if (a === 'close') return mdClose();
+  if (a === 'voice') { const M = MS(); M.set.voice = !M.set.voice; persist('mind'); b.textContent = M.set.voice ? 'Voice on' : 'Voice off'; if (!M.set.voice) try { speechSynthesis.cancel(); } catch (x) {} return; }
+  if (a === 'go') {
+    if (MP.i >= MP.steps.length) return mdClose();
+    MP.paused = !MP.paused; b.textContent = MP.paused ? 'Resume' : 'Pause';
+    if (MP.paused) { clearTimeout(MP.timer); try { speechSynthesis.cancel(); } catch (x) {} }
+    else { if (navigator.wakeLock && !MP.lock) navigator.wakeLock.request('screen').then(l => { MP.lock = l; }).catch(() => {}); mpRun(); }
+    return;
+  }
+  if (MP.i >= MP.steps.length) return;
+  clearTimeout(MP.timer); try { speechSynthesis.cancel(); } catch (x) {}
+  if (a === 'skip') { const n0 = MP.steps[MP.i].num != null; do { MP.i++; } while (n0 && MP.i < MP.steps.length && MP.steps[MP.i].num != null); }
+  if (a === 'back') { MP.i = Math.max(0, MP.i - 1); while (MP.i > 0 && MP.steps[MP.i].num != null) MP.i--; }
+  if (MP.i >= MP.steps.length) return mpFinish();
+  if (MP.paused) mpShow(); else mpRun();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !MP.el.hidden) mdClose(); });
+
+/* ---------- DEEP LEVEL: events ---------- */
+function mdGo(view, extra){ V.tab = 'mind'; V.mview = view; Object.assign(V, extra || {}); render(); window.scrollTo(0, 0); }
+async function mdExport(){
+  const txt = MS().journal.map(e => e.date + ' | ' + e.type + (e.depth ? ' | depth ' + e.depth : '') + '\n' + (e.name || '') + '\n' + e.text + '\n').join('\n---\n');
+  const filename = 'deep-level-journal-' + iso(new Date()) + '.txt';
+  if (!STANDALONE && window.claude && window.claude.use) {
+    try { const dl = await window.claude.use('downloads'); if (dl) { await dl.save({ filename, data: txt }); return; } } catch (e) { if (e && e.code === 'cancelled') return; }
+  }
+  const url = URL.createObjectURL(new Blob([txt], { type: 'text/plain' }));
+  const a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 4000);
+}
+document.addEventListener('click', ev => {
+  const link = ev.target.closest('a[href^="#/"]');
+  if (link) {
+    ev.preventDefault();
+    const p = link.getAttribute('href').replace(/^#\/?/, '').split('/'), r = p[0];
+    if (r === 'play') return mdOpen(p[1]);
+    if (r === 't') return mdGo('tech', { mtech: p[1] });
+    if (r === 'week') return mdGo('week', { mweek: +p[1] || 1, mday: +p[2] || 0 });
+    if (r === 'techniques') return mdGo('library');
+    if (r === 'practice') return mdGo('sessions');
+    return mdGo(['program', 'journal', 'guide', 'tap', 'count'].includes(r) ? r : 'today');
+  }
+  const b = ev.target.closest('[data-act]'); if (!b) return;
+  const a = b.dataset.act;
+  if (a === 'mview') mdGo(b.dataset.v);
+  else if (a === 'mweek') mdGo('week', { mweek: +b.dataset.w, mday: 0, mjump: null });
+  else if (a === 'mday') { V.mweek = +b.dataset.w; V.mday = +b.dataset.d; render(); }
+  else if (a === 'mtech') mdGo('tech', { mtech: b.dataset.id });
+  else if (a === 'mtog') { mdToggle(b.dataset.k); render(); }
+  else if (a === 'mplay') mdOpen(b.dataset.id);
+  else if (a === 'mfilt') { V.mfilt = b.dataset.v; render(); }
+  else if (a === 'mjump') { V.mjump = +b.dataset.w; render(); }
+  else if (a === 'mjump-no') { V.mjump = null; render(); }
+  else if (a === 'mjump-yes') { const w = +b.dataset.w, D = MS().done; for (let ww = 1; ww < w; ww++) for (let d = 1; d <= 7; d++) mdDayTasks(ww, d).forEach((t, i) => D[mdKey(ww, d, i)] = 1); persist('mind'); V.mjump = null; mdGo('today'); toast('Week ' + w + ' is now current'); }
+  else if (a === 'mjexp') mdExport();
+  else if (a === 'mjdel') { V.mjdel = +b.dataset.i; render(); }
+  else if (a === 'mjdel-no') { V.mjdel = null; render(); }
+  else if (a === 'mjdel-yes') { MS().journal.splice(+b.dataset.i, 1); V.mjdel = null; persist('mind'); render(); toast('Entry deleted'); }
+});
+document.addEventListener('change', ev => {
+  const t = ev.target, M = MS();
+  if (t.id === 'md-sv') { M.set.voice = t.checked; persist('mind'); }
+  else if (t.id === 'md-sr') { M.set.rate = +t.value; persist('mind'); }
+  else if (t.id === 'md-sp') { M.set.pace = +t.value; persist('mind'); }
+});
+document.addEventListener('toggle', ev => { if (ev.target.classList && ev.target.classList.contains('md-day')) V.mdOpen = ev.target.open; }, true);
+document.addEventListener('submit', ev => {
+  if (ev.target.id === 'md-tapf') { ev.preventDefault(); mdBuildTap(); document.getElementById('md-tout').innerHTML = V.mtapOut; return; }
+  if (ev.target.id === 'md-jf') {
+    ev.preventDefault();
+    const x = document.getElementById('md-jx').value.trim(), n = document.getElementById('md-jn').value.trim(); if (!x && !n) return;
+    MS().journal.push({ date: iso(new Date()), type: document.getElementById('md-jt').value, depth: +document.getElementById('md-jd').value, name: n, text: x });
+    persist('mind'); render(); toast('Entry saved');
+  }
+});
+
+
 /* ---------- render + events ---------- */
 const ICONS = {
   today:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v4M12 3 9 6M12 3l3 3"/><path d="M8 21h8M12 21V11"/><path d="M5 13h14"/></svg>',
   progress:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><path d="M5 16l4-5 4 3 6-8"/></svg>',
   breath:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10a3 3 0 1 0-3-3"/><path d="M3 12h15a3 3 0 1 1-3 3"/><path d="M3 16h6"/></svg>',
+  mind:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9" opacity=".45"/><circle cx="12" cy="12" r="5" opacity=".75"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg>',
   guide:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/></svg>',
   supps:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="18" height="7" rx="3.5" transform="rotate(-35 12 12.5)"/><path d="M9.5 8.2l4 6"/></svg>',
   settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>',
@@ -1309,8 +2591,8 @@ const ICONS = {
 function render(){
   const main = $('#main');
   const focusId = document.activeElement && document.activeElement.id;
-  main.innerHTML = V.tab === 'today' ? renderToday() : V.tab === 'progress' ? renderProgress() : V.tab === 'guide' ? renderGuide() : V.tab === 'supps' ? renderSupps() : V.tab === 'breath' ? renderBreath() : renderSettings();
-  $('#tabs').innerHTML = [['today','Today'],['progress','Progress'],['breath','Breath'],['supps','Supps'],['guide','Guide'],['settings','Settings']].map(([k,l]) => `<button class="tab ${V.tab===k?'on':''}" data-act="tab" data-v="${k}" aria-current="${V.tab===k?'page':'false'}">${ICONS[k]}<span>${l}</span></button>`).join('');
+  main.innerHTML = V.tab === 'today' ? renderToday() : V.tab === 'progress' ? renderProgress() : V.tab === 'guide' ? renderGuide() : V.tab === 'supps' ? renderSupps() : V.tab === 'breath' ? renderBreath() : V.tab === 'mind' ? renderMind() : renderSettings();
+  $('#tabs').innerHTML = [['today','Today'],['progress','Progress'],['breath','Breath'],['mind','Mind'],['supps','Supps'],['guide','Guide'],['settings','Settings']].map(([k,l]) => `<button class="tab ${V.tab===k?'on':''}" data-act="tab" data-v="${k}" aria-current="${V.tab===k?'page':'false'}">${ICONS[k]}<span>${l}</span></button>`).join('');
   if (focusId) { const el = document.getElementById(focusId); if (el && el.tagName === 'INPUT' && el.type === 'text') { el.focus(); const n = el.value.length; try { el.setSelectionRange(n, n); } catch(e){} } }
 }
 function entry(code){
@@ -1334,7 +2616,7 @@ document.addEventListener('click', ev => {
   else if (a === 'delm') { S.metrics.entries = S.metrics.entries.filter(e => e.id !== b.dataset.id); persist('metrics'); render(); toast('Entry deleted'); }
   else if (a === 'reset') { V.confirmReset = true; render(); }
   else if (a === 'reset-no') { V.confirmReset = false; render(); }
-  else if (a === 'reset-yes') { const keys = Object.keys(S.logs), months = Object.keys(S.supplog); S.logs = {}; S.metrics = { entries: [] }; S.supplog = {}; if (S.breath) { S.breath.done = {}; S.breath.bolt = []; S.breath.holds = []; persist('breath'); } keys.forEach(k => persist('log-' + k)); months.forEach(m => persist('supplog-' + m)); persist('metrics'); V.confirmReset = false; render(); toast('Logs erased'); }
+  else if (a === 'reset-yes') { const keys = Object.keys(S.logs), months = Object.keys(S.supplog); S.logs = {}; S.metrics = { entries: [] }; S.supplog = {}; if (S.breath) { S.breath.done = {}; S.breath.bolt = []; S.breath.holds = []; persist('breath'); } if (S.mind) { S.mind.done = {}; S.mind.journal = []; persist('mind'); } keys.forEach(k => persist('log-' + k)); months.forEach(m => persist('supplog-' + m)); persist('metrics'); V.confirmReset = false; render(); toast('Logs erased'); }
   else if (a === 'backup') { doBackup(); }
   else if (a === 'rt') { const en = entry(b.dataset.c); const i = +b.dataset.i; en.dr = en.dr || []; const k = en.dr.indexOf(i); if (k >= 0) en.dr.splice(k, 1); else en.dr.push(i); en.t = Date.now(); pruneEntry(b.dataset.c); saveSession(); render(); }
   else if (a === 'imp-yes') { applyImport(V.pendingImport); V.pendingImport = null; render(); toast('Backup imported'); }
@@ -1408,6 +2690,7 @@ function applyImport(o){
   S.supps = o.supps && Array.isArray(o.supps.items) ? o.supps : { items: [] };
   S.supplog = o.supplog || {};
   S.breath = o.breath ? Object.assign(BR_DEF(), o.breath) : BR_DEF(); persist('breath');
+  S.mind = o.mind ? Object.assign(MD_DEF(), o.mind) : MD_DEF(); persist('mind');
   new Set([...oldLogs, ...Object.keys(S.logs)]).forEach(k => persist('log-' + k));
   new Set([...oldMonths, ...Object.keys(S.supplog)]).forEach(m => persist('supplog-' + m));
   persist('profile'); persist('metrics'); persist('supps');
