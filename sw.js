@@ -1,5 +1,5 @@
 // Offline support: app files are cached on install; Google Fonts are cached the first time they load.
-const VERSION = 'ma-v8-2026-10-13';
+const VERSION = 'ma-v9-2026-10-13';
 const APP = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/maskable-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(VERSION).then(c => c.addAll(APP)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== VERSION).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
