@@ -726,6 +726,8 @@ function renderToday(){
     if (st.pain && !isDeload(w)) tags += `<span class="adj pain">pain last time</span>`;
     const grp = code.match(/^([A-Z])(\d)$/); if (grp) { const mates = sess.rows.filter(r2 => r2[0] !== code && r2[0].startsWith(grp[1]) && /\d$/.test(r2[0])).map(r2 => r2[0]); if (mates.length) tags += `<span class="pair">with ${mates.join(' + ')}</span>`; }
     if (elKey) tags += `<span class="lvl">${esc(lvlLabel(elKey))}</span>`;
+    const CP = !RT ? compoundParts(name, note) : null;
+    if (CP) { const done = (e?.dr || []).length; tags += `<span class="lvl">${done ? done + '/' : ''}${CP.length * circRounds(rx)} checks</span>`; }
     if (RT) { const done = (e?.dr || []).length, rounds = rtKey === 'bulgarian' ? circRounds(rx) : 1; tags += `<span class="lvl">${done ? done + '/' : ''}${RT[2].length * rounds} ${rtKey === 'bulgarian' ? 'checks' : 'drills'}</span>`; }
     if (er) tags += `<span class="rated">· ${RATINGS.find(x=>x[0]===er)[1]}${e.res?` · ${esc(e.res)}`:''}</span>`;
     h += `<div class="ex ${e?'logged':''}"><button class="ex-row" data-act="open" data-c="${code}" aria-expanded="${open}"><span class="code">${esc(code)}</span><span class="ex-name">${esc(name)}<div class="tags">${tags}</div></span><span class="rx">${esc(rx||'—')}${changed?`<span class="was">${esc(planned)}</span>`:''}</span></button>`;
@@ -733,6 +735,7 @@ function renderToday(){
     if (open) {
       h += `<div class="ex-body">${note?`<div class="ex-note">${esc(isPct ? withKg(note) : note)}</div>`:''}`;
       if (isPct) h += `<div class="why">1RM (added weight): ${oneRM().v}kg, ${oneRM().src}.</div>`;
+      if (CP) h += compoundHTML(CP, code, e?.dr || [], circRounds(rx));
       if (RT && rtKey === 'bulgarian') h += circuitHTML(RT, code, e?.dr || [], circRounds(rx));
       else if (RT) {
         const dr = e?.dr || [];
@@ -2557,7 +2560,7 @@ document.addEventListener('submit', ev => {
 
 
 /* ---------- BULGARIAN CIRCUIT: rounds × exercises checklist ---------- */
-function circRounds(rx){ const m = String(rx || '').match(/^(\d+)\s?sets?/); return m ? Math.max(1, +m[1]) : 3; }
+function circRounds(rx){ if (/per shape/.test(rx || '')) return 1; const m = String(rx || '').match(/^(\d+)\s?sets?/); return m ? Math.max(1, +m[1]) : 3; }
 function circuitHTML(RT, code, dr, rounds){
   let h = `<div class="lvlbox"><b>${esc(RT[0])}</b><div class="mut">${esc(RT[1])}</div><div class="mut">${rounds} round${rounds > 1 ? 's' : ''} today. Tick each exercise in each round.</div></div>`;
   h += `<div class="circ" style="--r:${rounds}"><div class="circ-head"><span></span>${Array.from({ length: rounds }, (_, r) => `<span>R${r + 1}</span>`).join('')}</div>`;
@@ -2690,6 +2693,34 @@ document.addEventListener('click', ev => {
   else if (a === 'fcancel-yes') { F.cur = null; V.fcancel = false; persist('fast'); render(); }
 });
 document.addEventListener('toggle', ev => { if (ev.target.classList && ev.target.classList.contains('fast-proto') && ev.target.open) V.fopen = ev.target.querySelector('b').textContent; }, true);
+
+/* ---------- COMPOUND EXERCISES: rounds × parts checklist ---------- */
+function compoundParts(name, note){
+  let src = '';
+  const m = (note || '').match(/1 set = (.+?)(?:\.\s|\.$|$)/);
+  if (m) src = m[1];
+  if (!src || /^all three drills/i.test(src)) { const n = name.split(': ')[1]; if (n && / · /.test(n)) src = n; else if (!m) return null; }
+  let each = ''; const em = src.match(/,\s*(\d+m) each$/); if (em) { each = em[1]; src = src.replace(em[0], ''); }
+  src = src.replace(/\s*\(week \d+:[^)]*\)/, '').replace(/ back to back.*$/, '').replace(/, linked$/, '').replace(/,\s*\d+ reps each$/, '').replace(/, \d+[–-]?\d* each$/, '').replace(/, 4s lowering$/, '');
+  let parts;
+  if (/ · /.test(src)) parts = src.split(' · ');
+  else if (/, then /.test(src)) parts = src.split(/, then /);
+  else if (/, /.test(src) && /→/.test(src)) parts = src.split(', ');
+  else if (/ → /.test(src)) parts = src.split(' → ');
+  else parts = src.split(/, | and /);
+  parts = parts.map(s => s.trim()).filter(Boolean);
+  if (parts.length < 2) return null;
+  return parts.map(p => { const d = p.match(/^(.*?)\s((?:×|x)\s?[\d/–-]+.*|\d+m|\d+s)$/); return d ? [d[1], d[2]] : [p.charAt(0).toUpperCase() + p.slice(1), each]; });
+}
+function compoundHTML(parts, code, dr, rounds){
+  let h = `<div class="circ" style="--r:${rounds}"><div class="circ-head"><span style="text-align:left">${rounds} round${rounds > 1 ? 's' : ''} · tick each part</span>${Array.from({ length: rounds }, (_, r) => `<span>R${r + 1}</span>`).join('')}</div>`;
+  parts.forEach(([n, d], i) => {
+    h += `<div class="circ-row"><div class="circ-ex"><b>${i + 1}. ${esc(n.charAt(0).toUpperCase() + n.slice(1))}</b>${d ? `<span class="rt-dose">${esc(d)}</span>` : ''}</div>`;
+    for (let r = 0; r < rounds; r++) { const k = i * 10 + r, on = dr.includes(k); h += `<button class="check circ-ck ${on ? 'on' : ''}" data-act="rt" data-c="${code}" data-i="${k}" aria-pressed="${on}" aria-label="${esc(n)}, round ${r + 1}">${on ? '✓' : ''}</button>`; }
+    h += '</div>';
+  });
+  return h + '</div>';
+}
 
 
 /* ---------- TIMERS: work holds and rest ---------- */
