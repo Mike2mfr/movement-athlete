@@ -354,6 +354,9 @@ button.md-tag{cursor:pointer}
 .fast-ok{color:var(--good);font-weight:700;font-size:13px}
 .fast-mini .bar{margin-top:6px}
 input[type=time]{border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:10px;padding:9px 10px;font:inherit;font-size:14px}
+.daily > summary{cursor:pointer;display:flex;justify-content:space-between;gap:8px;list-style:none;font-size:15px}
+.daily > summary::-webkit-details-marker{display:none}
+.daily .br-item .chip.tm{white-space:nowrap}
 </style>
 </head><body><main class="wrap" id="main"></main>
 <div class="tabbar"><nav id="tabs" aria-label="Sections"></nav></div>
@@ -664,7 +667,7 @@ function renderToday(){
   h += '<div class="days" role="tablist">' + DAYKEYS.map((k,i) => {
     const lg = getLog(w, k), sess = sessionOf(w, k);
     let dot = '';
-    if (lg && sess) { const tot = sess.rows.filter(r => r[2].some(Boolean)).length, n = Object.keys(lg.entries).filter(k => k !== 'EVE').length; if (n) dot = `<em class="dot ${n >= tot ? '' : 'part'}"></em>`; }
+    if (lg && sess) { const tot = sess.rows.filter(r => r[2].some(Boolean)).length, n = Object.keys(lg.entries).filter(k => k !== 'EVE' && k !== 'DAY').length; if (n) dot = `<em class="dot ${n >= tot ? '' : 'part'}"></em>`; }
     const d = dateOf(w, i);
     return `<button class="day ${i===di?'sel':''} ${w===pos.week&&i===pos.dayIdx&&!pos.before?'today':''}" data-act="day" data-i="${i}" role="tab" aria-selected="${i===di}">${dot}<b>${DAYSHORT[i]}</b><span>${d.getDate()}/${d.getMonth()+1}</span></button>`;
   }).join('') + '</div>';
@@ -678,7 +681,7 @@ function renderToday(){
   if (dk === 'D7') {
     h += `<div class="rest-card"><div class="eyebrow">Sunday</div><h2>Rest</h2><p class="mut">Optional 10-minute reset: spinal waves 5 min, passive squat 2–5 min, passive hang 1 min. Go for a walk.</p></div>`;
     if (P.routines && P.routines.dw_flow) { const F = P.routines.dw_flow; h += `<details class="card" style="margin-top:10px"><summary style="cursor:pointer"><b>${esc(F[0])}</b><div class="mut" style="font-size:12.5px;margin-top:3px">${esc(F[1])}</div></summary><ul class="rt-list" style="margin-top:10px">${F[2].map(d => `<li class="rt-item" style="grid-template-columns:1fr;cursor:default"><span class="rt-txt"><b>${esc(d[0])}</b><span class="rt-dose">${esc(d[1])}</span>${d[2]?`<span class="mut">${esc(d[2])}</span>`:''}</span></li>`).join('')}</ul></details>`; }
-    h += fastBanner(iso(dateOf(w, di))) + breathCard(iso(dateOf(w, di))) + mindCard(iso(dateOf(w, di))) + eveningCard(w, dk);
+    h += fastBanner(iso(dateOf(w, di))) + dailyCard(w, dk) + breathCard(iso(dateOf(w, di))) + mindCard(iso(dateOf(w, di))) + eveningCard(w, dk);
     return h;
   }
   const sess = sessionOf(w, dk);
@@ -755,9 +758,9 @@ function renderToday(){
     h += '</div>';
   });
   h += '</div>';
-  const tot = sess.rows.filter(r => r[2].some(Boolean)).length, n = lg ? Object.keys(lg.entries).filter(k => k !== 'EVE').length : 0;
+  const tot = sess.rows.filter(r => r[2].some(Boolean)).length, n = lg ? Object.keys(lg.entries).filter(k => k !== 'EVE' && k !== 'DAY').length : 0;
   h += `<div class="complete"><span><b class="num">${n}/${tot}</b> logged</span><span class="mut">Easy twice in a row steps it up · Hard twice or missed steps it down</span></div>`;
-  h += fastBanner(iso(dateOf(w, di))) + breathCard(iso(dateOf(w, di))) + mindCard(iso(dateOf(w, di))) + eveningCard(w, dk);
+  h += fastBanner(iso(dateOf(w, di))) + dailyCard(w, dk) + breathCard(iso(dateOf(w, di))) + mindCard(iso(dateOf(w, di))) + eveningCard(w, dk);
   return h;
 }
 
@@ -811,7 +814,7 @@ function renderProgress(){
   // adherence
   let logged = 0, planned = 0;
   const pos = todayPos();
-  for (let w = 1; w <= Math.min(12, pos.week); w++) for (let di = 0; di < 6; di++) { if (w === pos.week && di > pos.dayIdx) break; planned++; if (getLog(w, DAYKEYS[di]) && Object.keys(getLog(w, DAYKEYS[di]).entries).filter(k => k !== 'EVE').length) logged++; }
+  for (let w = 1; w <= Math.min(12, pos.week); w++) for (let di = 0; di < 6; di++) { if (w === pos.week && di > pos.dayIdx) break; planned++; if (getLog(w, DAYKEYS[di]) && Object.keys(getLog(w, DAYKEYS[di]).entries).filter(k => k !== 'EVE' && k !== 'DAY').length) logged++; }
   if (!pos.before) h += `<div class="card" style="margin-top:10px"><h3>Sessions logged</h3><div class="num" style="font-size:22px;font-weight:700">${logged} / ${planned}</div><div class="mut" style="font-size:12.5px">Counted up to today</div></div>`;
   return h;
 }
@@ -2721,6 +2724,49 @@ function compoundHTML(parts, code, dr, rounds){
   });
   return h + '</div>';
 }
+
+
+/* ---------- DAILY PROTOCOL: the small things the program asks for every day ---------- */
+// [id, when, title, detail, timer secs, action]  action: {tab} | {open:'EVE'}
+function dailyItems(dk){
+  const train = ['D1','D2','D3','D4','D5'].includes(dk), move = dk === 'D6', rest = dk === 'D7';
+  const hsDay = ['D1','D3','D5'].includes(dk);
+  const it = [];
+  it.push(['water', 'Morning', 'Glass of water with salt', 'Before coffee. Rehydrates after the night, especially on a fasting morning.', 0]);
+  it.push(['reset', 'Morning', 'Daily reset: spinal waves · deep squat · hang', 'Spinal waves at a wall 5 min, relaxed deep squat 2–3 min, passive hang 1 min (or a door frame stretch at home).', 540]);
+  it.push(['wrist', 'Morning', 'Wrist and finger prep', 'Circles, rocks forward/back/sideways and 10 fingertip push-ups. Keeps the wrists ready for daily handstand work.', 120]);
+  it.push(['breathAm', 'Morning', 'Morning breathwork', 'The morning session in the Breath tab.', 0, { tab: 'breath' }]);
+  if (!hsDay && !rest) it.push(['hs5', 'Any time', '5 minutes of handstand entries', 'Kick-ups or tuck/straddle entries in the middle of the room, every rep light and quiet. Not on Mon/Wed/Fri: the session covers it.', 300]);
+  if (rest) it.push(['hsRest', 'Any time', 'Optional: 5 easy wall lines', 'Chest-to-wall, 30s each, purely for feel. Skip if the wrists need the day off.', 30]);
+  it.push(['meal1', 'First meal', 'Protein + supplements', '30–50 g protein. Omega-3, multivitamin and D3+K2 with this meal; creatine any time.', 0]);
+  it.push(['midBreath', 'Midday', 'Coherent breathing 5 min', '5s in, 5s out through the nose. Resets stress before the afternoon or before training.', 300]);
+  if (train) it.push(['post', 'After training', 'Recovery holds + meal within 2h', 'The 4-minute recovery holds in the Breath card, then a proper meal with protein and carbs.', 240]);
+  if (move) it.push(['flow', 'Movement day', 'Play: 10 min of free flow or juggling', 'Anything that is not in the plan: floreio, juggling, a new skill. Keep it light.', 600]);
+  it.push(['steps', 'All day', '8,000+ steps', 'Easy walking helps recovery between hard days. A walk after lunch counts double for digestion.', 0]);
+  it.push(['nose', 'All day', 'Nose breathing at rest and in easy work', 'Mouth closed, tongue on the roof of the mouth.', 0]);
+  it.push(['eve', 'Evening', 'Evening stretch (optional)', 'The 10-minute floor routine at the bottom of today.', 0, { open: 'EVE' }]);
+  it.push(['mg', 'Evening', 'Magnesium + screens off 1h before bed', 'Dim lights, cool room. 7.5–9 hours in bed: this is where the training adapts.', 0]);
+  it.push(['journal', 'Evening', 'One line: how did today feel?', 'Rate today\'s exercises in the session and set tomorrow\'s readiness honestly.', 0]);
+  return it;
+}
+function dailyCard(w, dk){
+  const items = dailyItems(dk), lg = getLog(w, dk), e = lg && lg.entries && lg.entries.DAY, dr = (e && e.dr) || [];
+  const open = V.dailyOpen != null ? V.dailyOpen : true;
+  let h = `<details class="card brcard daily" ${open ? 'open' : ''}><summary><span><b>Daily protocol</b></span><span class="mut num">${items.filter((x, i) => dr.includes(i)).length}/${items.length}</span></summary>`;
+  let last = '';
+  items.forEach(([id, when, title, detail, secs, act], i) => {
+    if (when !== last) { h += `<div class="eyebrow br-slot">${esc(when)}</div>`; last = when; }
+    const on = dr.includes(i);
+    h += `<div class="br-item ${on ? 'done' : ''}"><button class="check ${on ? 'on' : ''}" data-act="rt" data-c="DAY" data-i="${i}" aria-pressed="${on}" aria-label="Mark done">${on ? '✓' : ''}</button><span class="br-txt"><b>${esc(title)}</b><span class="mut">${esc(detail)}</span></span>`;
+    if (secs) h += `<button class="chip tm" data-act="timer" data-s="${secs}" data-l="${esc(title)}" data-k="work">⏱ ${fmtT(secs)}</button>`;
+    else if (act && act.tab) h += `<button class="btn ghost br-go" data-act="tab" data-v="${act.tab}">Open</button>`;
+    else if (act && act.open) h += `<button class="btn ghost br-go" data-act="open" data-c="${act.open}">Show</button>`;
+    else h += '<span></span>';
+    h += '</div>';
+  });
+  return h + `<p class="mut" style="font-size:12px;margin:8px 0 0">Not part of the program's scoring: tick what you do, skip what doesn't fit the day.</p></details>`;
+}
+document.addEventListener('toggle', ev => { if (ev.target.classList && ev.target.classList.contains('daily')) V.dailyOpen = ev.target.open; }, true);
 
 
 /* ---------- TIMERS: work holds and rest ---------- */
