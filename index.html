@@ -177,6 +177,7 @@ details.gd>.gd-b{padding:0 16px 14px;border-top:1px solid var(--line);padding-to
 .gd-x{margin-left:auto;font-size:12.5px;white-space:nowrap}
 details.gd>summary .gd-x+*{}
 details.fold{margin-bottom:10px}
+#main details.fold[data-fk^="tc-"]{margin-top:10px;margin-bottom:0}
 details.fold .md-grid{margin-top:4px}
 .gd-tools{display:flex;gap:8px;margin:0 0 12px}
 .howrun summary{cursor:pointer;font-weight:700}
@@ -673,6 +674,14 @@ const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;
 let toastT;
 function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 1800); }
 // collapsible topic: remembers open/closed across re-renders
+// turns a day card into a tap-to-open topic (closed until you open it; remembers its state)
+function foldCard(key, html){
+  if (!html) return '';
+  let m = html.match(/^<div class="card brcard"><div class="br-head"><h3>([\s\S]*?)<\/h3><span class="mut num">([\s\S]*?)<\/span><\/div>([\s\S]*)<\/div>$/);
+  if (!m) m = html.match(/^<details class="card brcard daily"[^>]*><summary><span><b>([\s\S]*?)<\/b><\/span><span class="mut num">([\s\S]*?)<\/span><\/summary>([\s\S]*)<\/details>$/);
+  if (!m) return html;
+  return fold('tc-' + key, m[1], m[3], m[2], false);
+}
 function fold(key, title, body, extra, defOpen){
   const F = V.fold || (V.fold = {}), o = key in F ? F[key] : !!defOpen;
   return `<details class="card gd fold" data-fk="${key}" ${o ? 'open' : ''}><summary><h3>${title}</h3>${extra ? `<span class="mut num gd-x">${extra}</span>` : ''}</summary><div class="gd-b">${body}</div></details>`;
@@ -706,7 +715,7 @@ function renderToday(){
   if (dk === 'D7') {
     h += `<div class="rest-card"><div class="eyebrow">Sunday</div><h2>Rest</h2><p class="mut">Optional 10-minute reset: spinal waves 5 min, passive squat 2–5 min, passive hang 1 min. Go for a walk.</p></div>`;
     if (P.routines && P.routines.dw_flow) { const F = P.routines.dw_flow; h += `<details class="card" style="margin-top:10px"><summary style="cursor:pointer"><b>${esc(F[0])}</b><div class="mut" style="font-size:12.5px;margin-top:3px">${esc(F[1])}</div></summary><ul class="rt-list" style="margin-top:10px">${F[2].map(d => `<li class="rt-item" style="grid-template-columns:1fr;cursor:default"><span class="rt-txt"><b>${esc(d[0])}</b><span class="rt-dose">${esc(d[1])}</span>${d[2]?`<span class="mut">${esc(d[2])}</span>`:''}</span></li>`).join('')}</ul></details>`; }
-    h += fastBanner(iso(dateOf(w, di))) + dailyCard(w, dk) + breathCard(iso(dateOf(w, di))) + mindCard(iso(dateOf(w, di))) + extraCard(w, dk) + eveningCard(w, dk);
+    h += fastBanner(iso(dateOf(w, di))) + foldCard('daily', dailyCard(w, dk)) + foldCard('breath', breathCard(iso(dateOf(w, di)))) + foldCard('mind', mindCard(iso(dateOf(w, di)))) + foldCard('extra', extraCard(w, dk)) + foldCard('eve', eveningCard(w, dk));
     return h;
   }
   const sess = sessionOf(w, dk);
@@ -786,7 +795,7 @@ function renderToday(){
   h += '</div>';
   const tot = sess.rows.filter(r => r[2].some(Boolean) && r[0] !== 'R').length, n = lg ? Object.keys(lg.entries).filter(k => k !== 'EVE' && k !== 'DAY' && k !== 'XTR').length : 0;
   h += `<div class="complete"><span><b class="num">${n}/${tot}</b> logged</span><span class="mut">Easy twice in a row steps it up · Hard twice or missed steps it down</span></div>`;
-  h += fastBanner(iso(dateOf(w, di))) + dailyCard(w, dk) + breathCard(iso(dateOf(w, di))) + mindCard(iso(dateOf(w, di))) + extraCard(w, dk) + eveningCard(w, dk);
+  h += fastBanner(iso(dateOf(w, di))) + foldCard('daily', dailyCard(w, dk)) + foldCard('breath', breathCard(iso(dateOf(w, di)))) + foldCard('mind', mindCard(iso(dateOf(w, di)))) + foldCard('extra', extraCard(w, dk)) + foldCard('eve', eveningCard(w, dk));
   return h;
 }
 
@@ -1252,7 +1261,7 @@ function breathCard(date){
   h += `<div class="mut" style="font-size:12.5px;margin:-2px 0 6px">${esc(p.f)}</div>`;
   if (mv && mv.train) h += `<div class="eyebrow br-slot">Right after training</div>` + brRow(date, 'post', 'recover', 'Recovery holds');
   const slotKeys = BR_SLOTS.flatMap(([sl]) => p[sl].map(s => sl + '|' + s)), slotDone = slotKeys.filter(k => brIsDone(date, k)).length;
-  const open = V.brOpen != null ? V.brOpen : !(mv && mv.train);
+  const open = V.brOpen != null ? V.brOpen : true;
   h += `<details class="br-day" ${open ? 'open' : ''}><summary><span>Morning · midday · evening</span><span class="mut num">${slotDone}/${slotKeys.length}</span></summary>`;
   BR_SLOTS.forEach(([sl, nm]) => { if (p[sl].length) h += `<div class="eyebrow br-slot">${nm}</div>` + p[sl].map(s => brRow(date, sl, s)).join(''); });
   if (mv && mv.ready === 'low' && items.some(brIntense)) h += `<div class="eyebrow br-slot">Swap for today</div>` + brRow(date, 'am', 'coherent:10');
@@ -2310,7 +2319,7 @@ const MD_TRAIN = [
 /* ---------- DEEP LEVEL: card on today's session ---------- */
 function mindCard(date){
   const day = MD_DAYS[mdWD(date) - 1], tasks = day.t, mv = mvOn(date), done = mdDayCount(date);
-  const open = V.mdOpen != null ? V.mdOpen : !(mv && mv.train);
+  const open = V.mdOpen != null ? V.mdOpen : true;
   let h = `<div class="card brcard"><div class="br-head"><h3>Meditation · ${esc(day.n)}</h3><span class="mut num">${done}/${tasks.length}</span></div>`;
   h += `<div class="mut" style="font-size:12.5px;margin:-2px 0 6px">${esc(day.f)}</div>`;
   h += `<details class="md-day" ${open ? 'open' : ''}><summary><span>Today's practice</span><span class="mut num">~${tasks.reduce((a, t) => a + (t.mins || 0), 0)} min</span></summary>${mdTaskHTML(date, true)}</details>`;
@@ -2899,12 +2908,11 @@ const XTR_CAT = { HS: ['Handstand', 'c-HS'], MOB: ['Mobility', 'c-MOB'], PRE: ['
 function extraCard(w, dk){
   const X = XTR[dk]; if (!X) return '';
   const col = w % 4 === 0 ? 3 : (w <= 4 ? 0 : w <= 8 ? 1 : 2);
-  const lg = getLog(w, dk), e = lg && lg.entries && lg.entries.XTR, dr = (e && e.dr) || [], open = V.open === 'XTR';
+  const lg = getLog(w, dk), e = lg && lg.entries && lg.entries.XTR, dr = (e && e.dr) || [], open = true;
   const rows = X.rows.map((r, i) => ({ r, i })).filter(o => o.r.d[col] && o.r.d[col] !== '—');
   const done = rows.filter(o => dr.includes(o.i)).length;
   let h = `<div class="card brcard"><div class="br-head"><h3>Extra session · optional</h3><span class="mut num">${done}/${rows.length}</span></div>`;
   h += `<div style="font-weight:650;font-size:14px">${esc(X.t)}</div><div class="mut" style="font-size:12.5px;margin:2px 0 8px">${esc(X.s)}. Bodyweight only, 4–6 h away from the main session, easy effort. Skip it on low-readiness days.</div>`;
-  h += `<button class="btn ghost md-s" data-act="open" data-c="XTR">${open ? 'Hide exercises' : 'Show exercises'}</button>`;
   if (open) {
     h += `<div class="br-note info" style="margin-top:10px">${esc(X.i)}${col === 3 ? ' Deload week: lighter doses.' : ''}</div>`;
     h += `<ul class="rt-list" style="margin-top:8px">${rows.map(({ r, i }) => { const on = dr.includes(i), s = drillSecs(r.d[col]), cat = XTR_CAT[r.c] || ['', ''];
@@ -2914,9 +2922,8 @@ function extraCard(w, dk){
 }
 function eveningCard(w, dk){
   const R = P.routines && P.routines.evening; if (!R) return '';
-  const lg = getLog(w, dk), e = lg && lg.entries && lg.entries.EVE, dr = (e && e.dr) || [], open = V.open === 'EVE';
+  const lg = getLog(w, dk), e = lg && lg.entries && lg.entries.EVE, dr = (e && e.dr) || [], open = true;
   let h = `<div class="card brcard"><div class="br-head"><h3>Evening stretch · optional</h3><span class="mut num">${dr.length}/${R[2].length}</span></div><div class="mut" style="font-size:12.5px;margin:-2px 0 8px">${esc(R[1])}. Not part of the program: skip it freely.</div>`;
-  h += `<button class="btn ghost md-s" data-act="open" data-c="EVE">${open ? 'Hide drills' : 'Show drills'}</button>`;
   if (open) h += `<ul class="rt-list" style="margin-top:10px">${R[2].map((d, i) => `<li><button class="rt-item ${dr.includes(i) ? 'on' : ''}" data-act="rt" data-c="EVE" data-i="${i}" aria-pressed="${dr.includes(i)}"><span class="check ${dr.includes(i) ? 'on' : ''}" aria-hidden="true">${dr.includes(i) ? '✓' : ''}</span><span class="rt-txt"><b>${esc(d[0])}</b><span class="rt-dose">${esc(d[1])}</span>${d[2] ? `<span class="mut">${esc(d[2])}</span>` : ''}</span></button>${drillSecs(d[1]) ? `<button class="chip tm" data-act="timer" data-s="${drillSecs(d[1])}" data-l="${esc(d[0])}" data-k="work">⏱ ${fmtT(drillSecs(d[1]))}</button>` : ''}</li>`).join('')}</ul>`;
   return h + '</div>';
 }
