@@ -140,8 +140,8 @@ select,input[type=number],input[type=date]{border:1px solid var(--line);backgrou
 
 /* tab bar */
 .tabbar{position:fixed;left:0;right:0;bottom:0;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));z-index:5}
-.tabbar nav{max-width:640px;margin:0 auto;display:grid;grid-template-columns:repeat(7,1fr);gap:0}
-.tab{border:0;background:none;padding:6px 0;border-radius:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10.5px;font-weight:600;color:var(--mut);min-width:0;letter-spacing:-.01em}
+.tabbar nav{max-width:640px;margin:0 auto;display:grid;grid-template-columns:repeat(8,1fr);gap:0}
+.tab{border:0;background:none;padding:6px 0;border-radius:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;font-weight:600;color:var(--mut);min-width:0;letter-spacing:-.02em}
 .tab svg{width:22px;height:22px}
 .tab.on{color:var(--fg)} .tab.on svg{color:var(--accent)}
 .toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:9px 14px;border-radius:10px;font-size:13px;font-weight:600;z-index:6;opacity:0;transition:opacity .2s;pointer-events:none}
@@ -2727,6 +2727,15 @@ setInterval(() => {
 document.addEventListener('click', ev => {
   const b = ev.target.closest('[data-act]'); if (!b) return;
   const a = b.dataset.act, F = FS();
+  if (a === 'phz' || a === 'phsev' || a === 'phdir' || a === 'phck' || a === 'phreset') {
+    const Q = V.ph, v = b.dataset.v, t = iso(new Date());
+    if (a === 'phz') Q.sel = Q.sel.includes(v) ? Q.sel.filter(x => x !== v) : Q.sel.concat(v);
+    else if (a === 'phsev') Q.sev = v; else if (a === 'phdir') Q.dir = v;
+    else if (a === 'phreset') delete Q.done[t];
+    else { const d = Q.done[t] = Q.done[t] || {}; if (d[v]) delete d[v]; else d[v] = 1; }
+    Object.keys(Q.done).forEach(k => { if (k < iso(new Date(Date.now() - 14 * 864e5))) delete Q.done[k]; });
+    phSave(Q); const y = window.scrollY; render(); window.scrollTo(0, y); return;
+  }
   if (a === 'ftab') { V.ftab = b.dataset.v; render(); window.scrollTo(0, 0); }
   else if (a === 'fproto') { F.proto = b.dataset.v; persist('fast'); render(); }
   else if (a === 'fstart') {
@@ -2944,7 +2953,180 @@ function eveningCard(w, dk){
 
 
 /* ---------- render + events ---------- */
+/* ---------- Prehab: pain-based easy sessions ---------- */
+const PH = {
+  areas: [
+    ['lowback','Lower back'],['back','Mid/upper back muscles'],['neck','Neck'],['shoulder','Shoulder'],['elbow','Elbow / forearm'],['wrist','Wrist / hand'],
+    ['hip','Hip / groin'],['ham','Hamstring'],['knee','Knee'],['ankle','Ankle / Achilles / foot'],['sore','General soreness / stiffness']
+  ],
+  /* each exercise: [name, mild dose, moderate dose, cue]; gentlest first (moderate pain uses the first 4) */
+  ex: {
+    lowback: [
+      ['90/90 breathing, feet on a wall', '2 × 6 breaths', '2 × 6 breaths', 'On your back, hips and knees at 90°, feet on the wall. Exhale fully, ribs down, feel the lower back soften into the floor.'],
+      ['Cat-camel, small range', '2 × 8 slow', '1 × 8 slow', 'On hands and knees, move through the range that feels easy. It is a motion drill, not a stretch.'],
+      ['McGill curl-up', '3 rounds: 6 · 4 · 2 reps × 10s', '2 rounds: 4 · 2 reps × 8s', 'One knee bent, hands under the lower back, lift only the head and shoulders a few cm. Spine stays neutral.'],
+      ['Side plank from the knees', '3 × 10s/side', '2 × 8s/side', 'Hips forward, straight line knees to head. Progress to the feet only when it is pain-free.'],
+      ['Bird dog with 5s holds', '2 × 6/side', '1 × 5/side', 'Reach long, no rotation in the hips. Imagine a glass of water on your lower back.'],
+      ['Glute bridge', '2 × 10, 3s hold', '1 × 10', 'Push through the heels, squeeze the glutes, stop before the lower back arches.'],
+      ['Easy walk', '10–15 min', '10 min', 'Walking is one of the best things for a sore lower back. Swing the arms, keep the pace easy.']
+    ],
+    lowback_flex: [['Prone lying → prone on elbows', '2 × 60s', '2 × 45s', 'Pain worse when bending forward: lie on your stomach, then prop on the elbows if it stays calm. Stop if pain spreads into the leg.']],
+    lowback_ext:  [['Knees to chest, rocking', '2 × 30s', '2 × 30s', 'Pain worse when arching: hug the knees and rock gently side to side. Skip bridges and back extensions today.']],
+    back: [
+      ['Child\'s pose with side reach', '5 breaths/side', '5 breaths/side', 'Walk the hands to one side, breathe into the opposite ribs.'],
+      ['Open books, side-lying', '2 × 8/side', '1 × 8/side', 'Knees stacked, open the top arm and follow it with the eyes. Let the upper back rotate, not the hips.'],
+      ['Thread the needle', '2 × 6/side', '1 × 6/side', 'Slide the arm under, pause 2s, then reach to the ceiling.'],
+      ['Thoracic extension over a rolled towel', '2 × 8', '1 × 8', 'Towel across the upper back, hands behind the head, extend over it. Move the towel up one spot for the 2nd set.'],
+      ['Prone Y-T-W raises, no weight', '2 × 8 each', '1 × 6 each', 'Lying face down, thumbs up, lift from the shoulder blades.'],
+      ['Towel or band pull-aparts', '2 × 15', '1 × 15', 'Arms straight, squeeze the shoulder blades together and down.'],
+      ['Warm shower or heat + easy walk', '10 min', '10 min', 'Muscle pain usually settles faster with heat and gentle movement than with rest.']
+    ],
+    neck: [
+      ['Chin tucks lying on your back', '2 × 10, 5s hold', '1 × 10, 5s hold', 'Nod as if saying "yes" very small, back of the head slides along the floor.'],
+      ['Neck isometrics, 4 directions', '2 × 10s each, 30% effort', '1 × 8s each, 20% effort', 'Hand on the forehead, back, then each side of the head. Push without moving.'],
+      ['Upper trap + levator stretch', '2 × 30s/side', '1 × 30s/side', 'Hold the bench or sit on your hand to keep that shoulder down. Breathe slowly.'],
+      ['Scapular wall slides', '2 × 10', '1 × 8', 'Back to the wall, arms in a W, slide up while keeping the ribs down.'],
+      ['Prone W squeeze', '2 × 10, 3s hold', '1 × 8', 'Face down, forehead on a towel, pull the elbows down toward the back pockets.'],
+      ['Slow neck rotations', '1 × 8/side', '1 × 6/side', 'Only in the range that is easy. Eyes lead, head follows.']
+    ],
+    shoulder: [
+      ['Pendulum swings', '2 × 45s', '2 × 30s', 'Lean on a table, let the arm hang and draw small circles from the body, not the arm.'],
+      ['Isometric external rotation against a wall', '5 × 10s/side', '4 × 10s/side', 'Elbow at 90° by your side, push the back of the hand into the wall at 30–50% effort.'],
+      ['Side-lying external rotation, light', '2 × 12–15', '1 × 12', 'Towel under the elbow, slow up and down. A water bottle is enough.'],
+      ['Scapular push-ups (wall or knees)', '2 × 12', '1 × 10', 'Arms straight, let the chest sink between the shoulder blades, then push the floor away.'],
+      ['Wall slides with lift-off', '2 × 10', '1 × 8', 'At the top, lift the hands 2 cm off the wall without arching the back.'],
+      ['Band or towel rows', '2 × 15', '1 × 12', 'Elbows close, pull the shoulder blades back and down.'],
+      ['Cross-body stretch, gentle', '2 × 30s/side', '1 × 30s/side', 'Pull the arm across the chest at the elbow. No pinching at the front.']
+    ],
+    elbow: [
+      ['Isometric wrist extension hold', '5 × 30–45s', '4 × 30s', 'Forearm on a table, hold a light bottle with the wrist slightly up. Pain should stay at 3/10 or less and often eases.'],
+      ['Isometric wrist flexion hold', '3 × 30s', '2 × 30s', 'Same position, palm up. Use this one for pain on the inside of the elbow.'],
+      ['Slow eccentric wrist extension', '3 × 15', '2 × 10', 'Lift the bottle with the other hand, lower it slowly over 3–4s with the sore side.'],
+      ['Pronation / supination with a hammer', '2 × 15', '1 × 12', 'Hold the hammer by the handle, rotate slowly from palm down to palm up.'],
+      ['Finger extensions with a rubber band', '2 × 20', '1 × 20', 'Band around the fingertips, open the hand wide.'],
+      ['Forearm flexor + extensor stretch', '2 × 30s each', '1 × 30s each', 'Gentle, elbow straight.']
+    ],
+    wrist: [
+      ['Tendon glides + wrist circles', '2 min', '2 min', 'Straight hand → hook fist → full fist → straight fist, then slow circles both ways.'],
+      ['Isometric press into the floor', '5 × 10s', '4 × 10s', 'On the knees, palms flat, press the fingers down without moving. Low effort.'],
+      ['Wrist rocks on the knees, small range', '2 × 10', '1 × 10', 'Palms down, rock forward only as far as it stays comfortable. Then backs of the hands, lighter.'],
+      ['Radial / ulnar deviation with a hammer', '2 × 15 each', '1 × 12 each', 'Hold it by the end and tilt up and down. Slow.'],
+      ['Wrist flexion / extension with a bottle', '2 × 15 each', '1 × 12 each', 'Forearm on the thigh, full range, light.'],
+      ['Prayer + reverse prayer stretch', '2 × 20s each', '1 × 20s each', 'Gentle, no sharp pain.']
+    ],
+    hip: [
+      ['90/90 hip switches', '2 × 8', '1 × 6', 'Seated, rotate both knees side to side. Use your hands behind you for support.'],
+      ['Clamshells', '2 × 15/side', '1 × 12/side', 'Heels together, open the top knee without rolling the pelvis back.'],
+      ['Glute bridge', '2 × 12, 3s hold', '1 × 10', 'Push through the heels, ribs down.'],
+      ['Adductor squeeze (ball or pillow between the knees)', '5 × 10s', '4 × 10s', 'Lying on your back, knees bent, squeeze at 50%. Good for groin pain.'],
+      ['Half-kneeling hip flexor stretch + glute squeeze', '2 × 30s/side', '1 × 30s/side', 'Tuck the pelvis first, then shift forward slightly.'],
+      ['Side-lying hip abduction', '2 × 12/side', '1 × 10/side', 'Toes forward, lead with the heel.'],
+      ['Supported deep squat hold', '2 × 30s', '—', 'Hold a door frame, sit as deep as is comfortable, breathe.']
+    ],
+    ham: [
+      ['Isometric hamstring bridge', '5 × 15s', '4 × 10s', 'Heels on the floor, knees slightly bent, lift the hips and dig the heels in. Low effort, no cramp.'],
+      ['Glute bridge, two legs', '2 × 12', '1 × 10', 'Slow up and down.'],
+      ['Hamstring floss, lying', '2 × 10/leg', '1 × 8/leg', 'Leg up, bend and straighten the knee gently. No stretching into pain.'],
+      ['Long-lever bridge (feet further away)', '2 × 8', '—', 'Only if the first exercises are pain-free.'],
+      ['Easy walk', '10 min', '10 min', 'Normal stride length, no running or sprinting for now.']
+    ],
+    knee: [
+      ['Wall sit / Spanish squat isometric', '5 × 30–45s', '4 × 30s', 'Shallow angle, pain at 3/10 or less. Isometrics usually calm tendon pain around the kneecap.'],
+      ['Straight-leg raise', '2 × 12/side', '1 × 10/side', 'Lock the knee first by tightening the thigh, then lift.'],
+      ['Terminal knee extension with a band', '2 × 15/side', '1 × 15/side', 'Band behind the knee, straighten it fully against the band.'],
+      ['Backward walking', '3–5 min', '3 min', 'Small steps, push through the front of the foot. Easy on the knee, strong for the quads.'],
+      ['Tibialis raises against a wall', '2 × 20', '1 × 15', 'Heels out, lift the toes.'],
+      ['Low step-ups', '2 × 10/side', '—', 'Small step, slow down, knee tracks over the toes.'],
+      ['Poliquin / Patrick step, small range', '2 × 10/side', '—', 'Heel elevated, knee forward over the toes in the range that feels good.']
+    ],
+    ankle: [
+      ['Ankle circles + alphabet', '1 min/side', '1 min/side', 'Draw the letters with the big toe.'],
+      ['Calf raise isometric hold', '5 × 30s', '4 × 30s', 'Halfway up, two legs. For Achilles pain this usually settles it.'],
+      ['Slow calf raises, two legs', '3 × 12', '1 × 10', '3s up, 3s down. Single leg once it is easy.'],
+      ['Knee-to-wall dorsiflexion', '2 × 10/side', '1 × 10/side', 'Heel down, knee to the wall over the toes.'],
+      ['Tibialis raises', '2 × 20', '1 × 15', 'Back against the wall, heels out.'],
+      ['Single-leg balance', '3 × 30s/side', '2 × 20s/side', 'Eyes closed to make it harder.'],
+      ['Toe yoga + towel scrunches', '2 × 20', '1 × 15', 'Big toe up, others down, then switch.']
+    ],
+    sore: [
+      ['Easy walk or bike', '10 min', '10 min', 'Raise the temperature. Nothing else needed to start.'],
+      ['Joint circles head to toe', '5 min', '5 min', 'Neck, shoulders, elbows, wrists, hips, knees, ankles.'],
+      ['Cat-camel + thread the needle', '2 × 8 + 6/side', '1 × 8 + 6/side', 'Slow, follow the breath.'],
+      ['Deep squat hold with rotations', '2 × 45s', '1 × 45s', 'Hold a support if needed.'],
+      ['World\'s greatest stretch', '1 × 5/side', '1 × 3/side', 'Lunge, elbow to the instep, rotate up.'],
+      ['Legs up the wall + slow breathing', '3 min', '3 min', 'Exhale longer than you inhale.']
+    ]
+  },
+  avoid: {
+    lowback: 'Skip RDLs, Jefferson curls, loaded pancake, heavy squats, bridges and macaco if arching hurts. Handstands are usually fine if you stay hollow and kick up gently.',
+    back: 'Train, but swap heavy pulling and front lever for lighter versions. Keep handstands and legs.',
+    neck: 'Skip headstands, tripod work, HSPU and heavy shrugs. Look at your hands in handstands, avoid fast head turns in floreio.',
+    shoulder: 'Skip handstands, HSPU, dips, German hang and skin the cat if they hurt. Legs, core and pain-free pulling are fine.',
+    elbow: 'Skip one-arm hangs, one-arm pull-up work, planche and straight-arm leans. Use a wider grip if pulling is pain-free.',
+    wrist: 'Handstands on parallettes or fists instead of flat palms, or skip them. No fingertip work, no planche leans.',
+    hip: 'Skip pancake, splits, leg swings, B-twist and flare drills. Upper body is fine.',
+    ham: 'Skip RDLs, Nordics, pancake, front splits, kicks and sprints. Isometrics and walking are fine.',
+    knee: 'Skip jumps, B-twist landings, pistols and deep split squats if they hurt. Upper body and handstands are fine.',
+    ankle: 'Skip jumps, hops, B-twist, running and bridge hops. Seated or kneeling work and upper body are fine.',
+    sore: 'If it is normal training soreness, a lighter main session is fine. Drop the volume by a third and skip max tests.'
+  },
+  sev: [['mild','Mild','1–3/10'],['mod','Moderate','4–6/10'],['sev','Strong','7+/10']]
+};
+function phLoad(){ try { return JSON.parse(localStorage.getItem('ma2-prehab-v1')) || {}; } catch (e) { return {}; } }
+function phSave(o){ try { localStorage.setItem('ma2-prehab-v1', JSON.stringify(o)); } catch (e) {} }
+if (!V.ph) { const o = phLoad(); V.ph = { sel: o.sel || [], sev: o.sev || 'mild', dir: o.dir || 'unsure', done: o.done || {} }; }
+function phSession(){
+  const Q = V.ph, mod = Q.sev === 'mod', seen = new Set(), blocks = [];
+  Q.sel.forEach(k => {
+    let L = PH.ex[k].slice();
+    if (k === 'lowback' && Q.dir === 'flex') L = PH.ex.lowback_flex.concat(L);
+    if (k === 'lowback' && Q.dir === 'ext') L = PH.ex.lowback_ext.concat(L.filter(e => !/Glute bridge/.test(e[0])));
+    if (mod) L = L.filter(e => e[2] !== '—').slice(0, k === 'lowback' && Q.dir !== 'unsure' ? 5 : 4);
+    else if (Q.sel.length > 2) L = L.slice(0, 5);
+    L = L.filter(e => !seen.has(e[0])); L.forEach(e => seen.add(e[0]));
+    if (L.length) blocks.push([k, L]);
+  });
+  return blocks;
+}
+function renderCare(){
+  const Q = V.ph, today = iso(new Date()), dn = Q.done[today] || {};
+  let h = `<div class="top"><div class="wk-title"><small>Prehab</small>Easy day</div></div>`;
+  h += `<p class="mut" style="font-size:13.5px;margin:10px 0 12px">Pick what hurts and how much. You get a gentle session for today and what to change in your training.</p>`;
+  h += `<div class="eyebrow" style="margin-bottom:6px">Where do you feel it?</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">` +
+    PH.areas.map(([k, l]) => `<button class="chip ${Q.sel.includes(k) ? 'on' : ''}" data-act="phz" data-v="${k}" aria-pressed="${Q.sel.includes(k)}">${l}</button>`).join('') + `</div>`;
+  if (Q.sel.includes('lowback')) h += `<div class="eyebrow" style="margin-bottom:6px">Lower back: what makes it worse?</div><div class="seg" style="grid-template-columns:repeat(3,1fr);margin-top:0">` +
+    [['flex','Bending forward'],['ext','Arching back'],['unsure','Not sure']].map(([k, l]) => `<button class="${Q.dir === k ? 'on' : ''}" data-act="phdir" data-v="${k}">${l}</button>`).join('') + `</div>`;
+  h += `<div class="eyebrow" style="margin:10px 0 6px">How strong is it?</div><div class="seg" style="grid-template-columns:repeat(3,1fr);margin-top:0">` +
+    PH.sev.map(([k, l, r]) => `<button class="${Q.sev === k ? 'on' : ''}" data-act="phsev" data-v="${k}">${l}<br><span style="font-size:11px;font-weight:500">${r}</span></button>`).join('') + `</div>`;
+  if (!Q.sel.length) { h += `<div class="card" style="margin-top:12px"><p class="mut" style="margin:0;font-size:14px">Choose one or more areas to build your session.</p></div>`; return h + phRules(); }
+  if (Q.sev === 'sev') {
+    h += `<div class="br-note warn" style="font-size:14px;margin-top:12px"><b>Strong pain: no session today.</b> Rest, take an easy walk if it feels okay, and do 5 min of slow breathing (exhale longer than the inhale). If it is not clearly better in 2–3 days, or if any warning sign below applies, see a doctor or physio.</div>`;
+    return h + phRules(true);
+  }
+  const blocks = phSession(), n = blocks.reduce((a, [, L]) => a + L.length, 0) + 2, mins = Math.round(n * (Q.sev === 'mod' ? 2 : 2.5)), done = Object.keys(dn).length;
+  h += `<div class="br-phase p1" style="margin-top:14px"><div class="eyebrow">Today's session · about ${mins} min · ${done}/${n} done</div><div style="font-size:13.5px;margin-top:3px">${Q.sev === 'mod' ? 'Moderate pain: fewer exercises, lighter doses, isometrics first.' : 'Mild pain: move through every exercise slowly.'} Keep the pain at 3/10 or less during the session, and no worse the next morning.</div></div>`;
+  const row = (nm, dose, cue) => { const on = !!dn[nm]; return `<div class="br-item ${on ? 'done' : ''}"><button class="check ${on ? 'on' : ''}" data-act="phck" data-v="${esc(nm)}" aria-pressed="${on}" aria-label="Mark done">${on ? '✓' : ''}</button><span class="br-txt"><b>${esc(nm)}</b><span class="mut">${esc(dose)}</span><span style="display:block;font-size:12.5px;margin-top:2px">${esc(cue)}</span></span></div>`; };
+  h += fold('ph-start', 'Settle in', `<div class="br-list">${row('Crocodile breathing', '2 min', 'Face down, forehead on your hands. Breathe into the lower back and sides. Slow exhale.')}</div>`, '', true);
+  blocks.forEach(([k, L]) => {
+    const nm = PH.areas.find(a => a[0] === k)[1];
+    h += fold('ph-' + k, nm, `<div class="br-list">${L.map(e => row(e[0], Q.sev === 'mod' ? e[2] : e[1], e[3])).join('')}</div>`, `${L.filter(e => dn[e[0]]).length}/${L.length}`, true);
+  });
+  h += fold('ph-end', 'Finish', `<div class="br-list">${row('90/90 breathing, slow exhale', '2 min', 'On your back, calves on a chair or sofa. 4s in, 6–8s out.')}</div>`, '', true);
+  h += fold('ph-train', 'Your training today', `<div class="gd-b">${Q.sel.map(k => `<p style="margin:0 0 8px"><b>${PH.areas.find(a => a[0] === k)[1]}:</b> ${esc(PH.avoid[k])}</p>`).join('')}${Q.sev === 'mod' ? '<p style="margin:0"><b>Moderate pain:</b> make the main session optional. If you train, skip everything that loads the sore area and stop at 7/10 effort.</p>' : ''}</div>`, '', false);
+  if (done) h += `<div style="text-align:center;margin:10px 0"><button class="chip" data-act="phreset">Reset today's ticks</button></div>`;
+  return h + phRules();
+}
+function phRules(open){
+  return fold('ph-rules', 'When to see a professional', `<div class="gd-b"><p style="margin:0 0 6px">This section is for everyday aches. See a doctor or physio, and do not train the area, if you have:</p><ul style="margin:0 0 8px;padding-left:18px">
+    <li>Numbness, tingling or weakness in an arm or leg, or pain spreading below the knee or elbow</li>
+    <li>Pain after a fall, a crash or a loud pop, or a joint that is swollen, hot or gives way</li>
+    <li>Pain that wakes you at night or is there at rest, with fever or weight loss</li>
+    <li>Loss of bladder or bowel control, or numbness around the groin: go to the emergency room</li>
+    <li>Pain that is not clearly better after 1–2 weeks, or keeps coming back</li></ul>
+    <p class="mut" style="margin:0;font-size:12.5px">General guidance, not a diagnosis. Pain during the session should stay at 3/10 or less and settle within 24 hours.</p></div>`, '', !!open);
+}
 const ICONS = {
+  care:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/><path d="M12 9v5M9.5 11.5h5"/></svg>',
   today:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v4M12 3 9 6M12 3l3 3"/><path d="M8 21h8M12 21V11"/><path d="M5 13h14"/></svg>',
   progress:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><path d="M5 16l4-5 4 3 6-8"/></svg>',
   breath:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10a3 3 0 1 0-3-3"/><path d="M3 12h15a3 3 0 1 1-3 3"/><path d="M3 16h6"/></svg>',
@@ -2956,8 +3138,8 @@ const ICONS = {
 function render(){
   const main = $('#main');
   const focusId = document.activeElement && document.activeElement.id;
-  main.innerHTML = V.tab === 'today' ? renderToday() : V.tab === 'progress' ? renderProgress() : V.tab === 'guide' ? renderGuide() : V.tab === 'supps' ? renderFuel() : V.tab === 'breath' ? renderBreath() : V.tab === 'mind' ? renderMind() : renderSettings();
-  $('#tabs').innerHTML = [['today','Today'],['progress','Progress'],['breath','Breath'],['mind','Mind'],['supps','Fuel'],['guide','Guide'],['settings','Settings']].map(([k,l]) => `<button class="tab ${V.tab===k?'on':''}" data-act="tab" data-v="${k}" aria-current="${V.tab===k?'page':'false'}">${ICONS[k]}<span>${l}</span></button>`).join('');
+  main.innerHTML = V.tab === 'today' ? renderToday() : V.tab === 'progress' ? renderProgress() : V.tab === 'guide' ? renderGuide() : V.tab === 'supps' ? renderFuel() : V.tab === 'care' ? renderCare() : V.tab === 'breath' ? renderBreath() : V.tab === 'mind' ? renderMind() : renderSettings();
+  $('#tabs').innerHTML = [['today','Today'],['progress','Progress'],['care','Prehab'],['breath','Breath'],['mind','Mind'],['supps','Fuel'],['guide','Guide'],['settings','Settings']].map(([k,l]) => `<button class="tab ${V.tab===k?'on':''}" data-act="tab" data-v="${k}" aria-current="${V.tab===k?'page':'false'}">${ICONS[k]}<span>${l}</span></button>`).join('');
   if (focusId) { const el = document.getElementById(focusId); if (el && el.tagName === 'INPUT' && el.type === 'text') { el.focus(); const n = el.value.length; try { el.setSelectionRange(n, n); } catch(e){} } }
 }
 function entry(code){
