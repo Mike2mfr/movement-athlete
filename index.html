@@ -799,7 +799,7 @@ function renderToday(){
   if (dk === 'D7') {
     h += `<div class="rest-card"><div class="eyebrow">Sunday</div><h2>Rest</h2><p class="mut">Optional 10-minute reset: spinal waves 5 min, passive squat 2–5 min, passive hang 1 min. Go for a walk.</p></div>`;
     if (P.routines && P.routines.dw_flow) { const F = P.routines.dw_flow; h += `<details class="card" style="margin-top:10px"><summary style="cursor:pointer"><b>${esc(F[0])}</b><div class="mut" style="font-size:12.5px;margin-top:3px">${esc(F[1])}</div></summary><ul class="rt-list" style="margin-top:10px">${F[2].map(d => `<li class="rt-item" style="grid-template-columns:1fr;cursor:default"><span class="rt-txt"><b>${esc(d[0])}</b><span class="rt-dose">${esc(d[1])}</span>${d[2]?`<span class="mut">${esc(d[2])}</span>`:''}</span></li>`).join('')}</ul></details>`; }
-    h += fastBanner(iso(dateOf(w, di))) + foldCard('daily', dailyCard(w, dk)) + foldCard('breath', breathCard(iso(dateOf(w, di)))) + foldCard('mind', mindCard(iso(dateOf(w, di)))) + practiceCard(w, dk);
+    h += fastBanner(iso(dateOf(w, di))) + foldCard('daily', dailyCard(w, dk)) + foldCard('breath', breathCard(iso(dateOf(w, di)))) + foldCard('mind', mindCard(iso(dateOf(w, di)))) + otherCard(w, dk) + practiceCard(w, dk);
     return h;
   }
   const sess = sessionOf(w, dk);
@@ -809,6 +809,7 @@ function renderToday(){
   h += `<div class="sess-head"><div><div class="eyebrow">${DAYSHORT[di]} · ${dateOf(w,di).toLocaleDateString(undefined,{day:'numeric',month:'short'})}</div><h2>${esc(sess.title)}</h2><div class="sub">${esc(sess.sub)}</div></div></div>`;
   if (P.bw) h += `<div class="ready bwsw"><span class="lbl">Equipment</span><button class="chip ${sess.bw ? '' : 'on'}" data-act="bwmode" data-v="0">Full gym</button><button class="chip ${sess.bw ? 'on' : ''}" data-act="bwmode" data-v="1">Bodyweight only</button></div>` + (sess.bw ? `<div class="banner info" style="margin:0 0 12px"><div><b>Bodyweight version</b>Handstand, floor, mobility and flow work stay the same; the gym exercises are swapped. You need: ${esc(P.bw.kit.replace(/\.$/, ''))}.</div></div>` : '');
   h += `<div class="ready"><span class="lbl">How do you feel?</span>` + [['good','Good'],['ok','OK'],['low','Low']].map(([k,l]) => `<button class="chip ${ready===k?'on':''}" data-act="ready" data-v="${k}">${l}</button>`).join('') + `</div>`;
+  const OA = otAdjust(w, di); h += otAdjBanner(w, di, sess.rows);
   const SP = shortPlan(w, dk, lg), spSkip = sess.rows.filter(r => SP.skip.has(r[0])), spTrim = sess.rows.filter(r => SP.trim.has(r[0]) && !SP.skip.has(r[0]));
   if (SHORT['P' + (P.phases.indexOf(phaseOf(w)) + 1)]?.[dk]) h += `<div class="ready"><span class="lbl">Session length</span><button class="chip ${SP.on ? '' : 'on'}" data-act="short" data-v="0">Full</button><button class="chip ${SP.on ? 'on' : ''}" data-act="short" data-v="1">Short</button></div>`;
   h += `<div class="ready"><span class="lbl">Rest stretches</span><button class="chip ${rsOn() ? 'on' : ''}" data-act="rstr" data-v="1">On</button><button class="chip ${rsOn() ? '' : 'on'}" data-act="rstr" data-v="0">Off</button></div>`;
@@ -840,7 +841,8 @@ function renderToday(){
     const isPct = /%/.test(planned + note) && /pull-up/i.test(name);
     const st = Object.assign({ L:0, pain:false, why:[] }, lv[name] || {}); const cy = carryOf(name); if (cy) { st.L += cy; st.why = (st.why || []).concat(['Carried over from earlier cycles: +' + cy]); }
     if (isPct || (elKey && EL[elKey].type === 'accum')) st.L = 0;
-    const halve = ((low || st.pain) && !isDeload(w)) || (SP.trim.has(code) && !(lg.shortAdd || []).includes(code));
+    const otHit = OA.heavy.size && [...rowAreas(row)].some(a => OA.heavy.has(a));
+    const halve = ((low || st.pain) && !isDeload(w)) || (SP.trim.has(code) && !(lg.shortAdd || []).includes(code)) || otHit;
     let rx = (planned && !/^(TEST|—|light)$/.test(planned)) ? adjustRx(planned, st.L, halve) : planned;
     if (elKey && EL[elKey].type === 'accum' && planned && /collect/.test(planned)) rx = 'up to 5 sets · collect ' + Math.round(lvl(elKey) * (isDeload(w) ? 0.7 : 1)) + 's' + (elKey === 'oa_hold' ? '/arm' : '');
     if (isPct) rx = withKg(rx);
@@ -857,6 +859,7 @@ function renderToday(){
     const CP = !RT ? compoundParts(name, note) : null;
     if (CP) { const done = (e?.dr || []).length; tags += `<span class="lvl">${done ? done + '/' : ''}${CP.length * circRounds(rx)} checks</span>`; }
     if (RT) { const done = (e?.dr || []).length, rounds = rtKey === 'bulgarian' ? circRounds(rx) : 1; tags += `<span class="lvl">${done ? done + '/' : ''}${RT[2].length * rounds} ${rtKey === 'bulgarian' ? 'checks' : 'drills'}</span>`; }
+    if (otHit) tags += `<span class="rated">Half sets: other training</span>`;
     if (er) tags += `<span class="rated">· ${RATINGS.find(x=>x[0]===er)[1]}${e.res?` · ${esc(e.res)}`:''}</span>`;
     h += `<div class="ex ${e?'logged':''}"><button class="ex-row" data-act="open" data-c="${code}" aria-expanded="${open}"><span class="code">${esc(code)}</span><span class="ex-name">${esc(name)}<div class="tags">${tags}</div></span><span class="rx">${esc(rx||'—')}${changed?`<span class="was">${esc(planned)}</span>`:''}</span></button>`;
     const tm = timerSpec(rx, note); if (tm) h += `<div class="tm-row">${tm.work ? `<button class="chip tm" data-act="timer" data-s="${tm.work}" data-l="${esc(name)}" data-k="work">⏱ ${fmtT(tm.work)}${tm.side ? ' / side' : ''}</button>` : ''}${tm.rest ? `<button class="chip tm rest" data-act="timer" data-s="${tm.rest}" data-l="${esc(name)}" data-k="rest">Rest ${fmtT(tm.rest)}</button>` : ''}</div>`;
@@ -887,7 +890,7 @@ function renderToday(){
   if (SP.on && spSkip.length) h += fold('short-skip', 'Skipped today', `<ul style="margin:0;padding:0;list-style:none">${spSkip.map(r => `<li style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line)"><span style="font-size:13.5px"><b class="num">${esc(r[0])}</b> ${esc(clean(r[1]))}</span><button class="chip" data-act="shadd" data-c="${esc(r[0])}">Add back</button></li>`).join('')}</ul>`, String(spSkip.length), false);
   const tot = sess.rows.filter(r => r[2].some(Boolean) && r[0] !== 'R' && !SP.skip.has(r[0])).length, n = lg ? Object.keys(lg.entries).filter(k => k !== 'EVE' && k !== 'DAY' && k !== 'XTR' && k !== 'FLX').length : 0;
   h += `<div class="complete"><span><b class="num">${n}/${tot}</b> logged</span><span class="mut">Easy twice in a row steps it up · Hard twice or missed steps it down</span></div>`;
-  h += fastBanner(iso(dateOf(w, di))) + foldCard('daily', dailyCard(w, dk)) + foldCard('breath', breathCard(iso(dateOf(w, di)))) + foldCard('mind', mindCard(iso(dateOf(w, di)))) + practiceCard(w, dk);
+  h += fastBanner(iso(dateOf(w, di))) + foldCard('daily', dailyCard(w, dk)) + foldCard('breath', breathCard(iso(dateOf(w, di)))) + foldCard('mind', mindCard(iso(dateOf(w, di)))) + otherCard(w, dk) + practiceCard(w, dk);
   return h;
 }
 
@@ -3055,6 +3058,59 @@ function flexCard(w, dk){
   return h + '</div>';
 }
 
+/* ---------- other training: log extra workouts, adapt the next sessions ---------- */
+const OT_AREAS = [['push','Shoulders / pushing'],['pull','Pulling / grip'],['wrist','Wrists (hand balancing)'],['legs','Legs / jumping'],['core','Core'],['hips','Hips / flexibility'],['cardio','Cardio / endurance']];
+const OT_EFF = [['light','Light'],['mod','Moderate'],['hard','Hard']];
+const OT_PRESETS = {'Run':['legs','cardio'],'Football':['legs','cardio'],'Climbing':['pull'],'Bouldering':['pull'],'Swimming':['pull','push','cardio'],'Cycling':['legs','cardio'],'Hike':['legs','cardio'],'Gym: upper body':['push','pull'],'Gym: legs':['legs'],'Yoga':['hips','wrist'],'Capoeira class':['legs','wrist','hips'],'Breakdance session':['wrist','push','legs'],'Handstand practice':['wrist','push'],'Juggling':[],'Calisthenics':['push','pull','core'],'Martial arts':['legs','cardio'],'Surf':['push','cardio']};
+function otLoadOf(lg){ return (lg && lg.other) || []; }
+function dayIndexToWD(idx){ return { w: Math.floor(idx / 7) + 1, di: idx % 7 }; }
+/* fatigue per area from other training today, yesterday (full) and 2 days ago (half) */
+function otFatigue(w, di){
+  const F = {}, why = {}, base = (w - 1) * 7 + di;
+  [[0, 1], [1, 1], [2, .5]].forEach(([back, k]) => {
+    const idx = base - back; if (idx < 0) return;
+    const p = dayIndexToWD(idx); if (p.w > 12) return;
+    otLoadOf(getLog(p.w, DAYKEYS[p.di])).forEach(o => {
+      const pts = (o.e === 'hard' ? 2 : o.e === 'mod' ? 1 : 0) * k * ((+o.min || 0) >= 75 ? 1.5 : 1);
+      (o.a || []).forEach(a => { if (!pts) return; F[a] = (F[a] || 0) + pts; (why[a] = why[a] || []).push(o.n + (back === 0 ? ' (today)' : back === 1 ? ' (yesterday)' : ' (2 days ago)')); });
+    });
+  });
+  return { F, why };
+}
+function rowAreas(row){
+  const [code, name, , , cat] = row, n = name.toLowerCase(), A = new Set();
+  if (cat === 'MOB' || /^A\d?$/.test(code) || code === 'R') return A;
+  if (cat === 'HS' || /handstand|press|hspu|planche|one-arm hold|side flexion/.test(n)) { A.add('wrist'); A.add('push'); }
+  if (/pull|chin|row|hang|lever|grip|archer|one-arm (pull|finisher)/.test(n)) A.add('pull');
+  if (/dip|push-up|pushup|bench|overhead|ring|planche|pseudo/.test(n)) A.add('push');
+  if (/squat|deadlift|rdl|lunge|jump|calf|tib|pistol|nordic|good morning|back extension|sprint|box|broad|split squat|bulgarian|depth/.test(n)) A.add('legs');
+  if (cat === 'CORE' || /hollow|l-sit|compression|toes to bar|leg raise|dragon/.test(n)) A.add('core');
+  if (/b-twist|flare|macaco|floreio|aú|au |raiz|helic/.test(n)) { A.add('legs'); A.add('wrist'); }
+  return A;
+}
+function otAdjust(w, di){
+  const { F, why } = otFatigue(w, di), heavy = Object.keys(F).filter(a => F[a] >= 2);
+  return { heavy: new Set(heavy), F, why };
+}
+function otherCard(w, dk){
+  const lg = getLog(w, dk), L = otLoadOf(lg), name = a => (OT_AREAS.find(x => x[0] === a) || ['', a])[1];
+  let body = `<p class="mut" style="font-size:12.5px;margin:0 0 8px">Log anything you train outside the program: a run, a class, a climbing session, extra handstands. Moderate or hard work is taken into account: the next two days, exercises that load the same area get half the sets.</p>`;
+  if (L.length) body += `<ul style="list-style:none;margin:0 0 10px;padding:0">${L.map((o, i) => `<li style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--line)"><span style="font-size:13.5px"><b>${esc(o.n)}</b> <span class="mut">· ${esc((OT_EFF.find(e => e[0] === o.e) || ['', ''])[1])}${o.min ? ' · ' + esc(o.min) + ' min' : ''}</span><span class="mut" style="display:block;font-size:12px">${(o.a || []).map(name).join(', ') || 'No area'}${o.note ? ' · ' + esc(o.note) : ''}</span></span><button class="chip" data-act="ot-del" data-i="${i}" aria-label="Remove">✕</button></li>`).join('')}</ul>`;
+  body += `<div class="ot-form"><label class="mut" style="font-size:12px" for="ot-n">What did you do?</label><input id="ot-n" list="ot-list" placeholder="e.g. Run, Climbing, Capoeira class" style="width:100%;margin:4px 0 8px"><datalist id="ot-list">${Object.keys(OT_PRESETS).map(k => `<option value="${esc(k)}">`).join('')}</datalist>
+    <div class="mut" style="font-size:12px;margin-bottom:4px">Areas worked</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px">${OT_AREAS.map(([k, l]) => `<button class="chip" data-act="ot-area" data-v="${k}" aria-pressed="false">${l}</button>`).join('')}</div>
+    <div class="mut" style="font-size:12px;margin-bottom:4px">Effort</div><div style="display:flex;gap:6px;margin-bottom:8px">${OT_EFF.map(([k, l]) => `<button class="chip ${k === 'mod' ? 'on' : ''}" data-act="ot-eff" data-v="${k}">${l}</button>`).join('')}</div>
+    <div style="display:flex;gap:8px;margin-bottom:8px"><input id="ot-min" type="number" inputmode="numeric" min="0" placeholder="Minutes" style="width:110px"><input id="ot-note" placeholder="Note (optional)" style="flex:1;min-width:0"></div>
+    <button class="btn" data-act="ot-add">Add to today</button></div>`;
+  return fold('tc-other', 'Other training', body, L.length ? String(L.length) : '', false);
+}
+function otAdjBanner(w, di, rows){
+  const O = otAdjust(w, di); if (!O.heavy.size) return '';
+  const used = new Set(); (rows || []).forEach(r => rowAreas(r).forEach(a => { if (O.heavy.has(a)) used.add(a); })); if (!used.size) return '';
+  O.heavy = used;
+  const name = a => (OT_AREAS.find(x => x[0] === a) || ['', a])[1].toLowerCase();
+  return `<div class="banner info" style="margin:0 0 12px"><div><b>Adjusted for your other training</b>${[...O.heavy].map(a => `${esc(name(a))}: ${esc([...new Set(O.why[a])].join(', '))}`).join(' · ')}. Exercises that load these areas have half the sets today.</div></div>`;
+}
+
 /* ---------- combined optional practice: extra + flexibility + evening ---------- */
 const PK_GROUPS = [['pigeon'],['thread the needle'],['legs up the wall'],['twist'],['child'],['cat-cow','cat cow'],['hip-flexor','hip flexor'],['pike','hamstring fold','forward fold'],['chest'],['figure-4','figure-four'],['wrist flexor','forearm flexor'],['front split'],['pancake'],['middle split'],['lat stretch'],['frog'],['butterfly'],['couch']];
 const PK_SIMPLE = new Set(['pigeon','thread the needle','legs up the wall','twist','child']);
@@ -3323,6 +3379,17 @@ document.addEventListener('click', ev => {
   else if (a === 'open') { V.open = V.open === b.dataset.c ? null : b.dataset.c; render(); }
   else if (a === 'gdall') { document.querySelectorAll('details.gd').forEach(d => d.open = b.dataset.v === '1'); }
   else if (a === 'bwmode') { const lg = ensureLog(V.week, DAYKEYS[V.dayIdx]); lg.bw = b.dataset.v === '1'; if (!lg.bw) delete lg.bw; V.open = null; saveSession(); render(); toast(b.dataset.v === '1' ? 'Bodyweight version' : 'Full gym version'); }
+  else if (a === 'ot-area') { const on = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', on); b.classList.toggle('on', on); }
+  else if (a === 'ot-eff') { b.parentNode.querySelectorAll('[data-act=ot-eff]').forEach(x => x.classList.toggle('on', x === b)); }
+  else if (a === 'ot-add') {
+    const f = b.closest('.ot-form'), n = f.querySelector('#ot-n').value.trim(); if (!n) { toast('Name the activity first'); return; }
+    let areas = [...f.querySelectorAll('[data-act=ot-area][aria-pressed=true]')].map(x => x.dataset.v);
+    if (!areas.length && OT_PRESETS[n]) areas = OT_PRESETS[n].slice();
+    const e = (f.querySelector('[data-act=ot-eff].on') || {}).dataset?.v || 'mod';
+    const lg = ensureLog(V.week, DAYKEYS[V.dayIdx]); lg.other = (lg.other || []).concat([{ n, a: areas, e, min: f.querySelector('#ot-min').value, note: f.querySelector('#ot-note').value.trim() }]);
+    saveSession(); V.fold = V.fold || {}; V.fold['tc-other'] = true; render(); toast('Logged: ' + n);
+  }
+  else if (a === 'ot-del') { const lg = ensureLog(V.week, DAYKEYS[V.dayIdx]); lg.other.splice(+b.dataset.i, 1); saveSession(); render(); }
   else if (a === 'pfold') { V.fold = V.fold || {}; V.fold['tc-practice'] = true; V.fold[b.dataset.v] = true; render(); const el = document.querySelector('[data-fk="' + b.dataset.v + '"]'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
   else if (a === 'xshort') { const lg = ensureLog(V.week, DAYKEYS[V.dayIdx]); lg.xshort = b.dataset.v === '1'; saveSession(); render(); }
   else if (a === 'rstr') { S.profile.restStr = b.dataset.v === '1'; persist('profile'); render(); }
