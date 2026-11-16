@@ -799,7 +799,7 @@ function renderToday(){
   if (dk === 'D7') {
     h += `<div class="rest-card"><div class="eyebrow">Sunday</div><h2>Rest</h2><p class="mut">Optional 10-minute reset: spinal waves 5 min, passive squat 2–5 min, passive hang 1 min. Go for a walk.</p></div>`;
     if (P.routines && P.routines.dw_flow) { const F = P.routines.dw_flow; h += `<details class="card" style="margin-top:10px"><summary style="cursor:pointer"><b>${esc(F[0])}</b><div class="mut" style="font-size:12.5px;margin-top:3px">${esc(F[1])}</div></summary><ul class="rt-list" style="margin-top:10px">${F[2].map(d => `<li class="rt-item" style="grid-template-columns:1fr;cursor:default"><span class="rt-txt"><b>${esc(d[0])}</b><span class="rt-dose">${esc(d[1])}</span>${d[2]?`<span class="mut">${esc(d[2])}</span>`:''}</span></li>`).join('')}</ul></details>`; }
-    h += fastBanner(iso(dateOf(w, di))) + foldCard('daily', dailyCard(w, dk)) + foldCard('breath', breathCard(iso(dateOf(w, di)))) + foldCard('mind', mindCard(iso(dateOf(w, di)))) + foldCard('extra', extraCard(w, dk)) + foldCard('flex', flexCard(w, dk)) + foldCard('eve', eveningCard(w, dk));
+    h += fastBanner(iso(dateOf(w, di))) + foldCard('daily', dailyCard(w, dk)) + foldCard('breath', breathCard(iso(dateOf(w, di)))) + foldCard('mind', mindCard(iso(dateOf(w, di)))) + practiceCard(w, dk);
     return h;
   }
   const sess = sessionOf(w, dk);
@@ -887,7 +887,7 @@ function renderToday(){
   if (SP.on && spSkip.length) h += fold('short-skip', 'Skipped today', `<ul style="margin:0;padding:0;list-style:none">${spSkip.map(r => `<li style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line)"><span style="font-size:13.5px"><b class="num">${esc(r[0])}</b> ${esc(clean(r[1]))}</span><button class="chip" data-act="shadd" data-c="${esc(r[0])}">Add back</button></li>`).join('')}</ul>`, String(spSkip.length), false);
   const tot = sess.rows.filter(r => r[2].some(Boolean) && r[0] !== 'R' && !SP.skip.has(r[0])).length, n = lg ? Object.keys(lg.entries).filter(k => k !== 'EVE' && k !== 'DAY' && k !== 'XTR' && k !== 'FLX').length : 0;
   h += `<div class="complete"><span><b class="num">${n}/${tot}</b> logged</span><span class="mut">Easy twice in a row steps it up · Hard twice or missed steps it down</span></div>`;
-  h += fastBanner(iso(dateOf(w, di))) + foldCard('daily', dailyCard(w, dk)) + foldCard('breath', breathCard(iso(dateOf(w, di)))) + foldCard('mind', mindCard(iso(dateOf(w, di)))) + foldCard('extra', extraCard(w, dk)) + foldCard('flex', flexCard(w, dk)) + foldCard('eve', eveningCard(w, dk));
+  h += fastBanner(iso(dateOf(w, di))) + foldCard('daily', dailyCard(w, dk)) + foldCard('breath', breathCard(iso(dateOf(w, di)))) + foldCard('mind', mindCard(iso(dateOf(w, di)))) + practiceCard(w, dk);
   return h;
 }
 
@@ -3054,6 +3054,44 @@ function flexCard(w, dk){
     return `<li><button class="rt-item ${on ? 'on' : ''}" data-act="rt" data-c="FLX" data-i="${i}" aria-pressed="${on}"><span class="check ${on ? 'on' : ''}" aria-hidden="true">${on ? '✓' : ''}</span><span class="rt-txt"><b>${esc(r.n)}</b><span class="rt-dose">${esc(r.d[col])}</span>${r.note ? `<span class="mut">${esc(r.note)}</span>` : ''}</span></button>${s ? `<button class="chip tm" data-act="timer" data-s="${s}" data-l="${esc(r.n)}" data-k="work">⏱ ${fmtT(s)}</button>` : ''}</li>`; }).join('')}</ul>`;
   return h + '</div>';
 }
+
+/* ---------- combined optional practice: extra + flexibility + evening ---------- */
+const PK_GROUPS = [['pigeon'],['thread the needle'],['legs up the wall'],['twist'],['child'],['cat-cow','cat cow'],['hip-flexor','hip flexor'],['pike','hamstring fold','forward fold'],['chest'],['figure-4','figure-four'],['wrist flexor','forearm flexor'],['front split'],['pancake'],['middle split'],['lat stretch'],['frog'],['butterfly'],['couch']];
+const PK_SIMPLE = new Set(['pigeon','thread the needle','legs up the wall','twist','child']);
+function pkKeys(name){ const n = name.toLowerCase().replace(/’/g, "'"); return PK_GROUPS.filter(g => g.some(t => n.includes(t))).map(g => g[0]); }
+function practiceCard(w, dk){
+  const col = w % 4 === 0 ? 3 : (w <= 4 ? 0 : w <= 8 ? 1 : 2);
+  const X = XTR[dk], F = FLX[dk], R = P.routines && P.routines.evening;
+  if (!X && !F && !R) return '';
+  const lg = getLog(w, dk), E = lg && lg.entries || {}, short = !!(lg && lg.xshort);
+  const drOf = c => (E[c] && E[c].dr) || [];
+  const seen = new Set();
+  // 1) handstand + mobility extra
+  let xr = X ? X.rows.map((r, i) => ({ c: 'XTR', i, n: r.n, d: r.d[col], note: r.note, cat: r.c })).filter(o => o.d && o.d !== '—') : [];
+  xr.forEach(o => pkKeys(o.n).forEach(k => seen.add(k)));
+  // 2) flexibility: drop only simple duplicates of the extra session
+  let fr = F ? F.rows.map((r, i) => ({ c: 'FLX', i, n: r.n, d: r.d[col], note: r.note })).filter(o => !pkKeys(o.n).some(k => PK_SIMPLE.has(k) && seen.has(k))) : [];
+  fr.forEach(o => pkKeys(o.n).forEach(k => seen.add(k)));
+  // 3) evening wind-down: drop anything already covered
+  let er = R ? R[2].map((d, i) => ({ c: 'EVE', i, n: d[0], d: d[1], note: d[2] || '' })).filter(o => !pkKeys(o.n).some(k => seen.has(k))) : [];
+  const fullN = xr.length + fr.length + er.length;
+  if (short) {
+    const hs = xr.filter(o => o.cat === 'HS').slice(0, 2), pre = hs.length ? xr.filter(o => o.cat === 'PRE').slice(0, 1) : [], br = xr.filter(o => o.cat === 'BR').slice(0, 1), mob = xr.filter(o => o.cat === 'MOB').slice(0, hs.length ? 0 : 2);
+    const keep = new Set([...pre, ...hs, ...br, ...mob]); xr = xr.filter(o => keep.has(o));
+    fr = fr.slice(0, 3); er = er.slice(0, 2);
+  }
+  const all = xr.concat(fr, er), done = all.filter(o => drOf(o.c).includes(o.i)).length;
+  const item = o => { const on = drOf(o.c).includes(o.i), sec = drillSecs(o.d), cat = o.c === 'XTR' ? (XTR_CAT[o.cat] || ['', '']) : null;
+    return `<li><button class="rt-item ${on ? 'on' : ''}" data-act="rt" data-c="${o.c}" data-i="${o.i}" aria-pressed="${on}"><span class="check ${on ? 'on' : ''}" aria-hidden="true">${on ? '✓' : ''}</span><span class="rt-txt"><b>${esc(o.n)}${cat && cat[0] ? ` <span class="src ${cat[1]}">${cat[0]}</span>` : ''}</b><span class="rt-dose">${esc(o.d)}</span>${o.note ? `<span class="mut">${esc(o.note)}</span>` : ''}</span></button>${sec ? `<button class="chip tm" data-act="timer" data-s="${sec}" data-l="${esc(o.n)}" data-k="work" style="margin:4px 0 0 34px">⏱ ${fmtT(sec)}</button>` : ''}</li>`; };
+  const part = (key, title, sub, list) => { if (!list.length) return ''; const n = list.filter(o => drOf(o.c).includes(o.i)).length;
+    return fold('pk-' + key, title, `${sub ? `<div class="mut" style="font-size:12.5px;margin:0 0 4px">${sub}</div>` : ''}<ul class="rt-list" style="margin-top:6px">${list.map(item).join('')}</ul>`, `${n}/${list.length}`, false); };
+  let h = `<div class="ready" style="margin:0 0 6px"><span class="lbl">Length</span><button class="chip ${short ? '' : 'on'}" data-act="xshort" data-v="0">Full</button><button class="chip ${short ? 'on' : ''}" data-act="xshort" data-v="1">Short</button></div>`;
+  h += `<div class="mut" style="font-size:12.5px">${short ? `Short: ${all.length} of ${fullN} exercises, the essentials of each part. About 15 min.` : `One optional session in three parts, about ${dk === 'D7' ? '50' : '45'} min. Do the first part 4–6 h away from the main session; the stretching parts fit best in the evening. Skip it on low-readiness days.`}${col === 3 ? ' Deload week: lighter doses.' : ''}</div>`;
+  if (X) h += part('x', '1 · ' + esc(X.t), esc(X.s.replace(/ · \d+ min/, '')) + ' · bodyweight only, easy effort', xr);
+  if (F) h += part('f', '2 · Flexibility: ' + esc(F.t), 'Mild tension, slow nasal breathing, never bounce', fr);
+  if (R) h += part('e', '3 · Evening wind-down', '5–8 slow breaths per position', er);
+  return fold('tc-practice', 'Extra practice · optional', h, `${done}/${all.length}`, false);
+}
 function eveningCard(w, dk){
   const R = P.routines && P.routines.evening; if (!R) return '';
   const lg = getLog(w, dk), e = lg && lg.entries && lg.entries.EVE, dr = (e && e.dr) || [], open = true;
@@ -3285,6 +3323,7 @@ document.addEventListener('click', ev => {
   else if (a === 'open') { V.open = V.open === b.dataset.c ? null : b.dataset.c; render(); }
   else if (a === 'gdall') { document.querySelectorAll('details.gd').forEach(d => d.open = b.dataset.v === '1'); }
   else if (a === 'bwmode') { const lg = ensureLog(V.week, DAYKEYS[V.dayIdx]); lg.bw = b.dataset.v === '1'; if (!lg.bw) delete lg.bw; V.open = null; saveSession(); render(); toast(b.dataset.v === '1' ? 'Bodyweight version' : 'Full gym version'); }
+  else if (a === 'xshort') { const lg = ensureLog(V.week, DAYKEYS[V.dayIdx]); lg.xshort = b.dataset.v === '1'; saveSession(); render(); }
   else if (a === 'rstr') { S.profile.restStr = b.dataset.v === '1'; persist('profile'); render(); }
   else if (a === 'short') { const lg = ensureLog(V.week, DAYKEYS[V.dayIdx]); lg.short = b.dataset.v === '1'; if (!lg.short) lg.shortAdd = []; saveSession(); render(); }
   else if (a === 'shadd') { const lg = ensureLog(V.week, DAYKEYS[V.dayIdx]); lg.shortAdd = (lg.shortAdd || []).concat(b.dataset.c); saveSession(); render(); toast(b.dataset.c + ' added back'); }
