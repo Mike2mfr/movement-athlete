@@ -915,37 +915,45 @@ function spark(m, ents){
 }
 function renderProgress(){
   const bst = brStats();
-  let h = cycProgress() + `<div class="card brsum"><div><h3>Breathwork</h3><div class="mut" style="font-size:12.5px">${bst.streak}-day streak · ${bst.sess} sessions · BOLT ${bst.lastB ? bst.lastB.v + 's' : 'not tested yet'}</div></div><button class="btn ghost" data-act="bprog">Details</button></div>` + (() => { const ms = mdStats(); return `<div class="card brsum"><div><h3>Meditation</h3><div class="mut" style="font-size:12.5px">${ms.streak}-day streak · ${ms.n} practices done · ${ms.j} journal entr${ms.j === 1 ? 'y' : 'ies'}</div></div><button class="btn ghost" data-act="mview" data-v="today">Open</button></div>`; })() + `<div class="section-title">Skill ladder</div><p class="mut" style="margin:0 0 8px;font-size:13.5px">Your level in each handstand element. Today's session uses it. Move up only when you meet the requirement.</p>`;
+  const ms = mdStats();
+  let h = cycProgress();
+  h += fold('pg-breath', 'Breathwork', `<div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><div class="mut" style="font-size:13px">${bst.streak}-day streak · ${bst.sess} sessions · BOLT ${bst.lastB ? bst.lastB.v + 's' : 'not tested yet'}</div><button class="btn ghost" data-act="bprog">Details</button></div>`, bst.streak + '-day streak', false);
+  h += fold('pg-mind', 'Meditation', `<div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><div class="mut" style="font-size:13px">${ms.streak}-day streak · ${ms.n} practices done · ${ms.j} journal entr${ms.j === 1 ? 'y' : 'ies'}</div><button class="btn ghost" data-act="mview" data-v="today">Open</button></div>`, ms.streak + '-day streak', false);
+  h += `<div class="section-title">Skill ladder</div><p class="mut" style="margin:0 0 8px;font-size:13.5px">Your level in each handstand element. Today's session uses it. Move up only when you meet the requirement.</p>`;
   ['Balance','Movement','Specialist','Elements'].forEach(ph => {
-    h += `<div class="eyebrow" style="margin:12px 0 6px">${ph}</div><div class="grid2">`;
+    const els = Object.values(EL).filter(e => e.phase === ph); if (!els.length) return;
+    let g = `<div class="grid2">`;
     Object.values(EL).filter(e => e.phase === ph).forEach(e => {
       const n = e.type === 'accum' ? null : e.vers.length, i = lvl(e.key);
-      h += `<div class="metric" style="grid-template-columns:1fr"><div><h3>${esc(e.name)}</h3><div class="meta">${esc(lvlLabel(e.key))}${n&&n>1&&i<n?` · level ${i+1} of ${n}`:''}</div></div>${n?`<div class="bar"><i style="width:${Math.round(Math.min(1,i/n)*100)}%"></i></div>`:''}<div class="meta" style="color:var(--fg)">Move up when: ${esc(lvlReq(e.key))}</div><div class="meta">Mastery: ${esc(e.adv)}</div>${lvlButtons(e.key)}</div>`;
+      g += `<div class="metric" style="grid-template-columns:1fr"><div><h3>${esc(e.name)}</h3><div class="meta">${esc(lvlLabel(e.key))}${n&&n>1&&i<n?` · level ${i+1} of ${n}`:''}</div></div>${n?`<div class="bar"><i style="width:${Math.round(Math.min(1,i/n)*100)}%"></i></div>`:''}<div class="meta" style="color:var(--fg)">Move up when: ${esc(lvlReq(e.key))}</div><div class="meta">Mastery: ${esc(e.adv)}</div>${lvlButtons(e.key)}</div>`;
     });
-    h += '</div>';
+    g += '</div>';
+    h += fold('pg-lv-' + ph.toLowerCase(), ph, g, els.length + '', false);
   });
-  h += `<div class="section-title">Benchmarks</div><p class="mut" style="margin:0 0 4px;font-size:13.5px">Log a benchmark whenever you hit a new best or test one. The dashed line is your week-12 target.</p>`;
-  h += `<form class="addm" id="addm"><div class="row"><select id="m-k" aria-label="Benchmark">${METRICS.map(m => `<option value="${m.k}">${esc(m.n)} (${m.u})</option>`).join('')}</select><input type="number" id="m-v" step="0.5" inputmode="decimal" placeholder="Value" aria-label="Value" required><input type="date" id="m-d" value="${iso(new Date())}" aria-label="Date"></div><button class="btn" type="submit">Save benchmark</button></form>`;
-  h += '<div class="grid2">';
+  h += `<div class="section-title">Benchmarks</div>`;
+  let bm = `<p class="mut" style="margin:0 0 4px;font-size:13.5px">Log a benchmark whenever you hit a new best or test one. The dashed line is your week-12 target.</p>`;
+  bm += `<form class="addm" id="addm"><div class="row"><select id="m-k" aria-label="Benchmark">${METRICS.map(m => `<option value="${m.k}">${esc(m.n)} (${m.u})</option>`).join('')}</select><input type="number" id="m-v" step="0.5" inputmode="decimal" placeholder="Value" aria-label="Value" required><input type="date" id="m-d" value="${iso(new Date())}" aria-label="Date"></div><button class="btn" type="submit">Save benchmark</button></form>`;
+  bm += '<div class="grid2">';
   METRICS.forEach(m => {
     const ents = metricEntries(m.k);
     const last = ents.length ? ents[ents.length-1].v : null;
     const best = ents.length ? (m.lower ? Math.min(...ents.map(e=>e.v)) : Math.max(...ents.map(e=>e.v))) : null;
     let pct = null;
     if (m.target != null && m.start != null && !m.flat && best != null && m.target !== m.start) pct = Math.max(0, Math.min(1, (best - m.start) / (m.target - m.start)));
-    h += `<div class="metric"><div><h3>${esc(m.n)}</h3><div class="meta">${m.start!=null?`Start ${m.start}${m.u==='reps'?'':m.u}`:'Set a baseline'}${m.target!=null&&!m.flat?` · Target ${m.target}${m.u==='reps'?'':m.u}`:''}</div></div>
+    bm += `<div class="metric"><div><h3>${esc(m.n)}</h3><div class="meta">${m.start!=null?`Start ${m.start}${m.u==='reps'?'':m.u}`:'Set a baseline'}${m.target!=null&&!m.flat?` · Target ${m.target}${m.u==='reps'?'':m.u}`:''}</div></div>
       <div class="val">${last!=null?last:'—'} <small>${m.u}</small></div>
       ${pct!=null?`<div class="bar"><i style="width:${Math.round(pct*100)}%"></i></div>`:''}
       ${spark(m, ents)}
       ${ents.length?`<details class="hist" style="grid-column:1/-1"><summary>${ents.length} entr${ents.length>1?'ies':'y'}</summary><ul>${ents.slice().reverse().map(e => `<li><span class="num">${e.d}</span><span class="num">${e.v} ${m.u}</span><button data-act="delm" data-id="${e.id}" aria-label="Delete entry">Delete</button></li>`).join('')}</ul></details>`:''}
     </div>`;
   });
-  h += '</div>';
+  bm += '</div>';
+  h += fold('pg-bench', 'Benchmarks: log + history', bm, METRICS.length + '', false);
   // adherence
   let logged = 0, planned = 0;
   const pos = todayPos();
   for (let w = 1; w <= Math.min(12, pos.week); w++) for (let di = 0; di < 6; di++) { if (w === pos.week && di > pos.dayIdx) break; planned++; if (getLog(w, DAYKEYS[di]) && Object.keys(getLog(w, DAYKEYS[di]).entries).filter(k => k !== 'EVE' && k !== 'DAY' && k !== 'XTR' && k !== 'FLX').length) logged++; }
-  if (!pos.before) h += `<div class="card" style="margin-top:10px"><h3>Sessions logged</h3><div class="num" style="font-size:22px;font-weight:700">${logged} / ${planned}</div><div class="mut" style="font-size:12.5px">Counted up to today</div></div>`;
+  if (!pos.before) h += fold('pg-adh', 'Sessions logged', `<div><div class="num" style="font-size:22px;font-weight:700">${logged} / ${planned}</div><div class="mut" style="font-size:12.5px">Counted up to today</div></div>`, `${logged}/${planned}`, false);
   return h;
 }
 
@@ -3162,7 +3170,7 @@ function eveningCard(w, dk){
 const PH = {
   areas: [
     ['lowback','Lower back'],['back','Mid/upper back muscles'],['neck','Neck'],['shoulder','Shoulder'],['elbow','Elbow / forearm'],['wrist','Wrist / hand'],
-    ['hip','Hip / groin'],['ham','Hamstring'],['knee','Knee'],['ankle','Ankle / Achilles / foot'],['sore','General soreness / stiffness']
+    ['hip','Hip / groin'],['ham','Hamstring'],['knee','Knee'],['calf','Calves'],['ankle','Ankle / Achilles / foot'],['sore','General soreness / stiffness']
   ],
   /* each exercise: [name, mild dose, moderate dose, cue]; gentlest first (moderate pain uses the first 4) */
   ex: {
@@ -3257,6 +3265,16 @@ const PH = {
       ['Calf raises, knee bent', '2 × 20', '1 × 15', 'Slow, full range. The calf protects the knee.'],
       ['Split squat, front foot raised, 5s pause', '3 × 5/side', '—', 'Front foot on a step, knee travels over the toes as far as it is pain-free. Bodyweight only.']
     ],
+    calf: [
+      ['Calf stretch on a wall, straight knee', '2 × 45s/side', '2 × 30s/side', 'Back leg straight, heel down, hips forward. Gentle: a tight or strained calf only needs a mild pull.'],
+      ['Calf stretch on a wall, bent knee', '2 × 45s/side', '2 × 30s/side', 'Same position, back knee bent and heel down. Reaches the deeper calf muscle (soleus).'],
+      ['Calf raise isometric hold, two legs', '4 × 30s', '4 × 20s', 'Rise halfway and hold. Pain at 3/10 or less. If one side is sore, shift a little more weight to the good leg.'],
+      ['Slow calf raises, straight knee', '3 × 12', '2 × 10', '3s up, 1s pause, 3s down. Two legs; move to one leg when it is pain-free.'],
+      ['Bent-knee calf raises (seated or wall sit)', '3 × 15', '2 × 12', 'Sitting with a weight on the knees, or with the knees bent against a wall. Trains the soleus, which does most of the work in running and jumping.'],
+      ['Tibialis raises', '2 × 20', '1 × 15', 'Back against the wall, heels out, lift the toes. Balances the front and back of the lower leg.'],
+      ['Easy walk', '10 min', '10 min', 'Blood flow helps a sore calf. Short steps, no running or jumping for now.'],
+      ['Single-leg calf raises off a step', '3 × 8/side', '—', 'Only when two-leg raises are easy: full range, slow lowering below the step.']
+    ],
     ankle: [
       ['Ankle circles + alphabet', '1 min/side', '1 min/side', 'Draw the letters with the big toe.'],
       ['Calf raise isometric hold', '5 × 30s', '4 × 30s', 'Halfway up, two legs. Pain at 3/10 or less.'],
@@ -3286,6 +3304,7 @@ const PH = {
     hip: 'Skip pancake, splits, leg swings, B-twist and flare drills. Upper body is fine.',
     ham: 'Skip RDLs, Nordics, pancake, front splits, kicks and sprints. Isometrics and walking are fine.',
     knee: 'Skip jumps, B-twist landings, pistols and deep split squats if they hurt. Upper body and handstands are fine.',
+    calf: 'Skip jumps, hops, sprints, B-twist and running. Pistols and deep squats only if pain-free. Upper body and handstands are fine.',
     ankle: 'Skip jumps, hops, B-twist, running and bridge hops. Seated or kneeling work and upper body are fine.',
     sore: 'If it is normal training soreness, a lighter main session is fine. Drop the volume by a third and skip max tests.'
   },
