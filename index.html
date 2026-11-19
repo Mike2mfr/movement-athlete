@@ -611,6 +611,75 @@ function cycProgress(){
   return `<details class="card gd fold"><summary><h3>Cycles</h3><span class="mut num gd-x">${L.length}</span></summary><div class="gd-b"><ul style="margin:0 0 8px;padding-left:18px;font-size:13px">${L.map(c => `<li>Cycle ${c.n}: ${c.start}${c.end ? ' → ' + c.end : ' → now'}</li>`).join('')}</ul>${rows ? `<div style="overflow-x:auto"><table style="width:100%;font-size:12.5px;border-collapse:collapse"><tr><th style="text-align:left">Best result</th>${L.map(c => `<th>C${c.n}</th>`).join('')}</tr>${rows}</table></div>` : '<p class="mut" style="font-size:12.5px">Log your benchmarks to compare cycles.</p>'}</div></details>`;
 }
 
+/* ---------- easier option (regression) for each exercise ---------- */
+const EZ = [
+ [/flare/i, ['One stage earlier', 'Table and arched-support shifts, leg-lift circles on your back, one-arm side crow on two arms.']],
+ [/b-twist/i, ['One stage earlier', 'Butterfly kicks and the twist from standing onto soft ground, landing on your back.']],
+ [/floreio|corta|rotation|squat ↔|cuban|chaturanga|lateral walking|aú|au cortado|helic/i, ['Half tempo, smaller range', 'Pick the 2 moves you know best and repeat them slowly.']],
+ [/macaco/i, ['One stage earlier', 'Half macaco into a bridge and back, or two-hand macaco on grass.']],
+ [/cossack/i, ['Easier range', 'Hold a support, go only as deep as is comfortable.']],
+ [/scorpion|heart-melt/i, ['Elevated bridge instead', 'Hands on a sofa or bed, short holds.']],
+ [/no bar/i, ['Two-arm table row + shorter grip holds', 'Both hands on the table row, half the hold times.']],
+ [/straddle hold \+ tuck hold/i, ['Tuck hold only, feet on a box', 'Hands on the floor, feet on a box, lift into a tuck for 3–5s.']],
+ [/hand switches|transitions in the air|hand-to-hand/i, ['Hand-to-hand transfers, chest to the wall', 'Same transfers with the wall behind you for safety; lift the hand only 2–3 cm.']],
+ [/one-arm wall reps/i, ['Wall weight shifts, both hands down', 'Chest to the wall, shift 70–80% of your weight onto one hand and hold 3s. No lift-off.']],
+ [/one-arm (assisted|hold|holds|: |entries|shape|shift|lift-off|transfers)|one-arm: /i, ['Same drill one finger level easier', 'Keep one or two more fingers of the free hand on a block or the floor, or do it chest to the wall. Shorter holds.']],
+ [/shrugs/i, ['Shrugs chest to the wall', 'Same shrug with the wall behind you; two hands if one is too much.']],
+ [/side-bend|side flexion/i, ['Side bends standing and kneeling only', 'Skip the handstand part; do slow standing and kneeling side bends, 2×6/side.']],
+ [/hspu|handstand push/i, [/freestanding/i, 0]],
+ [/press band warm-up/i, ['Same drills without the band', 'Protraction punches and pike lifts with bodyweight only.']],
+ [/press (to handstand|play)|press eccentric|forward-fold press/i, ['Press from a high box', 'Feet on a sofa or bench, lean over the hands, lift to straddle and lower slowly. Or press negatives with your back to the wall.']],
+ [/pike-up|straddle-up|tuck-up/i, ['Same move with the feet on a box', 'Start with the feet raised on a step or sofa so the hips are already higher.']],
+ [/entries|entry|entrance|mounts|mini planche/i, ['Wall-assisted entries', 'Kick or tuck up to the wall, then peel the feet off. Same reps.']],
+ [/qdr|tension-loose|scissors|shape|head positions|handstand transitions|hold ladder|free handstand/i, ['Same drill chest to the wall', 'Do it facing the wall with the toes lightly touching; take the toes off for 2–3s at a time.']],
+ [/chest-to-wall|back-to-wall|wall hs hollow|hollow →/i, ['Shorter holds with the feet lower', 'Pike handstand with the feet on a box, or 20–30s holds instead of long ones.']],
+ [/integration routine|paralette/i, ['Floor version, half the reps', 'Same sequence on the floor at an easy pace, half the reps.']],
+ [/planche lean/i, ['Planche lean from the knees', 'Knees down, lean the shoulders past the hands, keep the arms straight. Shorter lean.']],
+ [/pseudo-planche/i, ['Pseudo-planche push-ups on the knees', 'Hands turned out by the hips, lean forward, knees on the floor.']],
+ [/planche/i, ['One step easier: frog stand → tuck', 'Frog stand (knees on the elbows) holds or tuck planche on books/parallettes, shorter holds.']],
+ [/front lever|floor lever|lever lowers/i, ['One shape easier', 'Tuck instead of advanced tuck, one leg instead of straddle, or keep the feet on a box. Shorter holds.']],
+ [/weighted pull-up/i, ['Bodyweight pull-ups', 'Same reps and sets without weight, or half the weight.']],
+ [/archer pull-up/i, ['Assisted archer pull-ups', 'Feet on a chair to take some weight off, or wide-grip pull-ups.']],
+ [/oap eccentric/i, ['Shorter, band-assisted eccentric', 'Lower on one arm over 3s with a light band, or two-arm slow negatives.']],
+ [/band-assisted|oap|one-arm pull-up|grip and one-arm finisher/i, ['Thicker band or archer pull-ups', 'Use a stronger band, or swap for archer pull-ups with the same reps.']],
+ [/one-arm hang/i, ['Two-arm hang with uneven grip', 'Hang with one hand fully and two fingers of the other; or feet lightly on a box.']],
+ [/dead hang|passive-active/i, ['Shorter hangs, feet on a box', 'Take some weight on the feet; 3 × 20s.']],
+ [/one-arm table row/i, ['Two-arm table row', 'Same table row with both hands; bend the knees to make it lighter.']],
+ [/table row|scap rows|pull-up iso/i, ['Same with a more upright body', 'Knees bent and feet closer so less weight hangs from the arms.']],
+ [/pinch|dumbbell hold|backpack hold|book/i, ['Lighter and shorter', 'Half the load or half the hold time.']],
+ [/back squat/i, ['Goblet squat or lighter load', 'Hold a backpack or dumbbell in front; same reps.']],
+ [/shrimp|pistol/i, ['Box pistol', 'Sit down to a chair on one leg and stand up, holding a door frame if needed.']],
+ [/split squat|bulgarian|knee-over-toe/i, ['Supported split squat, no load', 'Hold a wall or chair, raise the front foot, bodyweight only.']],
+ [/step-up/i, ['Lower step with a hand on the wall', 'Half the height, slow.']],
+ [/nordic/i, ['Hamstring bridge walk-outs', 'On your back, walk the heels out from a bridge and back, 3 × 6. Or Nordic negatives catching early with the hands.']],
+ [/jump|depth drop|broad|power circuit/i, ['Low-impact version', 'Squat jumps on the spot or pogo hops, landing softly; skip boxes and drops.']],
+ [/rdl|good morning|reverse hyper|back extension|jefferson/i, ['Bodyweight, smaller range', 'No load, two legs, stop where the back stays relaxed.']],
+ [/calf raise|tibialis/i, ['Two legs, bodyweight', 'Same reps on two legs, smaller range.']],
+ [/wrist .*curls|shoulder resilience/i, ['No weight, fewer rounds', 'Same movements with bodyweight only, 2 rounds.']],
+ [/v-sit|l-sit/i, ['Tuck L-sit on books', 'Knees bent, hands on books or parallettes; shorter holds.']],
+ [/toes-to-bar|hanging hollow/i, ['Hanging knee raises', 'Or lying leg raises if the grip is tired.']],
+ [/hollow/i, ['Tuck hollow', 'Knees bent, arms by the hips, lower back flat.']],
+ [/candlestick|hip-flexor lift|pike compression/i, ['One leg at a time, knees soft', 'Seated or lying, lift one leg at a time.']],
+ [/drop-back|walk-down/i, ['Partial walk-down', 'Walk only halfway down the wall and back up.']],
+ [/bridge locomotion/i, ['Crab walks', 'Hips high, forward, back and sideways, 3 × 20s.']],
+ [/bridge|scorpion|heart-melt/i, ['Elevated bridge', 'Hands on a sofa or bed, or a table-top hold. Shorter holds.']],
+ [/macaco/i, ['One stage earlier', 'Half macaco into a bridge and back, or two-hand macaco on grass.']],
+ [/flare/i, ['One stage earlier', 'Table and arched-support shifts, leg-lift circles on your back, one-arm side crow on two arms.']],
+ [/b-twist/i, ['One stage earlier', 'Butterfly kicks and the twist from standing onto soft ground, landing on your back.']],
+ [/floreio|aú|au |helic|corta|queda|rolê|capoeira|rotation|low bridge|squat ↔|cuban|chaturanga|lateral walking/i, ['Half tempo, smaller range', 'Pick the 2 moves you know best and repeat them slowly.']],
+ [/juggling/i, ['One ball fewer', '3-ball cascade or 4-ball fountain flashes.']],
+ [/flow|locomotion|free play/i, ['Shorter rounds', 'Half the round time, longer rest, simpler moves.']],
+ [/split|pancake|pnf|frog|cossack|hips|mobility|good morning|stretch/i, ['Easier range', 'Hands on blocks, less depth, no contractions (no PNF). 2 rounds.']]
+];
+const ezGeneric = t => /^(Half|Easier range|One stage|One shape|One step|Same|Shorter|Lighter|No weight|Bodyweight,|Two legs|Low-impact|Floor version|One ball|Easier)/.test(t);
+function easierOf(name){
+  for (const [re, v] of EZ) if (re.test(name)) {
+    if (v[0] instanceof RegExp) return v[0].test(name) ? ['Wall HSPU partials', 'Half range at the wall, slow lowering.'] : ['Pike push-ups on a box', 'Feet on a box, hips over the hands, head to the floor between the hands.'];
+    return v;
+  }
+  return ['Half the volume', 'Same exercise, half the sets and a longer rest.'];
+}
+
 /* ---------- rest-period stretches ---------- */
 const RSTR = {"D1": [["Pancake fold", "30s", "Sit wide, hinge forward with a flat back, breathe out into it."], ["Middle split hold", "30s", "Wide stance, hands on the floor or a block, sink slowly."], ["Half split", "20s/side", "Back knee down, front leg straight, hips square, chest long."], ["Couch stretch", "20s/side", "Back knee against a wall or sofa, squeeze the glute, ribs down."], ["90/90 hip switches", "×6", "Seated, rotate both knees side to side, sit tall."], ["Frog rocks", "×8", "On the knees and forearms, knees wide, rock the hips back and forth."], ["Seated pike fold", "30s", "Legs together, flat back, pull the chest toward the thighs."], ["Calf stretch on a wall", "20s/side", "Back leg straight, heel down."]], "D2": [["Wall shoulder flexion stretch", "30s", "Hands on the wall, walk back and let the chest sink, arms straight."], ["Wrist flexor + extensor stretch", "20s each", "Kneeling, fingers toward the knees, then backs of the hands down."], ["Open books", "×5/side", "Side-lying, knees stacked, open the top arm and follow it with your eyes."], ["Door-frame chest stretch", "30s/side", "Forearm on the frame, step through gently."], ["Side-lying lat stretch", "30s/side", "Lie on your side, top arm overhead, let it fall back."], ["Thread the needle", "×5/side", "On all fours, slide one arm under, then reach to the ceiling."], ["Neck CARs", "×3 each way", "Slow circles in the easy range, about 30% effort."]], "D3": [["Seated pike pulses", "×10", "Legs straight, hands beside the knees, lift the heels with the hip flexors."], ["Pancake fold", "30s", "Sit wide, hinge forward with a flat back."], ["Half split", "20s/side", "Back knee down, hips square."], ["Middle split hold", "30s", "Wide stance, sink slowly."], ["Couch stretch", "20s/side", "Glute squeezed, ribs down."], ["Seated straddle leg lifts", "×8", "Hands beside the knees, lift both legs off the floor."]], "D4": [["Wall shoulder flexion stretch", "30s", "Hands on the wall, walk back and let the chest sink, arms straight."], ["Wrist flexor + extensor stretch", "20s each", "Kneeling, fingers toward the knees, then backs of the hands down."], ["Open books", "×5/side", "Side-lying, knees stacked, open the top arm and follow it with your eyes."], ["Door-frame chest stretch", "30s/side", "Forearm on the frame, step through gently."], ["Side-lying lat stretch", "30s/side", "Lie on your side, top arm overhead, let it fall back."], ["Thread the needle", "×5/side", "On all fours, slide one arm under, then reach to the ceiling."], ["Neck CARs", "×3 each way", "Slow circles in the easy range, about 30% effort."]], "D5": [["Seated pike pulses", "×10", "Legs straight, hands beside the knees, lift the heels with the hip flexors."], ["Pancake fold", "30s", "Sit wide, hinge forward with a flat back, breathe out into it."], ["Middle split hold", "30s", "Wide stance, hands on the floor or a block, sink slowly."], ["Half split", "20s/side", "Back knee down, front leg straight, hips square, chest long."], ["Couch stretch", "20s/side", "Back knee against a wall or sofa, squeeze the glute, ribs down."], ["90/90 hip switches", "×6", "Seated, rotate both knees side to side, sit tall."], ["Frog rocks", "×8", "On the knees and forearms, knees wide, rock the hips back and forth."], ["Seated pike fold", "30s", "Legs together, flat back, pull the chest toward the thighs."], ["Calf stretch on a wall", "20s/side", "Back leg straight, heel down."]], "D6": [["Calf stretch on a wall", "20s/side", "Back leg straight, heel down."], ["Hip flexor lunge stretch", "20s/side", "Tuck the pelvis, then shift forward."], ["Thread the needle", "×5/side", "Slide one arm under, then reach up."], ["Wrist flexor + extensor stretch", "20s each", "Gentle, arms straight."], ["Squat hold", "30s", "Sit deep, elbows push the knees out."]]};
 const rsOn = () => S.profile.restStr !== false;
@@ -784,7 +853,7 @@ function renderToday(){
   h += '<div class="days" role="tablist">' + DAYKEYS.map((k,i) => {
     const lg = getLog(w, k), sess = sessionOf(w, k);
     let dot = '';
-    if (lg && sess) { const sp = shortPlan(w, k, lg), tot = sess.rows.filter(r => r[2].some(Boolean) && r[0] !== 'R' && !sp.skip.has(r[0])).length, n = Object.keys(lg.entries).filter(k => k !== 'EVE' && k !== 'DAY' && k !== 'XTR' && k !== 'FLX').length; if (n) dot = `<em class="dot ${n >= tot ? '' : 'part'}"></em>`; }
+    if (lg && sess) { const sp = shortPlan(w, k, lg), tot = sess.rows.filter(r => r[2].some(Boolean) && r[0] !== 'R' && !sp.skip.has(r[0])).length, n = Object.keys(lg.entries).filter(k => k !== 'EVE' && k !== 'DAY' && k !== 'XTR' && k !== 'FLX' && !(lg.entries[k].ez && !lg.entries[k].r && !lg.entries[k].res && !(lg.entries[k].dr || []).length)).length; if (n) dot = `<em class="dot ${n >= tot ? '' : 'part'}"></em>`; }
     const d = dateOf(w, i);
     return `<button class="day ${i===di?'sel':''} ${w===pos.week&&i===pos.dayIdx&&!pos.before?'today':''}" data-act="day" data-i="${i}" role="tab" aria-selected="${i===di}">${dot}<b>${DAYSHORT[i]}</b><span>${d.getDate()}/${d.getMonth()+1}</span></button>`;
   }).join('') + '</div>';
@@ -861,11 +930,13 @@ function renderToday(){
     if (RT) { const done = (e?.dr || []).length, rounds = rtKey === 'bulgarian' ? circRounds(rx) : 1; tags += `<span class="lvl">${done ? done + '/' : ''}${RT[2].length * rounds} ${rtKey === 'bulgarian' ? 'checks' : 'drills'}</span>`; }
     if (otHit) tags += `<span class="rated">Half sets: other training</span>`;
     if (er) tags += `<span class="rated">· ${RATINGS.find(x=>x[0]===er)[1]}${e.res?` · ${esc(e.res)}`:''}</span>`;
-    h += `<div class="ex ${e?'logged':''}"><button class="ex-row" data-act="open" data-c="${code}" aria-expanded="${open}"><span class="code">${esc(code)}</span><span class="ex-name">${esc(name)}<div class="tags">${tags}</div></span><span class="rx">${esc(rx||'—')}${changed?`<span class="was">${esc(planned)}</span>`:''}</span></button>`;
+    const ezOn = !!(e && e.ez) && !/^A\d?$/.test(code), ezv = easierOf(name);
+    if (ezOn) tags = `<span class="src c-MOB">Easier option</span>` + tags;
+    h += `<div class="ex ${e && (e.r || e.res || (e.dr || []).length) ? 'logged' : ''}"><button class="ex-row" data-act="open" data-c="${code}" aria-expanded="${open}"><span class="code">${esc(code)}</span><span class="ex-name">${esc(ezOn ? (ezGeneric(ezv[0]) ? name : ezv[0]) : name)}${ezOn ? `<span class="mut" style="display:block;font-size:12px;font-weight:500">${ezGeneric(ezv[0]) ? 'Easier: ' + esc(ezv[0].toLowerCase()) : 'instead of: ' + esc(name)}</span>` : ''}<div class="tags">${tags}</div></span><span class="rx">${esc(rx||'—')}${changed?`<span class="was">${esc(planned)}</span>`:''}</span></button>`;
     const tm = timerSpec(rx, note); if (tm) h += `<div class="tm-row">${tm.work ? `<button class="chip tm" data-act="timer" data-s="${tm.work}" data-l="${esc(name)}" data-k="work">⏱ ${fmtT(tm.work)}${tm.side ? ' / side' : ''}</button>` : ''}${tm.rest ? `<button class="chip tm rest" data-act="timer" data-s="${tm.rest}" data-l="${esc(name)}" data-k="rest">Rest ${fmtT(tm.rest)}</button>` : ''}</div>`;
     if (RSM[code]) h += `<div class="rs-strip"><span class="rs-ic" aria-hidden="true">↻</span><span><b>Stretch in the rest:</b> ${esc(RSM[code][0])} · ${esc(RSM[code][1])}</span></div>`;
     if (open) {
-      h += `<div class="ex-body">${note?`<div class="ex-note">${esc(isPct ? withKg(note) : note)}</div>`:''}${RSM[code] ? `<div class="ex-note" style="margin-top:6px"><b>During each rest:</b> ${esc(RSM[code][0])} ${esc(RSM[code][1])}. ${esc(RSM[code][2])} Easy, about 60–70% of your range. Stop 20s before the next set.</div>` : ''}`;
+      h += `<div class="ex-body">${note?`<div class="ex-note">${esc(isPct ? withKg(note) : note)}</div>`:''}${/^A\d?$/.test(code) ? '' : `<div class="ex-note" style="margin-top:6px;border-left:3px solid #2b7a62;padding-left:8px"><b>${ezOn ? 'Doing the easier option:' : 'Too hard today? Easier option:'}</b> ${esc(ezv[0])}. ${esc(ezv[1])}<div style="margin-top:6px"><button class="chip ${ezOn ? 'on' : ''}" data-act="ez" data-c="${code}">${ezOn ? 'Back to the original' : 'Use the easier option today'}</button></div></div>`}${RSM[code] ? `<div class="ex-note" style="margin-top:6px"><b>During each rest:</b> ${esc(RSM[code][0])} ${esc(RSM[code][1])}. ${esc(RSM[code][2])} Easy, about 60–70% of your range. Stop 20s before the next set.</div>` : ''}`;
       if (isPct) h += `<div class="why">1RM (added weight): ${oneRM().v}kg, ${oneRM().src}.</div>`;
       if (CP) h += compoundHTML(CP, code, e?.dr || [], circRounds(rx));
       if (RT && rtKey === 'bulgarian') h += circuitHTML(RT, code, e?.dr || [], circRounds(rx));
@@ -888,7 +959,7 @@ function renderToday(){
   });
   h += '</div>';
   if (SP.on && spSkip.length) h += fold('short-skip', 'Skipped today', `<ul style="margin:0;padding:0;list-style:none">${spSkip.map(r => `<li style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line)"><span style="font-size:13.5px"><b class="num">${esc(r[0])}</b> ${esc(clean(r[1]))}</span><button class="chip" data-act="shadd" data-c="${esc(r[0])}">Add back</button></li>`).join('')}</ul>`, String(spSkip.length), false);
-  const tot = sess.rows.filter(r => r[2].some(Boolean) && r[0] !== 'R' && !SP.skip.has(r[0])).length, n = lg ? Object.keys(lg.entries).filter(k => k !== 'EVE' && k !== 'DAY' && k !== 'XTR' && k !== 'FLX').length : 0;
+  const tot = sess.rows.filter(r => r[2].some(Boolean) && r[0] !== 'R' && !SP.skip.has(r[0])).length, n = lg ? Object.keys(lg.entries).filter(k => k !== 'EVE' && k !== 'DAY' && k !== 'XTR' && k !== 'FLX' && !(lg.entries[k].ez && !lg.entries[k].r && !lg.entries[k].res && !(lg.entries[k].dr || []).length)).length : 0;
   h += `<div class="complete"><span><b class="num">${n}/${tot}</b> logged</span><span class="mut">Easy twice in a row steps it up · Hard twice or missed steps it down</span></div>`;
   h += fastBanner(iso(dateOf(w, di))) + foldCard('daily', dailyCard(w, dk)) + foldCard('breath', breathCard(iso(dateOf(w, di)))) + foldCard('mind', mindCard(iso(dateOf(w, di)))) + otherCard(w, dk) + practiceCard(w, dk);
   return h;
@@ -3387,7 +3458,7 @@ function entry(code){
 function saveSession(){ persist('log-' + logKey(V.week, DAYKEYS[V.dayIdx])); }
 function pruneEntry(code){
   const lg = getLog(V.week, DAYKEYS[V.dayIdx]); const e = lg?.entries[code];
-  if (e && !e.r && !e.res && !e.pain && !(e.dr && e.dr.length)) delete lg.entries[code];
+  if (e && !e.r && !e.res && !e.pain && !e.ez && !(e.dr && e.dr.length)) delete lg.entries[code];
 }
 document.addEventListener('click', ev => {
   const b = ev.target.closest('[data-act]'); if (!b) return;
@@ -3410,6 +3481,7 @@ document.addEventListener('click', ev => {
   }
   else if (a === 'ot-del') { const lg = ensureLog(V.week, DAYKEYS[V.dayIdx]); lg.other.splice(+b.dataset.i, 1); saveSession(); render(); }
   else if (a === 'pfold') { V.fold = V.fold || {}; V.fold['tc-practice'] = true; V.fold[b.dataset.v] = true; render(); const el = document.querySelector('[data-fk="' + b.dataset.v + '"]'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  else if (a === 'ez') { const e = entry(b.dataset.c); e.ez = !e.ez; if (!e.ez) delete e.ez; e.t = Date.now(); pruneEntry(b.dataset.c); saveSession(); render(); }
   else if (a === 'xshort') { const lg = ensureLog(V.week, DAYKEYS[V.dayIdx]); lg.xshort = b.dataset.v === '1'; saveSession(); render(); }
   else if (a === 'rstr') { S.profile.restStr = b.dataset.v === '1'; persist('profile'); render(); }
   else if (a === 'short') { const lg = ensureLog(V.week, DAYKEYS[V.dayIdx]); lg.short = b.dataset.v === '1'; if (!lg.short) lg.shortAdd = []; saveSession(); render(); }
