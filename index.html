@@ -961,7 +961,6 @@ function renderToday(){
   if (low) h += `<div class="banner warn" style="margin:0 0 12px"><div><b>Low readiness: sets halved</b>Keep the quality, cut the volume. Handstand work is practice, not a workout.</div></div>`;
 
   const lv = levelsBefore(w, di);
-  h += `<details class="howrun"><summary>How to run this session</summary><div>Go top to bottom. A single letter: do all its sets, then move on. <b>Same letter with numbers</b> (e.g. D1 + D2): 1 set of D1 → rest → 1 set of D2 → rest → repeat until all sets are done; extra sets of the longer one at the end. Stretches marked "during the rest" fill the rest of their partner. Full guide in the Guide tab.</div></details>`;
   h += '<div class="list">';
   sess.rows.forEach(row => {
     const [code, nameRaw, wk, note, src] = row;
