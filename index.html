@@ -680,6 +680,53 @@ function easierOf(name){
   return ['Half the volume', 'Same exercise, half the sets and a longer rest.'];
 }
 
+/* ---------- session length estimate ---------- */
+const fmtDur = m => m >= 60 ? `${Math.floor(m / 60)} h ${String(m % 60).padStart(2, '0')}` : `${m} min`;
+function estPartSecs(t){
+  t = t.replace(/–/g, '-');
+  let side = /\/\s*side|each side|per side|\/leg|each way|\/direction/.test(t) ? 2 : 1, m;
+  if ((m = t.match(/(\d+(?:\.\d+)?)\s*(?:-\s*\d+(?:\.\d+)?)?\s*min/))) return +m[1] * 60 * side;
+  if ((m = t.match(/(\d+)\s*(?:-\s*\d+)?\s*s\b/))) { const reps = (t.match(/[×x]\s*(\d+)\s*(?:-\s*\d+)?\s*(?!s\b)/) || [])[1]; return (+m[1]) * side * (reps && !t.includes(m[0].trim()) ? +reps : 1) + 5; }
+  if ((m = t.match(/[×x]\s*(\d+)(?:\s*-\s*(\d+))?/))) return (+(m[2] || m[1])) * 4 * side + 5;
+  if ((m = t.match(/(\d+)\s*m\b/))) return (+m[1]) * 3 * side;
+  return 30;
+}
+function estRowSecs(row, d){
+  if (!d || d === '—') return 0;
+  const note = row[3] || '', rest = restSecs(note) || (row[4] === 'MOB' ? 15 : 60);
+  d = d.replace(/–/g, '-'); let m;
+  if ((m = d.match(/collect\s*(\d+)\s*s/i))) return Math.max(300, +m[1] * 3.5 * (/arm|side/.test(d) ? 2 : 1));
+  if ((m = d.match(/(\d+)\s*(?:sets?|rounds?)\s*[×x]\s*the/i))) {
+    const parts = (note.match(/1 (?:set|round) = ([^.]*)/) || [])[1];
+    const per = parts ? parts.split('·').reduce((a, p) => a + estPartSecs(p) + 10, 0) : 180;
+    return +m[1] * per + (+m[1] - 1) * rest;
+  }
+  if ((m = d.match(/^(\d+)\s*(?:sets?|rounds?)?\s*[×x]\s*(.+)$/i))) {
+    const sets = +m[1], w = m[2];
+    let work;
+    if (/min/.test(w)) work = estPartSecs(w);
+    else if (/\d\s*s\b/.test(w)) work = estPartSecs(w);
+    else { const r = w.match(/(\d+)(?:\s*-\s*(\d+))?/); work = r ? (+(r[2] || r[1])) * 4 * (/side|leg|each/.test(w) ? 2 : 1) + 10 : 30; }
+    return sets * work + (sets - 1) * rest;
+  }
+  if ((m = d.match(/(\d+)\s*min/))) return +m[1] * 60;
+  return 180;
+}
+function estSessionMin(w, dk, plan){
+  const sess = sessionOf(w, dk); if (!sess) return 0;
+  const SP = plan || shortPlan(w, dk, getLog(w, dk));
+  const groups = {}; let tot = 0;
+  sess.rows.forEach(r => {
+    if (r[0] === 'R' || SP.skip.has(r[0])) return;
+    if (/^A\d?$/.test(r[0]) && r[1].toLowerCase().includes('prep')) { tot += 26 * 60; return; }
+    let sec = estRowSecs(r, r[2][(w - 1) % 4]); if (sec) sec += 60; if (SP.trim.has(r[0])) sec *= 0.55;
+    const g = r[0].match(/^([A-Z])\d$/);
+    if (g) (groups[g[1]] = groups[g[1]] || []).push(sec); else tot += sec;
+  });
+  Object.values(groups).forEach(a => { a.sort((x, y) => y - x); tot += a[0] + a.slice(1).reduce((s, x) => s + x * 0.35, 0); });
+  return Math.round(tot / 60);
+}
+
 /* ---------- rest-period stretches ---------- */
 const RSTR = {"D1": [["Pancake fold", "30s", "Sit wide, hinge forward with a flat back, breathe out into it."], ["Middle split hold", "30s", "Wide stance, hands on the floor or a block, sink slowly."], ["Half split", "20s/side", "Back knee down, front leg straight, hips square, chest long."], ["Couch stretch", "20s/side", "Back knee against a wall or sofa, squeeze the glute, ribs down."], ["90/90 hip switches", "×6", "Seated, rotate both knees side to side, sit tall."], ["Frog rocks", "×8", "On the knees and forearms, knees wide, rock the hips back and forth."], ["Seated pike fold", "30s", "Legs together, flat back, pull the chest toward the thighs."], ["Calf stretch on a wall", "20s/side", "Back leg straight, heel down."]], "D2": [["Wall shoulder flexion stretch", "30s", "Hands on the wall, walk back and let the chest sink, arms straight."], ["Wrist flexor + extensor stretch", "20s each", "Kneeling, fingers toward the knees, then backs of the hands down."], ["Open books", "×5/side", "Side-lying, knees stacked, open the top arm and follow it with your eyes."], ["Door-frame chest stretch", "30s/side", "Forearm on the frame, step through gently."], ["Side-lying lat stretch", "30s/side", "Lie on your side, top arm overhead, let it fall back."], ["Thread the needle", "×5/side", "On all fours, slide one arm under, then reach to the ceiling."], ["Neck CARs", "×3 each way", "Slow circles in the easy range, about 30% effort."]], "D3": [["Seated pike pulses", "×10", "Legs straight, hands beside the knees, lift the heels with the hip flexors."], ["Pancake fold", "30s", "Sit wide, hinge forward with a flat back."], ["Half split", "20s/side", "Back knee down, hips square."], ["Middle split hold", "30s", "Wide stance, sink slowly."], ["Couch stretch", "20s/side", "Glute squeezed, ribs down."], ["Seated straddle leg lifts", "×8", "Hands beside the knees, lift both legs off the floor."]], "D4": [["Wall shoulder flexion stretch", "30s", "Hands on the wall, walk back and let the chest sink, arms straight."], ["Wrist flexor + extensor stretch", "20s each", "Kneeling, fingers toward the knees, then backs of the hands down."], ["Open books", "×5/side", "Side-lying, knees stacked, open the top arm and follow it with your eyes."], ["Door-frame chest stretch", "30s/side", "Forearm on the frame, step through gently."], ["Side-lying lat stretch", "30s/side", "Lie on your side, top arm overhead, let it fall back."], ["Thread the needle", "×5/side", "On all fours, slide one arm under, then reach to the ceiling."], ["Neck CARs", "×3 each way", "Slow circles in the easy range, about 30% effort."]], "D5": [["Seated pike pulses", "×10", "Legs straight, hands beside the knees, lift the heels with the hip flexors."], ["Pancake fold", "30s", "Sit wide, hinge forward with a flat back, breathe out into it."], ["Middle split hold", "30s", "Wide stance, hands on the floor or a block, sink slowly."], ["Half split", "20s/side", "Back knee down, front leg straight, hips square, chest long."], ["Couch stretch", "20s/side", "Back knee against a wall or sofa, squeeze the glute, ribs down."], ["90/90 hip switches", "×6", "Seated, rotate both knees side to side, sit tall."], ["Frog rocks", "×8", "On the knees and forearms, knees wide, rock the hips back and forth."], ["Seated pike fold", "30s", "Legs together, flat back, pull the chest toward the thighs."], ["Calf stretch on a wall", "20s/side", "Back leg straight, heel down."]], "D6": [["Calf stretch on a wall", "20s/side", "Back leg straight, heel down."], ["Hip flexor lunge stretch", "20s/side", "Tuck the pelvis, then shift forward."], ["Thread the needle", "×5/side", "Slide one arm under, then reach up."], ["Wrist flexor + extensor stretch", "20s each", "Gentle, arms straight."], ["Squat hold", "30s", "Sit deep, elbows push the knees out."]]};
 const rsOn = () => S.profile.restStr !== false;
@@ -698,13 +745,29 @@ function restStretchMap(sess, dk){
 
 /* ---------- short sessions ---------- */
 const SHORT = {"P1": {"D1": ["R,D2,J1,J2,K1,K2", "C,D1,G1,H,I"], "D2": ["R,F1,G1,G2,H", "D1,D2,E,F2"], "D3": ["R,E1,E2,G2,H1,H2,I", "C2,F,G1"], "D4": ["R,F1,F2,G2,G3,H", "C,D,BL,E1,E2,G1,MC"], "D5": ["R,C2,E2,H2,H3,H4,I2,J", "F1,F2,G,H1,I1"], "D6": ["B,C2,C3,C5,G2,H,I,FP", "A,C1,C4,C6,E,F"]}, "P2": {"D1": ["R,C2,TR,H,I,L1,L2", "D,F1,K"], "D2": ["R,F,G2,H", "D,E1,E2,G1"], "D3": ["R,D2,E,H,I2,J,K1,K2", "C2,G,I1"], "D4": ["R,F1,F2,G2,G3,H", "C,D,BL,E1,E2,G1,MC"], "D5": ["R,D2,F,I3,J2,J3,J4,K1,K2", "C2,G,H,I1,I2,J1"], "D6": ["B,C3,C4,D,G2,H,I", "A,C1,C5,C6,F"]}, "P3": {"D1": ["R,J", "E,F1,H,I"], "D2": ["R,F2,G", "C2,D1,D2,E,F1"], "D3": ["R,D2,H,J", "C2,E,G,I"], "D4": ["R,F1,F2,G2,G3,H", "C,D,BL,E1,E2,G1,MC"], "D5": ["R,D1,H2,I2,J", "C,F2,G,H1,I1"], "D6": ["B,C3,D,G2,H1,H2,I", "A,C1,C4,F"]}};
+const FIT_MIN = 120;
 function shortPlan(week, dayKey, lg){
-  const z = { on: !!(lg && lg.short), skip: new Set(), trim: new Set() };
-  if (!z.on) return z;
+  const z = { on: !!(lg && lg.short), skip: new Set(), trim: new Set(), fit: false };
+  if (!z.on) return fitPlan(week, dayKey, lg, z);
   const e = (SHORT['P' + (Math.min(2, Math.floor((week - 1) / 4)) + 1)] || {})[dayKey]; if (!e) return z;
   const back = new Set(lg.shortAdd || []);
   e[0].split(',').forEach(c => { if (!back.has(c)) z.skip.add(c); });
   e[1].split(',').forEach(c => z.trim.add(c));
+  const sess = sessionOf(week, dayKey);
+  if (sess) for (const r of sess.rows.slice().reverse()) { if (estSessionMin(week, dayKey, z) <= 85) break; if (!z.skip.has(r[0]) && !/^A\d?$/.test(r[0]) && r[0] !== 'R') z.trim.add(r[0]); }
+  return z;
+}
+
+function fitPlan(week, dayKey, lg, z){
+  const e = (SHORT['P' + (Math.min(2, Math.floor((week - 1) / 4)) + 1)] || {})[dayKey];
+  if (!e || isDeload(week)) return z;
+  const back = new Set((lg && lg.shortAdd) || []), est = () => estSessionMin(week, dayKey, z);
+  if (est() <= FIT_MIN) return z;
+  z.fit = true;
+  for (const c of e[1].split(',')) { z.trim.add(c); if (est() <= FIT_MIN) return z; }
+  for (const c of e[0].split(',').reverse()) { if (back.has(c)) continue; z.skip.add(c); if (est() <= FIT_MIN) return z; }
+  const sess = sessionOf(week, dayKey);
+  if (sess) for (const r of sess.rows.slice().reverse()) { if (est() <= FIT_MIN) break; if (!z.skip.has(r[0]) && !/^A\d?$/.test(r[0]) && r[0] !== 'R') z.trim.add(r[0]); }
   return z;
 }
 
@@ -875,14 +938,16 @@ function renderToday(){
   const lg = getLog(w, dk);
   const ready = lg?.readiness || null;
   const low = ready === 'low';
-  h += `<div class="sess-head"><div><div class="eyebrow">${DAYSHORT[di]} · ${dateOf(w,di).toLocaleDateString(undefined,{day:'numeric',month:'short'})}</div><h2>${esc(sess.title)}</h2><div class="sub">${esc(sess.sub)}</div></div></div>`;
+  h += `<div class="sess-head"><div><div class="eyebrow">${DAYSHORT[di]} · ${dateOf(w,di).toLocaleDateString(undefined,{day:'numeric',month:'short'})}</div><h2>${esc(sess.title)}</h2><div class="sub">${esc(sess.sub.replace(/ · ~2h| · 90–120 min/, ''))} · ≈ ${fmtDur(estSessionMin(w, dk))}</div></div></div>`;
   if (P.bw) h += `<div class="ready bwsw"><span class="lbl">Equipment</span><button class="chip ${sess.bw ? '' : 'on'}" data-act="bwmode" data-v="0">Full gym</button><button class="chip ${sess.bw ? 'on' : ''}" data-act="bwmode" data-v="1">Bodyweight only</button></div>` + (sess.bw ? `<div class="banner info" style="margin:0 0 12px"><div><b>Bodyweight version</b>Handstand, floor, mobility and flow work stay the same; the gym exercises are swapped. You need: ${esc(P.bw.kit.replace(/\.$/, ''))}.</div></div>` : '');
   h += `<div class="ready"><span class="lbl">How do you feel?</span>` + [['good','Good'],['ok','OK'],['low','Low']].map(([k,l]) => `<button class="chip ${ready===k?'on':''}" data-act="ready" data-v="${k}">${l}</button>`).join('') + `</div>`;
   const OA = otAdjust(w, di); h += otAdjBanner(w, di, sess.rows);
   const SP = shortPlan(w, dk, lg), spSkip = sess.rows.filter(r => SP.skip.has(r[0])), spTrim = sess.rows.filter(r => SP.trim.has(r[0]) && !SP.skip.has(r[0]));
-  if (SHORT['P' + (P.phases.indexOf(phaseOf(w)) + 1)]?.[dk]) h += `<div class="ready"><span class="lbl">Session length</span><button class="chip ${SP.on ? '' : 'on'}" data-act="short" data-v="0">Full</button><button class="chip ${SP.on ? 'on' : ''}" data-act="short" data-v="1">Short</button></div>`;
+  if (SHORT['P' + (P.phases.indexOf(phaseOf(w)) + 1)]?.[dk]) h += `<div class="ready"><span class="lbl">Session length</span><button class="chip ${SP.on ? '' : 'on'}" data-act="short" data-v="0">Full</button><button class="chip ${SP.on ? 'on' : ''}" data-act="short" data-v="1">Short</button><span class="mut num" style="font-size:12.5px;margin-left:auto">≈ ${fmtDur(estSessionMin(w, dk, SP))}</span></div>`;
   h += `<div class="ready"><span class="lbl">Rest stretches</span><button class="chip ${rsOn() ? 'on' : ''}" data-act="rstr" data-v="1">On</button><button class="chip ${rsOn() ? '' : 'on'}" data-act="rstr" data-v="0">Off</button></div>`;
   const RSM = restStretchMap(sess, dk);
+  if (SP.fit) h += `<div class="banner info" style="margin:0 0 12px"><div><b>Fitted to 2 hours</b>${spTrim.length ? `${spTrim.length} lower-priority exercise${spTrim.length === 1 ? ' has' : 's have'} half the sets` : ''}${spTrim.length && spSkip.length ? ' and ' : ''}${spSkip.length ? `${spSkip.length} moved to "Optional if you have time" at the bottom` : ''}, so the session stays within 2 hours with the warm-up.</div></div>`;
+  else if (lg && lg.full && !SP.on && !isDeload(w)) h += `<div class="banner info" style="margin:0 0 12px"><div><b>Whole plan today</b>Nothing is trimmed, so this session can run past 2 hours. <button class="chip" data-act="fiton" style="margin-top:6px">Fit it to 2 hours again</button></div></div>`;
   if (SP.on) h += `<div class="banner info" style="margin:0 0 12px"><div><b>Short session</b>${spSkip.length} non-essential exercise${spSkip.length === 1 ? '' : 's'} skipped and ${spTrim.length} with half the sets. The skill work (handstand, one-arm, press, flare, B-twist) and the main strength lifts stay. Skipped ones are listed at the bottom if you want one back.</div></div>`;
   if (low) h += `<div class="banner warn" style="margin:0 0 12px"><div><b>Low readiness: sets halved</b>Keep the quality, cut the volume. Handstand work is practice, not a workout.</div></div>`;
 
@@ -911,7 +976,7 @@ function renderToday(){
     const st = Object.assign({ L:0, pain:false, why:[] }, lv[name] || {}); const cy = carryOf(name); if (cy) { st.L += cy; st.why = (st.why || []).concat(['Carried over from earlier cycles: +' + cy]); }
     if (isPct || (elKey && EL[elKey].type === 'accum')) st.L = 0;
     const otHit = OA.heavy.size && [...rowAreas(row)].some(a => OA.heavy.has(a));
-    const halve = ((low || st.pain) && !isDeload(w)) || (SP.trim.has(code) && !(lg.shortAdd || []).includes(code)) || otHit;
+    const halve = ((low || st.pain) && !isDeload(w)) || (SP.trim.has(code) && !((lg && lg.shortAdd) || []).includes(code)) || otHit;
     let rx = (planned && !/^(TEST|—|light)$/.test(planned)) ? adjustRx(planned, st.L, halve) : planned;
     if (elKey && EL[elKey].type === 'accum' && planned && /collect/.test(planned)) rx = 'up to 5 sets · collect ' + Math.round(lvl(elKey) * (isDeload(w) ? 0.7 : 1)) + 's' + (elKey === 'oa_hold' ? '/arm' : '');
     if (isPct) rx = withKg(rx);
@@ -958,7 +1023,7 @@ function renderToday(){
     h += '</div>';
   });
   h += '</div>';
-  if (SP.on && spSkip.length) h += fold('short-skip', 'Skipped today', `<ul style="margin:0;padding:0;list-style:none">${spSkip.map(r => `<li style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line)"><span style="font-size:13.5px"><b class="num">${esc(r[0])}</b> ${esc(clean(r[1]))}</span><button class="chip" data-act="shadd" data-c="${esc(r[0])}">Add back</button></li>`).join('')}</ul>`, String(spSkip.length), false);
+  if ((SP.on || SP.fit) && spSkip.length) h += fold('short-skip', SP.fit ? 'Optional if you have time' : 'Skipped today', `<ul style="margin:0;padding:0;list-style:none">${spSkip.map(r => `<li style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line)"><span style="font-size:13.5px"><b class="num">${esc(r[0])}</b> ${esc(clean(r[1]))}</span><button class="chip" data-act="shadd" data-c="${esc(r[0])}">Add back</button></li>`).join('')}</ul>`, String(spSkip.length), false);
   const tot = sess.rows.filter(r => r[2].some(Boolean) && r[0] !== 'R' && !SP.skip.has(r[0])).length, n = lg ? Object.keys(lg.entries).filter(k => k !== 'EVE' && k !== 'DAY' && k !== 'XTR' && k !== 'FLX' && !(lg.entries[k].ez && !lg.entries[k].r && !lg.entries[k].res && !(lg.entries[k].dr || []).length)).length : 0;
   h += `<div class="complete"><span><b class="num">${n}/${tot}</b> logged</span><span class="mut">Easy twice in a row steps it up · Hard twice or missed steps it down</span></div>`;
   h += fastBanner(iso(dateOf(w, di))) + foldCard('daily', dailyCard(w, dk)) + foldCard('breath', breathCard(iso(dateOf(w, di)))) + foldCard('mind', mindCard(iso(dateOf(w, di)))) + otherCard(w, dk) + practiceCard(w, dk);
@@ -3482,6 +3547,7 @@ document.addEventListener('click', ev => {
   else if (a === 'ot-del') { const lg = ensureLog(V.week, DAYKEYS[V.dayIdx]); lg.other.splice(+b.dataset.i, 1); saveSession(); render(); }
   else if (a === 'pfold') { V.fold = V.fold || {}; V.fold['tc-practice'] = true; V.fold[b.dataset.v] = true; render(); const el = document.querySelector('[data-fk="' + b.dataset.v + '"]'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
   else if (a === 'ez') { const e = entry(b.dataset.c); e.ez = !e.ez; if (!e.ez) delete e.ez; e.t = Date.now(); pruneEntry(b.dataset.c); saveSession(); render(); }
+  else if (a === 'fitoff' || a === 'fiton') { const lg = ensureLog(V.week, DAYKEYS[V.dayIdx]); if (a === 'fitoff') lg.full = true; else delete lg.full; saveSession(); render(); }
   else if (a === 'xshort') { const lg = ensureLog(V.week, DAYKEYS[V.dayIdx]); lg.xshort = b.dataset.v === '1'; saveSession(); render(); }
   else if (a === 'rstr') { S.profile.restStr = b.dataset.v === '1'; persist('profile'); render(); }
   else if (a === 'short') { const lg = ensureLog(V.week, DAYKEYS[V.dayIdx]); lg.short = b.dataset.v === '1'; if (!lg.short) lg.shortAdd = []; saveSession(); render(); }
