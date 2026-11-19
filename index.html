@@ -760,12 +760,14 @@ function shortPlan(week, dayKey, lg){
 
 function fitPlan(week, dayKey, lg, z){
   const e = (SHORT['P' + (Math.min(2, Math.floor((week - 1) / 4)) + 1)] || {})[dayKey];
-  if (!e || isDeload(week) || (lg && lg.full)) return z;
+  if (!e || isDeload(week)) return z;
   const back = new Set((lg && lg.shortAdd) || []), est = () => estSessionMin(week, dayKey, z);
   if (est() <= FIT_MIN) return z;
   z.fit = true;
   for (const c of e[1].split(',')) { z.trim.add(c); if (est() <= FIT_MIN) return z; }
   for (const c of e[0].split(',').reverse()) { if (back.has(c)) continue; z.skip.add(c); if (est() <= FIT_MIN) return z; }
+  const sess = sessionOf(week, dayKey);
+  if (sess) for (const r of sess.rows.slice().reverse()) { if (est() <= FIT_MIN) break; if (!z.skip.has(r[0]) && !/^A\d?$/.test(r[0]) && r[0] !== 'R') z.trim.add(r[0]); }
   return z;
 }
 
@@ -944,7 +946,7 @@ function renderToday(){
   if (SHORT['P' + (P.phases.indexOf(phaseOf(w)) + 1)]?.[dk]) h += `<div class="ready"><span class="lbl">Session length</span><button class="chip ${SP.on ? '' : 'on'}" data-act="short" data-v="0">Full</button><button class="chip ${SP.on ? 'on' : ''}" data-act="short" data-v="1">Short</button><span class="mut num" style="font-size:12.5px;margin-left:auto">≈ ${fmtDur(estSessionMin(w, dk, SP))}</span></div>`;
   h += `<div class="ready"><span class="lbl">Rest stretches</span><button class="chip ${rsOn() ? 'on' : ''}" data-act="rstr" data-v="1">On</button><button class="chip ${rsOn() ? '' : 'on'}" data-act="rstr" data-v="0">Off</button></div>`;
   const RSM = restStretchMap(sess, dk);
-  if (SP.fit) h += `<div class="banner info" style="margin:0 0 12px"><div><b>Fitted to about 2 hours</b>${spTrim.length ? `${spTrim.length} lower-priority exercise${spTrim.length === 1 ? ' has' : 's have'} half the sets` : ''}${spTrim.length && spSkip.length ? ' and ' : ''}${spSkip.length ? `${spSkip.length} moved to "Optional if you have time" at the bottom` : ''}, so the full session stays within about 2 hours with the warm-up. <button class="chip" data-act="fitoff" style="margin-top:6px">Do the whole plan today</button></div></div>`;
+  if (SP.fit) h += `<div class="banner info" style="margin:0 0 12px"><div><b>Fitted to 2 hours</b>${spTrim.length ? `${spTrim.length} lower-priority exercise${spTrim.length === 1 ? ' has' : 's have'} half the sets` : ''}${spTrim.length && spSkip.length ? ' and ' : ''}${spSkip.length ? `${spSkip.length} moved to "Optional if you have time" at the bottom` : ''}, so the session stays within 2 hours with the warm-up.</div></div>`;
   else if (lg && lg.full && !SP.on && !isDeload(w)) h += `<div class="banner info" style="margin:0 0 12px"><div><b>Whole plan today</b>Nothing is trimmed, so this session can run past 2 hours. <button class="chip" data-act="fiton" style="margin-top:6px">Fit it to 2 hours again</button></div></div>`;
   if (SP.on) h += `<div class="banner info" style="margin:0 0 12px"><div><b>Short session</b>${spSkip.length} non-essential exercise${spSkip.length === 1 ? '' : 's'} skipped and ${spTrim.length} with half the sets. The skill work (handstand, one-arm, press, flare, B-twist) and the main strength lifts stay. Skipped ones are listed at the bottom if you want one back.</div></div>`;
   if (low) h += `<div class="banner warn" style="margin:0 0 12px"><div><b>Low readiness: sets halved</b>Keep the quality, cut the volume. Handstand work is practice, not a workout.</div></div>`;
