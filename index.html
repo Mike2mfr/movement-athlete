@@ -1148,13 +1148,14 @@ function renderProgress(){
   let bm = `<p class="mut" style="margin:0 0 4px;font-size:13.5px">Log a benchmark whenever you hit a new best or test one. The dashed line is your week-12 target.</p>`;
   bm += `<form class="addm" id="addm"><div class="row"><select id="m-k" aria-label="Benchmark">${METRICS.map(m => `<option value="${m.k}">${esc(m.n)} (${m.u})</option>`).join('')}</select><input type="number" id="m-v" step="0.5" inputmode="decimal" placeholder="Value" aria-label="Value" required><input type="date" id="m-d" value="${iso(new Date())}" aria-label="Date"></div><button class="btn" type="submit">Save benchmark</button></form>`;
   bm += '<div class="grid2">';
+  const XSb = xtrStats();
   METRICS.forEach(m => {
     const ents = metricEntries(m.k);
     const last = ents.length ? ents[ents.length-1].v : null;
     const best = ents.length ? (m.lower ? Math.min(...ents.map(e=>e.v)) : Math.max(...ents.map(e=>e.v))) : null;
     let pct = null;
     if (m.target != null && m.start != null && !m.flat && best != null && m.target !== m.start) pct = Math.max(0, Math.min(1, (best - m.start) / (m.target - m.start)));
-    bm += `<div class="metric"><div><h3>${esc(m.n)}</h3><div class="meta">${m.start!=null?`Start ${m.start}${m.u==='reps'?'':m.u}`:'Set a baseline'}${m.target!=null&&!m.flat?` · Target ${m.target}${m.u==='reps'?'':m.u}`:''}</div></div>
+    bm += `<div class="metric"><div><h3>${esc(m.n)}</h3><div class="meta">${m.start!=null?`Start ${m.start}${m.u==='reps'?'':m.u}`:'Set a baseline'}${m.target!=null&&!m.flat?` · Target ${m.target}${m.u==='reps'?'':m.u}`:''}${XM[m.k] && XSb[XM[m.k]] ? `<div class="meta">+ ${XSb[XM[m.k]]} day${XSb[XM[m.k]] === 1 ? '' : 's'} of extra ${XM[m.k] === 'hs' ? 'handstand' : XM[m.k]} work</div>` : ''}</div></div>
       <div class="val">${last!=null?last:'—'} <small>${m.u}</small></div>
       ${pct!=null?`<div class="bar"><i style="width:${Math.round(pct*100)}%"></i></div>`:''}
       ${spark(m, ents)}
@@ -1168,6 +1169,8 @@ function renderProgress(){
   const pos = todayPos();
   for (let w = 1; w <= Math.min(12, pos.week); w++) for (let di = 0; di < 6; di++) { if (w === pos.week && di > pos.dayIdx) break; planned++; if (getLog(w, DAYKEYS[di]) && Object.keys(getLog(w, DAYKEYS[di]).entries).filter(k => k !== 'EVE' && k !== 'DAY' && k !== 'XTR' && k !== 'FLX').length) logged++; }
   if (!pos.before) h += fold('pg-adh', 'Sessions logged', `<div><div class="num" style="font-size:22px;font-weight:700">${logged} / ${planned}</div><div class="mut" style="font-size:12.5px">Counted up to today</div></div>`, `${logged}/${planned}`, false);
+  const XS = xtrStats();
+  if (!pos.before) h += fold('pg-xtr', 'Extra practice', `<div style="display:flex;gap:18px;flex-wrap:wrap"><div><div class="num" style="font-size:22px;font-weight:700">${XS.days} / ${XS.sofar}</div><div class="mut" style="font-size:12.5px">days with extra practice</div></div><div><div class="num" style="font-size:22px;font-weight:700">${XS.streak}</div><div class="mut" style="font-size:12.5px">day streak</div></div><div><div class="num" style="font-size:22px;font-weight:700">${XS.items}</div><div class="mut" style="font-size:12.5px">exercises done</div></div></div><ul class="mut" style="font-size:13px;margin:10px 0 0;padding-left:18px"><li>Splits, pancake + hamstrings: ${XS.split} day${XS.split === 1 ? '' : 's'}</li><li>Bridge + shoulder opening: ${XS.bridge} day${XS.bridge === 1 ? '' : 's'}</li><li>Handstand practice: ${XS.hs} day${XS.hs === 1 ? '' : 's'}</li><li>Wrist and shoulder prehab: ${XS.wrist} day${XS.wrist === 1 ? '' : 's'}</li><li>Easy aerobic: about ${XS.cardio} min</li></ul>`, XS.days + ' days', false);
   return h;
 }
 
@@ -1181,7 +1184,8 @@ function renderGuide(){
    <li><b>Pain flag</b>: the next session of that exercise has half the sets.</li>
    <li><b>Low readiness</b>: half the sets for the whole session.</li>
    <li>When 6 of your last 14 exercises are hard or missed, or you flag pain twice, the app suggests taking your deload early.</li>
-   <li>Deload weeks (4 and 8) never count as easy.</li></ul></div></details>`;
+   <li>Deload weeks (4 and 8) never count as easy.</li>
+   <li><b>Extra practice</b> counts too: it shows in Progress, and when you mark it hard, the handstand, wrist, bridge or cardio areas you worked get half the sets in the next session. Easy or moderate extra practice adds to the load from other training (two moderate days in a row also trims them).</li></ul></div></details>`;
   h += `<details class="card gd"><summary><h3>Training rules</h3></summary><div class="gd-b"><ul>
    <li>Handstand work is practice. Cut the sets, not the quality.</li>
    <li>Line holds: keep every set the same length. Once they're all clean, add 1–3s.</li>
@@ -3314,6 +3318,46 @@ const OT_EFF = [['light','Light'],['mod','Moderate'],['hard','Hard']];
 const OT_PRESETS = {'Run':['legs','cardio'],'Football':['legs','cardio'],'Climbing':['pull'],'Bouldering':['pull'],'Swimming':['pull','push','cardio'],'Cycling':['legs','cardio'],'Hike':['legs','cardio'],'Gym: upper body':['push','pull'],'Gym: legs':['legs'],'Yoga':['hips','wrist'],'Capoeira class':['legs','wrist','hips'],'Breakdance session':['wrist','push','legs'],'Handstand practice':['wrist','push'],'Juggling':[],'Calisthenics':['push','pull','core'],'Martial arts':['legs','cardio'],'Surf':['push','cardio']};
 function otLoadOf(lg){ return (lg && lg.other) || []; }
 function dayIndexToWD(idx){ return { w: Math.floor(idx / 7) + 1, di: idx % 7 }; }
+/* extra practice: what was ticked, which areas it loads, and progress credit */
+function xtrDone(w, dk){
+  const lg = getLog(w, dk), E = (lg && lg.entries) || {}, out = [];
+  const X = XTR[dk], F = FLX[dk], R = P.routines && P.routines.evening;
+  ((E.XTR && E.XTR.dr) || []).forEach(i => { const r = X && X.rows[i]; if (r) out.push({ n: r.n, c: r.c }); });
+  ((E.FLX && E.FLX.dr) || []).forEach(i => { const r = F && F.rows[i]; if (r) out.push({ n: r.n, c: 'MOB' }); });
+  ((E.EVE && E.EVE.dr) || []).forEach(i => { const d = R && R[2][i]; if (d) out.push({ n: d[0], c: 'MOB' }); });
+  return out;
+}
+function xtrAreas(list){
+  const A = new Set();
+  list.forEach(o => {
+    if (o.c === 'HS') { A.add('wrist'); A.add('push'); }
+    if (o.c === 'PRE' && /wrist push|fingertip|hammer/i.test(o.n)) A.add('wrist');
+    if (o.c === 'CON') { A.add('legs'); A.add('cardio'); }
+    if (o.c === 'BR' && /push-up|one-arm bridge|walk-down/i.test(o.n)) A.add('push');
+  });
+  return [...A];
+}
+const XG = { split: /split|lunge|lizard|pigeon|pancake|straddle|frog|horse stance|tailor|adductor|butterfly|pike|hamstring|good morning|jefferson|couch|block crush/i, bridge: /bridge|backbend|camel|fish|thoracic|puppy|shoulder (flexion|extension)|wall angel|heart-melt/i };
+const XM = { fsplit: 'split', msplit: 'split', pancake: 'split', pklift: 'split', horse: 'split', bridge: 'bridge', bridgeHold: 'bridge', hs: 'hs', kick: 'hs' };
+function xtrStats(){
+  const pos = todayPos(), st = { days: 0, sofar: 0, items: 0, split: 0, bridge: 0, hs: 0, wrist: 0, cardio: 0, streak: 0 };
+  if (pos.before) return st;
+  const seq = [];
+  for (let w = 1; w <= Math.min(12, pos.week); w++) for (let di = 0; di < 7; di++) {
+    if (w === pos.week && di > pos.dayIdx) break;
+    const L = xtrDone(w, DAYKEYS[di]); st.sofar++; seq.push(L.length > 0);
+    if (!L.length) continue;
+    st.days++; st.items += L.length;
+    if (L.some(o => o.c === 'BR' || XG.bridge.test(o.n))) st.bridge++;
+    if (L.some(o => o.c !== 'BR' && XG.split.test(o.n))) st.split++;
+    if (L.some(o => o.c === 'HS')) st.hs++;
+    if (L.some(o => o.c === 'PRE')) st.wrist++;
+    st.cardio += L.filter(o => o.c === 'CON').length * 20;
+  }
+  let i = seq.length - 1; if (i >= 0 && !seq[i]) i--;
+  while (i >= 0 && seq[i]) { st.streak++; i--; }
+  return st;
+}
 /* fatigue per area from other training today, yesterday (full) and 2 days ago (half) */
 function otFatigue(w, di){
   const F = {}, why = {}, base = (w - 1) * 7 + di;
@@ -3324,6 +3368,11 @@ function otFatigue(w, di){
       const pts = (o.e === 'hard' ? 2 : o.e === 'mod' ? 1 : 0) * k * ((+o.min || 0) >= 75 ? 1.5 : 1);
       (o.a || []).forEach(a => { if (!pts) return; F[a] = (F[a] || 0) + pts; (why[a] = why[a] || []).push(o.n + (back === 0 ? ' (today)' : back === 1 ? ' (yesterday)' : ' (2 days ago)')); });
     });
+    if (back >= 1) {
+      const xl = getLog(p.w, DAYKEYS[p.di]), done = xtrDone(p.w, DAYKEYS[p.di]); if (!done.length) return;
+      const e = (xl && xl.xeff) || 'easy', pts = (e === 'hard' ? 2 : e === 'mod' ? 1 : .5) * k;
+      xtrAreas(done).forEach(a => { F[a] = (F[a] || 0) + pts; (why[a] = why[a] || []).push('Extra practice' + (e === 'easy' ? '' : ', ' + (e === 'mod' ? 'moderate' : 'hard')) + (back === 1 ? ' (yesterday)' : ' (2 days ago)')); });
+    }
   });
   return { F, why };
 }
@@ -3358,7 +3407,7 @@ function otAdjBanner(w, di, rows){
   const used = new Set(); (rows || []).forEach(r => rowAreas(r).forEach(a => { if (O.heavy.has(a)) used.add(a); })); if (!used.size) return '';
   O.heavy = used;
   const name = a => (OT_AREAS.find(x => x[0] === a) || ['', a])[1].toLowerCase();
-  return `<div class="banner info" style="margin:0 0 12px"><div><b>Adjusted for your other training</b>${[...O.heavy].map(a => `${esc(name(a))}: ${esc([...new Set(O.why[a])].join(', '))}`).join(' · ')}. Exercises that load these areas have half the sets today.</div></div>`;
+  return `<div class="banner info" style="margin:0 0 12px"><div><b>Adjusted for your ${[...O.heavy].some(x => (O.why[x] || []).some(t => !/^Extra practice/.test(t))) ? 'other training' : 'extra practice'}</b>${[...O.heavy].map(a => `${esc(name(a))}: ${esc([...new Set(O.why[a])].join(', '))}`).join(' · ')}. Exercises that load these areas have half the sets today.</div></div>`;
 }
 
 /* ---------- combined optional practice: extra + flexibility + evening ---------- */
@@ -3393,6 +3442,7 @@ function practiceCard(w, dk){
     return fold('pk-' + key, title, `${sub ? `<div class="mut" style="font-size:12.5px;margin:0 0 4px">${sub}</div>` : ''}<ul class="rt-list" style="margin-top:6px">${list.map(item).join('')}</ul>`, `${n}/${list.length}`, false); };
   let h = `<div class="ready" style="margin:0 0 6px"><span class="lbl">Length</span><button class="chip ${short ? '' : 'on'}" data-act="xshort" data-v="0">Full</button><button class="chip ${short ? 'on' : ''}" data-act="xshort" data-v="1">Short</button></div>`;
   h += `<div class="mut" style="font-size:12.5px">${short ? `Short: ${all.length} of ${fullN} exercises, the essentials of each part. About 15 min.` : `One optional session in three parts, about ${dk === 'D7' ? '50' : '45'} min. Do the first part 4–6 h away from the main session; the stretching parts fit best in the evening. Skip it on low-readiness days.`}${col === 3 ? ' Deload week: lighter doses.' : ''}</div>`;
+  if (done) { const xe = (lg && lg.xeff) || 'easy'; h += `<div class="ready" style="margin:8px 0 2px"><span class="lbl">How hard was it?</span>${[['easy','Easy'],['mod','Moderate'],['hard','Hard']].map(([k, l]) => `<button class="chip ${xe === k ? 'on' : ''}" data-act="xeff" data-v="${k}">${l}</button>`).join('')}</div><div class="mut" style="font-size:12px;margin:0 0 4px">Counts towards your progress. Hard handstand, wrist, bridge or cardio work gives the same areas half the sets in the next session; easy or moderate work adds to the load from other training.</div>`; }
   if (X) h += part('x', '1 · ' + esc(X.t), esc(X.s.replace(/ · \d+ min/, '')) + ' · bodyweight only, easy effort', xr);
   if (F) h += part('f', '2 · Flexibility: ' + esc(F.t), 'Mild tension, slow nasal breathing, never bounce', fr);
   if (R) h += part('e', '3 · Evening wind-down', '5–8 slow breaths per position', er);
@@ -3658,6 +3708,7 @@ document.addEventListener('click', ev => {
   else if (a === 'alt') { const dk = DAYKEYS[V.dayIdx], lg = ensureLog(V.week, dk), v = b.dataset.v, prev = altChoice(V.week, dk); if (v === prev) return; lg.alt = v; S.profile.alt = Object.assign({}, S.profile.alt || {}, { [dk]: v }); const code = ALT_SLOTS[dk][0]; if (lg.entries[code]) delete lg.entries[code]; saveSession(); persist('profile'); render(); toast('From now on: ' + ALT_SLOTS[dk][1].find(x => x[0] === v)[1]); }
   else if (a === 'ez') { const e = entry(b.dataset.c); e.ez = !e.ez; if (!e.ez) delete e.ez; e.t = Date.now(); pruneEntry(b.dataset.c); saveSession(); render(); }
   else if (a === 'fitoff' || a === 'fiton') { const lg = ensureLog(V.week, DAYKEYS[V.dayIdx]); if (a === 'fitoff') lg.full = true; else delete lg.full; saveSession(); render(); }
+  else if (a === 'xeff') { const lg = ensureLog(V.week, DAYKEYS[V.dayIdx]); lg.xeff = b.dataset.v; if (lg.xeff === 'easy') delete lg.xeff; saveSession(); render(); }
   else if (a === 'xshort') { const lg = ensureLog(V.week, DAYKEYS[V.dayIdx]); lg.xshort = b.dataset.v === '1'; saveSession(); render(); }
   else if (a === 'rstr') { S.profile.restStr = b.dataset.v === '1'; persist('profile'); render(); }
   else if (a === 'short') { const lg = ensureLog(V.week, DAYKEYS[V.dayIdx]); lg.short = b.dataset.v === '1'; if (!lg.short) lg.shortAdd = []; saveSession(); render(); }
