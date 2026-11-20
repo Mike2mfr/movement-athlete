@@ -1011,6 +1011,19 @@ function renderToday(){
   if (low) h += `<div class="banner warn" style="margin:0 0 12px"><div><b>Low readiness: sets halved</b>Keep the quality, cut the volume. Handstand work is practice, not a workout.</div></div>`;
 
   const lv = levelsBefore(w, di);
+  const LBL = {}, lblFrom = (list, start) => {
+    const L = i => i < 26 ? String.fromCharCode(65 + i) : 'Z' + (i - 25), g = c => (c.match(/^([A-Z])\d$/) || [])[1];
+    let i = start, k = 0;
+    while (k < list.length) {
+      let j = k + 1; const gk = g(list[k][0]);
+      if (gk) while (j < list.length && g(list[j][0]) === gk) j++;
+      if (j - k > 1) for (let m = k; m < j; m++) LBL[list[m][0]] = L(i) + (m - k + 1); else LBL[list[k][0]] = L(i);
+      i++; k = j;
+    }
+    return i;
+  };
+  const nextL = lblFrom(sess.rows.filter(r => !SP.skip.has(r[0])), 0); lblFrom(spSkip, nextL);
+  const relbl = t => String(t).replace(/(?<![\w-])([A-Z]\d)(?![\w-])/g, m => LBL[m] || m);
   h += '<div class="list">';
   const rowCard = (row, opt) => {
     const [code, nameRaw, wk, note, src] = row;
@@ -1022,8 +1035,8 @@ function renderToday(){
       const isLower = /lower/i.test(name);
       const prep = sess.bw ? (isLower ? P.bw.prepL : P.bw.prepU) : (isLower ? P.prepL : P.prepU);
       const idx = isDeload(w) ? 3 : 0;
-      h += `<div class="ex"><button class="ex-row" data-act="open" data-c="${code}" aria-expanded="${open}"><span class="code">${esc(code)}</span><span class="ex-name">${esc(isLower?'Lower prep':(/prep/i.test(name)?'Upper prep':name))}<div class="tags"><span class="rated">${prep.length} drills · ${isLower ? "24–27" : "25–28"} min</span></div></span><span class="rx">${open?'−':'+'}</span></button>`;
-      if (open) h += `<div class="ex-body"><ul class="prep-list">${prep.map(p => `<li><span>${esc(p[1])}</span><span>${esc(p[2][idx])}</span></li>`).join('')}</ul>${note?`<div class="ex-note">${esc(note)}</div>`:''}</div>`;
+      h += `<div class="ex"><button class="ex-row" data-act="open" data-c="${code}" aria-expanded="${open}"><span class="code">${esc(LBL[code] || code)}</span><span class="ex-name">${esc(isLower?'Lower prep':(/prep/i.test(name)?'Upper prep':name))}<div class="tags"><span class="rated">${prep.length} drills · ${isLower ? "24–27" : "25–28"} min</span></div></span><span class="rx">${open?'−':'+'}</span></button>`;
+      if (open) h += `<div class="ex-body"><ul class="prep-list">${prep.map(p => `<li><span>${esc(p[1])}</span><span>${esc(p[2][idx])}</span></li>`).join('')}</ul>${note?`<div class="ex-note">${esc(relbl(note))}</div>`:''}</div>`;
       h += '</div>';
       return;
     }
@@ -1046,7 +1059,7 @@ function renderToday(){
     if (st.L > 0) tags += `<span class="adj up">▲ ${st.L}</span>`;
     if (st.L < 0) tags += `<span class="adj down">▼ ${-st.L}</span>`;
     if (st.pain && !isDeload(w)) tags += `<span class="adj pain">pain last time</span>`;
-    const grp = code.match(/^([A-Z])(\d)$/); if (grp) { const mates = sess.rows.filter(r2 => r2[0] !== code && r2[0].startsWith(grp[1]) && /\d$/.test(r2[0])).map(r2 => r2[0]); if (mates.length) tags += `<span class="pair">with ${mates.join(' + ')}</span>`; }
+    { const inSkip = SP.skip.has(code), mates = sess.rows.filter(r2 => r2[0] !== code && LBL[r2[0]] && LBL[code] && LBL[r2[0]].slice(0, -1) === LBL[code].slice(0, -1) && /\d$/.test(LBL[code]) && SP.skip.has(r2[0]) === inSkip).map(r2 => LBL[r2[0]]); if (mates.length) tags += `<span class="pair">with ${mates.join(' + ')}</span>`; }
     if (elKey) tags += `<span class="lvl">${esc(lvlLabel(elKey))}</span>`;
     const CP = !RT ? compoundParts(name, note) : null;
     if (CP) { const done = (e?.dr || []).length; tags += `<span class="lvl">${done ? done + '/' : ''}${CP.length * circRounds(rx)} checks</span>`; }
@@ -1056,12 +1069,12 @@ function renderToday(){
     if (er) tags += `<span class="rated">· ${RATINGS.find(x=>x[0]===er)[1]}${e.res?` · ${esc(e.res)}`:''}</span>`;
     const ezOn = !!(e && e.ez) && !/^A\d?$/.test(code), ezv = easierOf(name);
     if (ezOn) tags = `<span class="src c-MOB">Easier option</span>` + tags;
-    h += `<div class="ex ${e && (e.r || e.res || (e.dr || []).length) ? 'logged' : ''}"><button class="ex-row" data-act="open" data-c="${code}" aria-expanded="${open}"><span class="code">${esc(code)}</span><span class="ex-name">${esc(ezOn ? (ezGeneric(ezv[0]) ? name : ezv[0]) : name)}${ezOn ? `<span class="mut" style="display:block;font-size:12px;font-weight:500">${ezGeneric(ezv[0]) ? 'Easier: ' + esc(ezv[0].toLowerCase()) : 'instead of: ' + esc(name)}</span>` : ''}<div class="tags">${tags}</div></span><span class="rx">${esc(rx||'—')}${changed?`<span class="was">${esc(planned)}</span>`:''}</span></button>`;
+    h += `<div class="ex ${e && (e.r || e.res || (e.dr || []).length) ? 'logged' : ''}"><button class="ex-row" data-act="open" data-c="${code}" aria-expanded="${open}"><span class="code">${esc(LBL[code] || code)}</span><span class="ex-name">${esc(ezOn ? (ezGeneric(ezv[0]) ? name : ezv[0]) : name)}${ezOn ? `<span class="mut" style="display:block;font-size:12px;font-weight:500">${ezGeneric(ezv[0]) ? 'Easier: ' + esc(ezv[0].toLowerCase()) : 'instead of: ' + esc(name)}</span>` : ''}<div class="tags">${tags}</div></span><span class="rx">${esc(rx||'—')}${changed?`<span class="was">${esc(planned)}</span>`:''}</span></button>`;
     h += altChips(w, dk, code);
     const tm = timerSpec(rx, note); if (tm) h += `<div class="tm-row">${tm.work ? `<button class="chip tm" data-act="timer" data-s="${tm.work}" data-l="${esc(name)}" data-k="work">⏱ ${fmtT(tm.work)}${tm.side ? ' / side' : ''}</button>` : ''}${tm.rest ? `<button class="chip tm rest" data-act="timer" data-s="${tm.rest}" data-l="${esc(name)}" data-k="rest">Rest ${fmtT(tm.rest)}</button>` : ''}</div>`;
     if (RSM[code]) h += `<div class="rs-strip"><span class="rs-ic" aria-hidden="true">↻</span><span><b>Stretch in the rest:</b> ${esc(RSM[code][0])} · ${esc(RSM[code][1])}</span></div>`;
     if (open) {
-      h += `<div class="ex-body">${note?`<div class="ex-note">${esc(isPct ? withKg(note) : note)}</div>`:''}${/^A\d?$/.test(code) ? '' : `<div class="ex-note" style="margin-top:6px;border-left:3px solid #2b7a62;padding-left:8px"><b>${ezOn ? 'Doing the easier option:' : 'Too hard today? Easier option:'}</b> ${esc(ezv[0])}. ${esc(ezv[1])}<div style="margin-top:6px"><button class="chip ${ezOn ? 'on' : ''}" data-act="ez" data-c="${code}">${ezOn ? 'Back to the original' : 'Use the easier option today'}</button></div></div>`}${RSM[code] ? `<div class="ex-note" style="margin-top:6px"><b>During each rest:</b> ${esc(RSM[code][0])} ${esc(RSM[code][1])}. ${esc(RSM[code][2])} Easy, about 60–70% of your range. Stop 20s before the next set.</div>` : ''}`;
+      h += `<div class="ex-body">${note?`<div class="ex-note">${esc(relbl(isPct ? withKg(note) : note))}</div>`:''}${/^A\d?$/.test(code) ? '' : `<div class="ex-note" style="margin-top:6px;border-left:3px solid #2b7a62;padding-left:8px"><b>${ezOn ? 'Doing the easier option:' : 'Too hard today? Easier option:'}</b> ${esc(ezv[0])}. ${esc(ezv[1])}<div style="margin-top:6px"><button class="chip ${ezOn ? 'on' : ''}" data-act="ez" data-c="${code}">${ezOn ? 'Back to the original' : 'Use the easier option today'}</button></div></div>`}${RSM[code] ? `<div class="ex-note" style="margin-top:6px"><b>During each rest:</b> ${esc(RSM[code][0])} ${esc(RSM[code][1])}. ${esc(RSM[code][2])} Easy, about 60–70% of your range. Stop 20s before the next set.</div>` : ''}`;
       if (isPct) h += `<div class="why">1RM (added weight): ${oneRM().v}kg, ${oneRM().src}.</div>`;
       if (CP) h += compoundHTML(CP, code, e?.dr || [], circRounds(rx));
       if (RT && rtKey === 'bulgarian') h += circuitHTML(RT, code, e?.dr || [], circRounds(rx));
