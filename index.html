@@ -72,7 +72,7 @@ h1,h2,h3{margin:0;text-wrap:balance}
 .list{display:flex;flex-direction:column;gap:8px}
 .ex{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .ex.logged{border-color:color-mix(in srgb,var(--good) 45%,var(--line))}
-.ex-row{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:start;padding:12px 12px 12px 10px;cursor:pointer;width:100%;background:none;border:0;text-align:left}
+.ex-row.nolbl ~ .tm-row{padding-left:14px}.ex-row.nolbl ~ .rs-strip{margin-left:14px}.ex-row.nolbl{grid-template-columns:1fr auto;padding-left:14px}.ex-row{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:start;padding:12px 12px 12px 10px;cursor:pointer;width:100%;background:none;border:0;text-align:left}
 .code{font-family:var(--f-num);font-size:12px;font-weight:700;color:var(--mut);padding-top:2px}
 .ex.logged .code{color:var(--good)}
 .ex-name{font-weight:650;font-size:15px;line-height:1.3;min-width:0}
@@ -1022,8 +1022,8 @@ function renderToday(){
     }
     return i;
   };
-  const nextL = lblFrom(sess.rows.filter(r => !SP.skip.has(r[0])), 0); lblFrom(spSkip, nextL);
-  const relbl = t => String(t).replace(/(?<![\w-])([A-Z]\d)(?![\w-])/g, m => LBL[m] || m);
+  const nextL = lblFrom(sess.rows.filter(r => !SP.skip.has(r[0])), 0); spSkip.forEach(r => { LBL[r[0]] = ''; });
+  const relbl = t => String(t).replace(/(?<![\w-])([A-Z]\d)(?![\w-])/g, m => !(m in LBL) ? m : LBL[m] || (sess.rows.find(r => r[0] === m) ? clean(sess.rows.find(r => r[0] === m)[1]).split(/ [(:·]/)[0].toLowerCase() : m));
   h += '<div class="list">';
   const rowCard = (row, opt) => {
     const [code, nameRaw, wk, note, src] = row;
@@ -1035,7 +1035,7 @@ function renderToday(){
       const isLower = /lower/i.test(name);
       const prep = sess.bw ? (isLower ? P.bw.prepL : P.bw.prepU) : (isLower ? P.prepL : P.prepU);
       const idx = isDeload(w) ? 3 : 0;
-      h += `<div class="ex"><button class="ex-row" data-act="open" data-c="${code}" aria-expanded="${open}"><span class="code">${esc(LBL[code] || code)}</span><span class="ex-name">${esc(isLower?'Lower prep':(/prep/i.test(name)?'Upper prep':name))}<div class="tags"><span class="rated">${prep.length} drills · ${isLower ? "24–27" : "25–28"} min</span></div></span><span class="rx">${open?'−':'+'}</span></button>`;
+      h += `<div class="ex"><button class="ex-row${code in LBL && !LBL[code] ? ' nolbl' : ''}" data-act="open" data-c="${code}" aria-expanded="${open}">${code in LBL && !LBL[code] ? '' : `<span class="code">${esc(code in LBL ? LBL[code] : code)}</span>`}<span class="ex-name">${esc(isLower?'Lower prep':(/prep/i.test(name)?'Upper prep':name))}<div class="tags"><span class="rated">${prep.length} drills · ${isLower ? "24–27" : "25–28"} min</span></div></span><span class="rx">${open?'−':'+'}</span></button>`;
       if (open) h += `<div class="ex-body"><ul class="prep-list">${prep.map(p => `<li><span>${esc(p[1])}</span><span>${esc(p[2][idx])}</span></li>`).join('')}</ul>${note?`<div class="ex-note">${esc(relbl(note))}</div>`:''}</div>`;
       h += '</div>';
       return;
@@ -1069,7 +1069,7 @@ function renderToday(){
     if (er) tags += `<span class="rated">· ${RATINGS.find(x=>x[0]===er)[1]}${e.res?` · ${esc(e.res)}`:''}</span>`;
     const ezOn = !!(e && e.ez) && !/^A\d?$/.test(code), ezv = easierOf(name);
     if (ezOn) tags = `<span class="src c-MOB">Easier option</span>` + tags;
-    h += `<div class="ex ${e && (e.r || e.res || (e.dr || []).length) ? 'logged' : ''}"><button class="ex-row" data-act="open" data-c="${code}" aria-expanded="${open}"><span class="code">${esc(LBL[code] || code)}</span><span class="ex-name">${esc(ezOn ? (ezGeneric(ezv[0]) ? name : ezv[0]) : name)}${ezOn ? `<span class="mut" style="display:block;font-size:12px;font-weight:500">${ezGeneric(ezv[0]) ? 'Easier: ' + esc(ezv[0].toLowerCase()) : 'instead of: ' + esc(name)}</span>` : ''}<div class="tags">${tags}</div></span><span class="rx">${esc(rx||'—')}${changed?`<span class="was">${esc(planned)}</span>`:''}</span></button>`;
+    h += `<div class="ex ${e && (e.r || e.res || (e.dr || []).length) ? 'logged' : ''}"><button class="ex-row${code in LBL && !LBL[code] ? ' nolbl' : ''}" data-act="open" data-c="${code}" aria-expanded="${open}">${code in LBL && !LBL[code] ? '' : `<span class="code">${esc(code in LBL ? LBL[code] : code)}</span>`}<span class="ex-name">${esc(ezOn ? (ezGeneric(ezv[0]) ? name : ezv[0]) : name)}${ezOn ? `<span class="mut" style="display:block;font-size:12px;font-weight:500">${ezGeneric(ezv[0]) ? 'Easier: ' + esc(ezv[0].toLowerCase()) : 'instead of: ' + esc(name)}</span>` : ''}<div class="tags">${tags}</div></span><span class="rx">${esc(rx||'—')}${changed?`<span class="was">${esc(planned)}</span>`:''}</span></button>`;
     h += altChips(w, dk, code);
     const tm = timerSpec(rx, note); if (tm) h += `<div class="tm-row">${tm.work ? `<button class="chip tm" data-act="timer" data-s="${tm.work}" data-l="${esc(name)}" data-k="work">⏱ ${fmtT(tm.work)}${tm.side ? ' / side' : ''}</button>` : ''}${tm.rest ? `<button class="chip tm rest" data-act="timer" data-s="${tm.rest}" data-l="${esc(name)}" data-k="rest">Rest ${fmtT(tm.rest)}</button>` : ''}</div>`;
     if (RSM[code]) h += `<div class="rs-strip"><span class="rs-ic" aria-hidden="true">↻</span><span><b>Stretch in the rest:</b> ${esc(RSM[code][0])} · ${esc(RSM[code][1])}</span></div>`;
