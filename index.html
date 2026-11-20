@@ -1012,9 +1012,9 @@ function renderToday(){
 
   const lv = levelsBefore(w, di);
   h += '<div class="list">';
-  sess.rows.forEach(row => {
+  const rowCard = (row, opt) => {
     const [code, nameRaw, wk, note, src] = row;
-    if (SP.skip.has(code)) return;
+    if (SP.skip.has(code) && !opt) return;
     const name = clean(nameRaw);
     const planned = wk[(w-1)%4];
     const open = V.open === code;
@@ -1081,10 +1081,15 @@ function renderToday(){
       h += '</div>';
     }
     h += '</div>';
-  });
+  };
+  sess.rows.forEach(r => rowCard(r));
   h += '</div>';
-  if ((SP.on || SP.fit) && spSkip.length) h += fold('short-skip', SP.fit ? 'Optional if you have time' : 'Skipped today', `<ul style="margin:0;padding:0;list-style:none">${spSkip.map(r => `<li style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line)"><span style="font-size:13.5px"><b class="num">${esc(r[0])}</b> ${esc(clean(r[1]))}</span><button class="chip" data-act="shadd" data-c="${esc(r[0])}">Add back</button></li>`).join('')}</ul>`, String(spSkip.length), false);
-  const tot = sess.rows.filter(r => r[2].some(Boolean) && r[0] !== 'R' && !SP.skip.has(r[0])).length, n = lg ? Object.keys(lg.entries).filter(k => k !== 'EVE' && k !== 'DAY' && k !== 'XTR' && k !== 'FLX' && !(lg.entries[k].ez && !lg.entries[k].r && !lg.entries[k].res && !(lg.entries[k].dr || []).length)).length : 0;
+  if ((SP.on || SP.fit) && spSkip.length) {
+    const h0 = h; h = ''; spSkip.forEach(r => rowCard(r, true)); const body = h; h = h0;
+    const od = spSkip.filter(r => { const e = lg?.entries?.[r[0]]; return e && (e.r || e.res || (e.dr || []).length); }).length;
+    h += fold('short-skip', SP.fit ? 'Optional if you have time' : 'Skipped today', `<p class="mut" style="margin:0 0 8px;font-size:13px">Do any of these now or later in the day. Open one and log it here: it stays in this list and still counts towards your progress.</p><div class="list">${body}</div>`, od ? od + '/' + spSkip.length + ' done' : String(spSkip.length), false);
+  }
+  const tot = sess.rows.filter(r => r[2].some(Boolean) && r[0] !== 'R' && (!SP.skip.has(r[0]) || (lg && lg.entries[r[0]] && !(lg.entries[r[0]].ez && !lg.entries[r[0]].r && !lg.entries[r[0]].res && !(lg.entries[r[0]].dr || []).length)))).length, n = lg ? Object.keys(lg.entries).filter(k => k !== 'EVE' && k !== 'DAY' && k !== 'XTR' && k !== 'FLX' && !(lg.entries[k].ez && !lg.entries[k].r && !lg.entries[k].res && !(lg.entries[k].dr || []).length)).length : 0;
   h += `<div class="complete"><span><b class="num">${n}/${tot}</b> logged</span><span class="mut">Easy twice in a row steps it up · Hard twice or missed steps it down</span></div>`;
   h += fastBanner(iso(dateOf(w, di))) + foldCard('daily', dailyCard(w, dk)) + foldCard('breath', breathCard(iso(dateOf(w, di)))) + foldCard('mind', mindCard(iso(dateOf(w, di)))) + otherCard(w, dk) + practiceCard(w, dk);
   return h;
