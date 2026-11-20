@@ -758,15 +758,27 @@ function restStretchMap(sess, dk){
 /* ---------- short sessions ---------- */
 const SHORT = {"P1": {"D1": ["R,D2,J1,J2,K1,K2", "C,D1,G1,H,I"], "D2": ["R,F1,G1,G2,H", "D1,D2,E,F2"], "D3": ["R,E1,E2,G2,H1,H2,I", "C2,F,G1"], "D4": ["R,F1,F2,G2,G3,H", "C,D,BL,E1,E2,G1,MC"], "D5": ["R,C2,E2,H2,H3,H4,I2,J", "F1,F2,G,H1,I1"], "D6": ["B,C2,C3,C5,G2,H,I,FP", "A,C1,C4,C6,E,F"]}, "P2": {"D1": ["R,C2,TR,H,I,L1,L2", "D,F1,K"], "D2": ["R,F,G2,H", "D,E1,E2,G1"], "D3": ["R,D2,E,H,I2,J,K1,K2", "C2,G,I1"], "D4": ["R,F1,F2,G2,G3,H", "C,D,BL,E1,E2,G1,MC"], "D5": ["R,D2,F,I3,J2,J3,J4,K1,K2", "C2,G,H,I1,I2,J1"], "D6": ["B,C3,C4,D,G2,H,I", "A,C1,C5,C6,F"]}, "P3": {"D1": ["R,J", "E,F1,H,I"], "D2": ["R,F2,G", "C2,D1,D2,E,F1"], "D3": ["R,D2,H,J", "C2,E,G,I"], "D4": ["R,F1,F2,G2,G3,H", "C,D,BL,E1,E2,G1,MC"], "D5": ["R,D1,H2,I2,J", "C,F2,G,H1,I1"], "D6": ["B,C3,D,G2,H1,H2,I", "A,C1,C4,F"]}};
 const FIT_MIN = 120;
+const SKILL_CODES = new Set(['FL','BT','MC','OA','TR','WR','PW','BP','SB','WS']);
+function isSkillRow(r){ return r && (r[4] === 'HS' || SKILL_CODES.has(r[0]) || /aú|helic|b-twist|flare|macaco/i.test(r[1])); }
+function protectSkills(week, dayKey, z){
+  const sess = sessionOf(week, dayKey); if (!sess) return z;
+  sess.rows.forEach(r => { if (isSkillRow(r)) { z.trim.delete(r[0]); z.skip.delete(r[0]); } });
+  return z;
+}
 function shortPlan(week, dayKey, lg){
   const z = { on: !!(lg && lg.short), skip: new Set(), trim: new Set(), fit: false };
   if (!z.on) return fitPlan(week, dayKey, lg, z);
+  const z0 = shortPlanRaw(week, dayKey, lg, z);
+  return z0;
+}
+function shortPlanRaw(week, dayKey, lg, z){
   const e = (SHORT['P' + (Math.min(2, Math.floor((week - 1) / 4)) + 1)] || {})[dayKey]; if (!e) return z;
   const back = new Set(lg.shortAdd || []);
   e[0].split(',').forEach(c => { if (!back.has(c)) z.skip.add(c); });
   e[1].split(',').forEach(c => z.trim.add(c));
+  protectSkills(week, dayKey, z);
   const sess = sessionOf(week, dayKey);
-  if (sess) for (const r of sess.rows.slice().reverse()) { if (estSessionMin(week, dayKey, z) <= 85) break; if (!z.skip.has(r[0]) && !/^A\d?$/.test(r[0]) && r[0] !== 'R') z.trim.add(r[0]); }
+  if (sess) for (const r of sess.rows.slice().reverse()) { if (estSessionMin(week, dayKey, z) <= 85) break; if (!z.skip.has(r[0]) && !/^A\d?$/.test(r[0]) && r[0] !== 'R' && !isSkillRow(r)) z.trim.add(r[0]); }
   return z;
 }
 
@@ -776,10 +788,11 @@ function fitPlan(week, dayKey, lg, z){
   const back = new Set((lg && lg.shortAdd) || []), est = () => estSessionMin(week, dayKey, z);
   if (est() <= FIT_MIN) return z;
   z.fit = true;
-  for (const c of e[1].split(',')) { z.trim.add(c); if (est() <= FIT_MIN) return z; }
-  for (const c of e[0].split(',').reverse()) { if (back.has(c)) continue; z.skip.add(c); if (est() <= FIT_MIN) return z; }
-  const sess = sessionOf(week, dayKey);
-  if (sess) for (const r of sess.rows.slice().reverse()) { if (est() <= FIT_MIN) break; if (!z.skip.has(r[0]) && !/^A\d?$/.test(r[0]) && r[0] !== 'R') z.trim.add(r[0]); }
+  const sess = sessionOf(week, dayKey), skillC = new Set((sess ? sess.rows : []).filter(isSkillRow).map(r => r[0]));
+  for (const c of e[1].split(',')) { if (skillC.has(c)) continue; z.trim.add(c); if (est() <= FIT_MIN) return z; }
+  for (const c of e[0].split(',').reverse()) { if (back.has(c) || skillC.has(c)) continue; z.skip.add(c); if (est() <= FIT_MIN) return z; }
+  if (sess) for (const r of sess.rows.slice().reverse()) { if (est() <= FIT_MIN) break; if (!z.skip.has(r[0]) && !/^A\d?$/.test(r[0]) && r[0] !== 'R' && !isSkillRow(r)) z.trim.add(r[0]); }
+  if (sess) for (const r of sess.rows.slice().reverse()) { if (est() <= FIT_MIN) break; if (!/^A\d?$/.test(r[0]) && r[0] !== 'R' && r[0] !== 'BP' && !isSkillRow(r) && !back.has(r[0])) z.skip.add(r[0]); }
   return z;
 }
 
@@ -831,6 +844,9 @@ function adjustRx(rx, L, halve){
     s = s.replace(/\((\d+)( [^,()]*)?, then (\d+)( [^()]*)?\)/, (m, x, y, z, w) => `(${Math.max(1, Math.ceil(x / 2))}${y || ''}, then ${Math.max(1, Math.ceil(z / 2))}${w || ''})`)
          .replace(/\((\d+) \+ (\d+)\)/, (m, x, z) => `(${Math.max(1, Math.ceil(x / 2))} + ${Math.max(1, Math.ceil(z / 2))})`)
          .replace(/\((\d+)( sets?)? per shape\)/, (m, x, y) => `(${Math.max(1, Math.ceil(x / 2))}${y || ''} per shape)`);
+    // keep the set total equal to its split, e.g. "3 sets × 10 (2 + 2)" -> "4 sets × 10 (2 + 2)"
+    const sp = s.match(/\((\d+) \+ (\d+)\)/) || s.match(/\((\d+)[^,()]*, then (\d+)/);
+    if (sp) s = s.replace(/^(\s*)(\d+)(\s?(?:sets?\s)?×)/, (m, a, n, b) => a + (+sp[1] + +sp[2]) + (/sets?/.test(b) ? b.replace(/sets?/, (+sp[1] + +sp[2]) === 1 ? 'set' : 'sets') : b));
   }
   if (load && L) {
     load = load.replace(/(\d+)×(\d+(?:\.\d+)?)kg/, (m, n, v) => n + '×' + fmtKg(Math.max(0, +v + 2 * L)) + 'kg')
@@ -1003,6 +1019,7 @@ function renderToday(){
     if (CP) { const done = (e?.dr || []).length; tags += `<span class="lvl">${done ? done + '/' : ''}${CP.length * circRounds(rx)} checks</span>`; }
     if (RT) { const done = (e?.dr || []).length, rounds = rtKey === 'bulgarian' ? circRounds(rx) : 1; tags += `<span class="lvl">${done ? done + '/' : ''}${RT[2].length * rounds} ${rtKey === 'bulgarian' ? 'checks' : 'drills'}</span>`; }
     if (otHit) tags += `<span class="rated">Half sets: other training</span>`;
+    else if (SP.trim.has(code) && !((lg && lg.shortAdd) || []).includes(code) && !((low || st.pain) && !isDeload(w))) tags += `<span class="rated">${SP.fit ? 'Fewer sets: 2-hour cap' : 'Fewer sets: short session'}</span>`;
     if (er) tags += `<span class="rated">· ${RATINGS.find(x=>x[0]===er)[1]}${e.res?` · ${esc(e.res)}`:''}</span>`;
     const ezOn = !!(e && e.ez) && !/^A\d?$/.test(code), ezv = easierOf(name);
     if (ezOn) tags = `<span class="src c-MOB">Easier option</span>` + tags;
