@@ -863,7 +863,9 @@ function skLevels(k, dk){
   }).filter(Boolean);
 }
 function skLevelList(k, dk, cur){
-  return skLevels(k, dk).map(o => `<div style="margin:6px 0 10px"><div style="font-weight:600;font-size:13.5px">${SK_LBL[o.L]}${o.L === cur ? ' · you are here' : ''}</div><div class="mut" style="font-size:12.5px;margin:1px 0 3px">${esc(o.name)}</div><ul style="margin:0;padding-left:18px;font-size:13px">${o.items.map(t => `<li>${esc(t)}</li>`).join('')}</ul></div>`).join('');
+  const M = S.profile.skm || {};
+  return skLevels(k, dk).map(o => { const ks = o.items.map((t, i) => k + '|' + (k === 'MC' ? (dk || 'D6') + '|' : '') + o.L + '|' + i), n = ks.filter(x => M[x]).length;
+    return `<div style="margin:6px 0 10px"><div style="font-weight:600;font-size:13.5px">${SK_LBL[o.L]}${o.L === cur ? ' · you are here' : ''} <span class="mut skm-n" style="font-weight:400;font-size:12px">${n}/${ks.length} mastered</span></div><div class="mut" style="font-size:12.5px;margin:1px 0 4px">${esc(o.name)}</div><div style="display:grid;gap:6px">${o.items.map((t, i) => `<label style="display:flex;gap:10px;align-items:flex-start;font-size:13px;cursor:pointer"><button class="check ${M[ks[i]] ? 'on' : ''}" data-act="skm" data-k="${ks[i]}" aria-pressed="${!!M[ks[i]]}" aria-label="Mastered: ${esc(t)}" style="flex:none">${M[ks[i]] ? '✓' : ''}</button><span style="padding-top:3px">${esc(t)}</span></label>`).join('')}</div></div>`; }).join('');
 }
 function skChips(week, dk, code){
   if (!SK_CODES.includes(code)) return '';
@@ -1242,7 +1244,7 @@ function renderProgress(){
 /* ---------- GUIDE ---------- */
 function renderGuide(){
   let h = `<div class="section-title">Guide</div><p class="mut" style="margin:-4px 0 10px;font-size:13.5px">Tap a topic to open it, tap again to close.</p><div class="gd-tools"><button class="chip" data-act="gdall" data-v="1">Open all</button><button class="chip" data-act="gdall" data-v="0">Close all</button></div><div class="section-title" style="font-size:24px">Using the program</div>`;
-  h += `<details class="card gd"><summary><h3>Skill levels: what each level includes</h3></summary><div class="gd-b"><p class="mut" style="font-size:13px">Set the level on the exercise itself. Two easy ratings in a row offers the next level; two hard ratings or a miss offers the level below.</p>${[['KU','Thursday'],['FL','Friday'],['BT','Saturday'],['MC','Saturday (Thursday has a lighter version)'],['HB','Friday or Saturday, if you choose it'],['HQ','Friday or Saturday, if you choose it']].map(([k, when]) => `<details style="margin:8px 0"><summary><b>${esc(SK_NAME[k])}</b> <span class="mut" style="font-size:12.5px">· ${when}</span></summary>${skLevelList(k, k === 'MC' ? 'D6' : null, skCur(k))}</details>`).join('')}</div></details>`;
+  h += `<details class="card gd"><summary><h3>Skill levels: what each level includes</h3></summary><div class="gd-b"><p class="mut" style="font-size:13px">Tick a drill once you've mastered it. Set the level on the exercise itself. Two easy ratings in a row offers the next level; two hard ratings or a miss offers the level below.</p>${[['KU','Thursday'],['FL','Friday'],['BT','Saturday'],['MC','Saturday (Thursday has a lighter version)'],['HB','Friday or Saturday, if you choose it'],['HQ','Friday or Saturday, if you choose it']].map(([k, when]) => `<details style="margin:8px 0"><summary><b>${esc(SK_NAME[k])}</b> <span class="mut" style="font-size:12.5px">· ${when}</span></summary>${skLevelList(k, k === 'MC' ? 'D6' : null, skCur(k))}</details>`).join('')}</div></details>`;
   h += `<details class="card gd"><summary><h3>How the app adjusts your program</h3></summary><div class="gd-b"><ul>
    <li>Rate each exercise <b>Easy</b>, <b>Right</b>, <b>Hard</b> or <b>Missed</b>. Or just type your result (e.g. "52s") and the app compares it to the target: 15% over counts as easy, under 80% as missed.</li>
    <li><b>Two easy sessions in a row</b> on the same exercise steps it up one level: +2.5kg on loaded lifts, +10% hold time, +1 rep, or +1 set on singles.</li>
@@ -3162,6 +3164,10 @@ setInterval(() => {
 document.addEventListener('click', ev => {
   const b = ev.target.closest('[data-act]'); if (!b) return;
   const a = b.dataset.act, F = FS();
+  if (a === 'skm') { ev.preventDefault(); const M = S.profile.skm = S.profile.skm || {}, key = b.dataset.k; if (M[key]) delete M[key]; else M[key] = 1; const on = !!M[key]; b.classList.toggle('on', on); b.textContent = on ? '✓' : ''; b.setAttribute('aria-pressed', on);
+    const box = b.closest('div[style*="margin:6px 0 10px"]'); if (box) { const all = box.querySelectorAll('[data-act=skm]'), d = box.querySelectorAll('[data-act=skm].on').length, sp = box.querySelector('.skm-n'); if (sp) sp.textContent = d + '/' + all.length + ' mastered'; }
+    document.querySelectorAll('[data-act=skm][data-k="' + key + '"]').forEach(x => { if (x !== b) { x.classList.toggle('on', on); x.textContent = on ? '✓' : ''; } });
+    persist('profile'); return; }
   if (a === 'phz' || a === 'phsev' || a === 'phdir' || a === 'phck' || a === 'phreset') {
     const Q = V.ph, v = b.dataset.v, t = iso(new Date());
     if (a === 'phz') Q.sel = Q.sel.includes(v) ? Q.sel.filter(x => x !== v) : Q.sel.concat(v);
