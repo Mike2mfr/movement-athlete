@@ -785,11 +785,58 @@ function protectSkills(week, dayKey, z){
   sess.rows.forEach(r => { if (isSkillRow(r)) { z.trim.delete(r[0]); z.skip.delete(r[0]); } });
   return z;
 }
+/* ---------- active pain: adapts the program right away until unticked ---------- */
+const PAINR = {
+  calf:     { avoid: /jump|hop|pogo|sprint|bound|b-twist|macaco|kip|aú|\bau\b|raiz|broad|skater|shuttle|box|cartwheel|bridge walk|bridge locomotion/, ease: /calf|squat|pistol|lunge|step-up|cossack|tib|horse|walk/ },
+  ankle:    { avoid: /jump|hop|pogo|sprint|bound|b-twist|macaco|kip|aú|\bau\b|raiz|broad|skater|shuttle|box|cartwheel|bridge walk|bridge locomotion/, ease: /calf|squat|pistol|lunge|step-up|cossack|tib|horse|walk/ },
+  knee:     { avoid: /jump|pistol|hop|bound|sprint|box|kneel|b-twist|macaco|shrimp|skater/, ease: /squat|lunge|step-up|cossack|bulgarian|nordic|horse|sissy|leg extension/ },
+  ham:      { avoid: /nordic|sprint|b-twist|kick|jump|split/, ease: /rdl|deadlift|good morning|pike|pancake|hamstring|straddle|compression|jefferson|l-sit/ },
+  hip:      { avoid: /b-twist|kick|split|flare|macaco/, ease: /pancake|straddle|cossack|squat|lunge|horse|frog|pigeon|l-sit|compression|leg raise/ },
+  lowback:  { avoid: /deadlift|rdl|good morning|back extension|hollowback|walkover|scorpion|kip|bridge (walk|locomotion|rotation|push)|rotations? into|drop-back|jefferson|weighted|b-twist|macaco/, ease: /bridge|squat|hollow|leg raise|compression|l-sit|toes to bar|dragon|press|lunge/ },
+  back:     { avoid: /weighted pull|one-arm pull|one-arm finisher|lever/, ease: /pull|chin|row|hang|bridge|archer/ },
+  neck:     { avoid: /headstand|head bridge|kip|hspu|handstand push|qdr|tripod|helic/, ease: /bridge|shrug/ },
+  shoulder: { avoid: /dip|hspu|handstand push|one-arm|planche|press to|ring|weighted|lever|flare|b-twist|hollowback/, ease: /handstand|press|pull|chin|push-up|bridge|hang|row|qdr|macaco|aú|\bau\b|crawl/ },
+  elbow:    { avoid: /one-arm pull|one-arm finisher|weighted|planche|lever|archer|hspu|dip/, ease: /pull|chin|row|push-up|press|handstand|crow|qdr|hang/ },
+  wrist:    { avoid: /one-arm|planche|flare|crow|qdr|macaco|aú|\bau\b|hollowback|b-twist|press to|cartwheel/, ease: /handstand|push-up|press|bridge|dip|support|crawl|wrist/ },
+  sore:     { avoid: /$^/, ease: /./ }
+};
+function painOn(){ const Q = V.ph; return Q && Q.adapt !== false ? (Q.sel || []).filter(k => PAINR[k]) : []; }
+function painSev(){ const v = (V.ph && V.ph.sev) || 'mild'; return v === 'mild' ? 'mild' : 'mod'; }
+function painLive(week, di){ const t = todayPos(); if (t.before) return true; return week > t.week || (week === t.week && di >= t.dayIdx); }
+function painApply(week, dayKey, z){
+  const areas = painOn(); z.pain = false; z.painWhy = {};
+  if (!areas.length || !painLive(week, DAYKEYS.indexOf(dayKey))) return z;
+  const sess = sessionOf(week, dayKey); if (!sess) return z;
+  const sev = painSev(), nm = a => (PH.areas.find(x => x[0] === a) || ['', a])[1];
+  sess.rows.forEach(r => {
+    const [code, name, , , cat] = r, n = name.toLowerCase();
+    if (cat === 'MOB' || /^A\d?$/.test(code) || code === 'R' || ['BP', 'SO', 'PW'].includes(code)) return;
+    for (const a of areas) {
+      const R = PAINR[a], av = R.avoid.test(n), ea = R.ease.test(n);
+      if (av || (ea && sev === 'mod' && a !== 'sore')) { z.skip.add(code); z.trim.delete(code); z.painWhy[code] = nm(a) + ': skipped'; z.pain = true; return; }
+      if (ea) { if (!z.skip.has(code)) { z.trim.add(code); z.painWhy[code] = nm(a) + ': half sets'; z.pain = true; } }
+    }
+  });
+  return z;
+}
+function painCard(w, di, SP){
+  const Q = V.ph, on = new Set(Q.sel || []), adapt = Q.adapt !== false, sev = painSev(), live = painLive(w, di);
+  let h = `<div class="ready" style="flex-wrap:wrap"><span class="lbl">Any pain?</span>${PH.areas.map(([k, l]) => `<button class="chip ${on.has(k) ? 'on' : ''}" data-act="phz" data-v="${k}" aria-pressed="${on.has(k)}">${esc(l)}</button>`).join('')}</div>`;
+  if (!on.size) return h;
+  h += `<div class="ready"><span class="lbl">How bad?</span>${PH.sev.map(([k, l]) => `<button class="chip ${Q.sev === k ? 'on' : ''}" data-act="phsev" data-v="${k}">${l}</button>`).join('')}</div><div class="ready"><span class="lbl">Adapt workouts</span><button class="chip ${adapt ? 'on' : ''}" data-act="phadapt" data-v="1">On</button><button class="chip ${adapt ? '' : 'on'}" data-act="phadapt" data-v="0">Off</button></div>`;
+  if (!adapt) return h;
+  if (Q.sev === 'sev') h += `<div class="banner warn" style="margin:0 0 8px"><div><b>Strong pain</b>Rest today is the better choice: an easy walk and breathing only. If it isn't clearly better in 2–3 days, get it checked.</div></div>`;
+  if (!live) return h + `<div class="mut" style="font-size:12.5px;margin:0 0 10px">Past day: shown as planned. Pain adjustments apply from today on.</div>`;
+  const nSkip = Object.values(SP.painWhy || {}).filter(t => /skipped/.test(t)).length, nHalf = Object.values(SP.painWhy || {}).filter(t => /half/.test(t)).length;
+  const pre = [...on].map(a => { const L = (PH.ex[a] || []).slice(0, 3); return L.length ? `<li><b>${esc((PH.areas.find(x => x[0] === a) || ['', a])[1])}:</b> ${L.map(e => esc(e[0]) + ' ' + esc(sev === 'mod' ? e[2] : e[1])).join(' · ')}</li>` : ''; }).join('');
+  h += `<div class="banner warn" style="margin:0 0 12px"><div><b>Adjusted for your pain</b>${nSkip} exercise${nSkip === 1 ? '' : 's'} that load it moved to "Skipped today", ${nHalf} with half the sets. Stay at 3/10 pain or less; stop anything that makes it worse. This stays on until you untick it.${pre ? `<div style="margin-top:6px"><b style="font-size:13px">Prehab first (5–8 min)</b><ul style="margin:4px 0 0;padding-left:18px;font-size:13px">${pre}</ul><div class="mut" style="font-size:12px;margin-top:4px">The full session for each area is in the Prehab tab.</div></div>` : ''}${sev === 'mod' ? '<div style="margin-top:6px;font-size:12.5px">Moderate pain that lasts more than a week, swelling, or pain at rest: get it checked.</div>' : ''}</div></div>`;
+  return h;
+}
 function shortPlan(week, dayKey, lg){
   const z = { on: !!(lg && lg.short), skip: new Set(), trim: new Set(), fit: false };
-  if (!z.on) return fitPlan(week, dayKey, lg, z);
+  if (!z.on) return painApply(week, dayKey, fitPlan(week, dayKey, lg, z));
   const z0 = shortPlanRaw(week, dayKey, lg, z);
-  return z0;
+  return painApply(week, dayKey, z0);
 }
 function shortPlanRaw(week, dayKey, lg, z){
   const e = (SHORT['P' + (Math.min(2, Math.floor((week - 1) / 4)) + 1)] || {})[dayKey]; if (!e) return z;
@@ -1071,7 +1118,8 @@ function renderToday(){
   if (P.bw) h += `<div class="ready bwsw"><span class="lbl">Equipment</span><button class="chip ${sess.bw ? '' : 'on'}" data-act="bwmode" data-v="0">Full gym</button><button class="chip ${sess.bw ? 'on' : ''}" data-act="bwmode" data-v="1">Bodyweight only</button></div>` + (sess.bw ? `<div class="banner info" style="margin:0 0 12px"><div><b>Bodyweight version</b>Handstand, floor, mobility and flow work stay the same; the gym exercises are swapped. You need: ${esc(P.bw.kit.replace(/\.$/, ''))}.</div></div>` : '');
   h += `<div class="ready"><span class="lbl">How do you feel?</span>` + [['good','Good'],['ok','OK'],['low','Low']].map(([k,l]) => `<button class="chip ${ready===k?'on':''}" data-act="ready" data-v="${k}">${l}</button>`).join('') + `</div>`;
   const OA = otAdjust(w, di); h += otAdjBanner(w, di, sess.rows);
-  const SP = shortPlan(w, dk, lg), spSkip = sess.rows.filter(r => SP.skip.has(r[0])), spTrim = sess.rows.filter(r => SP.trim.has(r[0]) && !SP.skip.has(r[0]));
+  const SP = shortPlan(w, dk, lg); h += painCard(w, di, SP);
+  const spSkip = sess.rows.filter(r => SP.skip.has(r[0])), spTrim = sess.rows.filter(r => SP.trim.has(r[0]) && !SP.skip.has(r[0]));
   if (SHORT['P' + (P.phases.indexOf(phaseOf(w)) + 1)]?.[dk]) h += `<div class="ready"><span class="lbl">Session length</span><button class="chip ${SP.on ? '' : 'on'}" data-act="short" data-v="0">Full</button><button class="chip ${SP.on ? 'on' : ''}" data-act="short" data-v="1">Short</button><span class="mut num" style="font-size:12.5px;margin-left:auto">≈ ${fmtDur(estSessionMin(w, dk, SP))}</span></div>`;
   h += `<div class="ready"><span class="lbl">Rest stretches</span><button class="chip ${rsOn() ? 'on' : ''}" data-act="rstr" data-v="1">On</button><button class="chip ${rsOn() ? '' : 'on'}" data-act="rstr" data-v="0">Off</button></div>`;
   const RSM = restStretchMap(sess, dk);
@@ -1133,6 +1181,7 @@ function renderToday(){
     if (CP) { const done = (e?.dr || []).length; tags += `<span class="lvl">${done ? done + '/' : ''}${CP.length * circRounds(rx)} checks</span>`; }
     if (RT) { const done = (e?.dr || []).length, rounds = rtKey === 'bulgarian' ? circRounds(rx) : 1; tags += `<span class="lvl">${done ? done + '/' : ''}${RT[2].length * rounds} ${rtKey === 'bulgarian' ? 'checks' : 'drills'}</span>`; }
     if (otHit) tags += `<span class="rated">Half sets: other training</span>`;
+    if (SP.painWhy && SP.painWhy[code]) tags += `<span class="rated" style="color:var(--warn, #b45309)">Pain · ${esc(SP.painWhy[code])}</span>`;
     else if (SP.trim.has(code) && !((lg && lg.shortAdd) || []).includes(code) && !((low || st.pain) && !isDeload(w))) tags += `<span class="rated">${SP.fit ? 'Fewer sets: 2-hour cap' : 'Fewer sets: short session'}</span>`;
     if (er) tags += `<span class="rated">· ${RATINGS.find(x=>x[0]===er)[1]}${e.res?` · ${esc(e.res)}`:''}</span>`;
     const ezOn = !!(e && e.ez) && !/^A\d?$/.test(code), ezv = easierOf(name);
@@ -1166,10 +1215,10 @@ function renderToday(){
   };
   sess.rows.forEach(r => rowCard(r));
   h += '</div>';
-  if ((SP.on || SP.fit) && spSkip.length) {
+  if ((SP.on || SP.fit || SP.pain) && spSkip.length) {
     const h0 = h; h = ''; spSkip.forEach(r => rowCard(r, true)); const body = h; h = h0;
     const od = spSkip.filter(r => { const e = lg?.entries?.[r[0]]; return e && (e.r || e.res || (e.dr || []).length); }).length;
-    h += fold('short-skip', SP.fit ? 'Optional if you have time' : 'Skipped today', `<p class="mut" style="margin:0 0 8px;font-size:13px">Do any of these now or later in the day. Open one and log it here: it stays in this list and still counts towards your progress.</p><div class="list">${body}</div>`, od ? od + '/' + spSkip.length + ' done' : String(spSkip.length), false);
+    h += fold('short-skip', SP.pain ? 'Skipped today' : SP.fit ? 'Optional if you have time' : 'Skipped today', `<p class="mut" style="margin:0 0 8px;font-size:13px">Do any of these now or later in the day. Open one and log it here: it stays in this list and still counts towards your progress.</p><div class="list">${body}</div>`, od ? od + '/' + spSkip.length + ' done' : String(spSkip.length), false);
   }
   const tot = sess.rows.filter(r => r[2].some(Boolean) && r[0] !== 'R' && (!SP.skip.has(r[0]) || (lg && lg.entries[r[0]] && !(lg.entries[r[0]].ez && !lg.entries[r[0]].r && !lg.entries[r[0]].res && !(lg.entries[r[0]].dr || []).length)))).length, n = lg ? Object.keys(lg.entries).filter(k => k !== 'EVE' && k !== 'DAY' && k !== 'XTR' && k !== 'FLX' && !(lg.entries[k].ez && !lg.entries[k].r && !lg.entries[k].res && !(lg.entries[k].dr || []).length)).length : 0;
   h += `<div class="complete"><span><b class="num">${n}/${tot}</b> logged</span><span class="mut">Easy twice in a row steps it up · Hard twice or missed steps it down</span></div>`;
@@ -3170,6 +3219,7 @@ document.addEventListener('click', ev => {
     const box = b.closest('div[style*="margin:6px 0 10px"]'); if (box) { const all = box.querySelectorAll('[data-act=skm]'), d = box.querySelectorAll('[data-act=skm].on').length, sp = box.querySelector('.skm-n'); if (sp) sp.textContent = d + '/' + all.length + ' mastered'; }
     document.querySelectorAll('[data-act=skm][data-k="' + key + '"]').forEach(x => { if (x !== b) { x.classList.toggle('on', on); x.textContent = on ? '✓' : ''; } });
     persist('profile'); return; }
+  if (a === 'phadapt') { V.ph.adapt = b.dataset.v === '1'; phSave(V.ph); const y = window.scrollY; render(); window.scrollTo(0, y); return; }
   if (a === 'phz' || a === 'phsev' || a === 'phdir' || a === 'phck' || a === 'phreset') {
     const Q = V.ph, v = b.dataset.v, t = iso(new Date());
     if (a === 'phz') Q.sel = Q.sel.includes(v) ? Q.sel.filter(x => x !== v) : Q.sel.concat(v);
@@ -3703,7 +3753,7 @@ const PH = {
 };
 function phLoad(){ try { return JSON.parse(localStorage.getItem('ma2-prehab-v1')) || {}; } catch (e) { return {}; } }
 function phSave(o){ try { localStorage.setItem('ma2-prehab-v1', JSON.stringify(o)); } catch (e) {} }
-if (!V.ph) { const o = phLoad(); V.ph = { sel: o.sel || [], sev: o.sev || 'mild', dir: o.dir || 'unsure', done: o.done || {} }; }
+if (!V.ph) { const o = phLoad(); V.ph = { sel: o.sel || [], sev: o.sev || 'mild', dir: o.dir || 'unsure', done: o.done || {}, adapt: o.adapt !== false }; }
 function phSession(){
   const Q = V.ph, mod = Q.sev === 'mod', seen = new Set(), blocks = [];
   Q.sel.forEach(k => {
@@ -3723,6 +3773,7 @@ function renderCare(){
   h += `<p class="mut" style="font-size:13.5px;margin:10px 0 12px">Pick what hurts and how much. You get a gentle session for today and what to change in your training.</p>`;
   h += `<div class="eyebrow" style="margin-bottom:6px">Where do you feel it?</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">` +
     PH.areas.map(([k, l]) => `<button class="chip ${Q.sel.includes(k) ? 'on' : ''}" data-act="phz" data-v="${k}" aria-pressed="${Q.sel.includes(k)}">${l}</button>`).join('') + `</div>`;
+  if (Q.sel.length) h += `<div class="ready" style="margin:-6px 0 12px"><span class="lbl">Adapt my workouts</span><button class="chip ${Q.adapt !== false ? 'on' : ''}" data-act="phadapt" data-v="1">On</button><button class="chip ${Q.adapt !== false ? '' : 'on'}" data-act="phadapt" data-v="0">Off</button></div><p class="mut" style="font-size:12.5px;margin:-6px 0 12px">${Q.adapt !== false ? 'On: from today, exercises that load these areas are skipped or get half the sets, until you untick the area.' : 'Off: your workouts stay as planned.'}</p>`;
   if (Q.sel.includes('lowback')) h += `<div class="eyebrow" style="margin-bottom:6px">Lower back: what makes it worse?</div><div class="seg" style="grid-template-columns:repeat(3,1fr);margin-top:0">` +
     [['flex','Bending forward'],['ext','Arching back'],['unsure','Not sure']].map(([k, l]) => `<button class="${Q.dir === k ? 'on' : ''}" data-act="phdir" data-v="${k}">${l}</button>`).join('') + `</div>`;
   h += `<div class="eyebrow" style="margin:10px 0 6px">How strong is it?</div><div class="seg" style="grid-template-columns:repeat(3,1fr);margin-top:0">` +
