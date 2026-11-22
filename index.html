@@ -864,10 +864,10 @@ function skLevels(k, dk){
     const r = P.phases[L - 1].days[d].rows.find(x => x[0] === k); return r ? { L, name: r[1], items: items(r[3]) } : null;
   }).filter(Boolean);
 }
-function skLevelList(k, dk, cur){
+function skLevelList(k, dk, cur, only){
   const M = S.profile.skm || {};
-  return skLevels(k, dk).map(o => { const ks = o.items.map((t, i) => k + '|' + (k === 'MC' ? (dk || 'D6') + '|' : '') + o.L + '|' + i), n = ks.filter(x => M[x]).length;
-    return `<div style="margin:6px 0 10px"><div style="font-weight:600;font-size:13.5px">${SK_LBL[o.L]}${o.L === cur ? ' · you are here' : ''} <span class="mut skm-n" style="font-weight:400;font-size:12px">${n}/${ks.length} mastered</span></div><div class="mut" style="font-size:12.5px;margin:1px 0 4px">${esc(o.name)}</div><div style="display:grid;gap:6px">${o.items.map((t, i) => `<label style="display:flex;gap:10px;align-items:flex-start;font-size:13px;cursor:pointer"><button class="check ${M[ks[i]] ? 'on' : ''}" data-act="skm" data-k="${ks[i]}" aria-pressed="${!!M[ks[i]]}" aria-label="Mastered: ${esc(t)}" style="flex:none">${M[ks[i]] ? '✓' : ''}</button><span style="padding-top:3px">${esc(t)}</span></label>`).join('')}</div></div>`; }).join('');
+  return skLevels(k, dk).filter(o => !only || o.L === cur).map(o => { const ks = o.items.map((t, i) => k + '|' + (k === 'MC' ? (dk || 'D6') + '|' : '') + o.L + '|' + i), n = ks.filter(x => M[x]).length;
+    return `<div style="margin:6px 0 10px"><div style="font-weight:600;font-size:13.5px">${only ? esc(SK_NAME[k]) + ' · ' + SK_LBL[o.L] + ' drills' : SK_LBL[o.L] + (o.L === cur ? ' · you are here' : '')} <span class="mut skm-n" style="font-weight:400;font-size:12px">${n}/${ks.length} mastered</span></div><div class="mut" style="font-size:12.5px;margin:1px 0 4px">${esc(o.name)}</div><div style="display:grid;gap:6px">${o.items.map((t, i) => `<label style="display:flex;gap:10px;align-items:flex-start;font-size:13px;cursor:pointer"><button class="check ${M[ks[i]] ? 'on' : ''}" data-act="skm" data-k="${ks[i]}" aria-pressed="${!!M[ks[i]]}" aria-label="Mastered: ${esc(t)}" style="flex:none">${M[ks[i]] ? '✓' : ''}</button><span style="padding-top:3px">${esc(t)}</span></label>`).join('')}</div></div>`; }).join('');
 }
 function skChips(week, dk, code){
   if (!SK_CODES.includes(code)) return '';
@@ -875,7 +875,7 @@ function skChips(week, dk, code){
   if (L == null) return '';
   const sg = skSuggest(k, L);
   let h = `<div class="tm-row" role="group" aria-label="${esc(SK_NAME[k])} level"><span class="mut" style="font-size:12.5px;align-self:center">${esc(SK_NAME[k])} level:</span>${SK_LBL.map((l, i) => `<button class="chip ${L === i ? 'on' : ''}" data-act="skl" data-k="${k}" data-c="${code}" data-v="${i}" aria-pressed="${L === i}">${i ? i : 'Foundation'}</button>`).join('')}</div>`;
-  h += `<details class="sk-all" style="margin:2px 0 6px"><summary class="mut" style="font-size:12.5px;cursor:pointer">What's in each ${esc(SK_NAME[k])} level</summary>${skLevelList(k, dk, L)}</details>`;
+  h += `<div class="sk-cur" style="margin:2px 0 8px;padding:8px 10px;border:1px solid var(--line, rgba(127,127,127,.25));border-radius:10px">${skLevelList(k, dk, L, true)}<div class="mut" style="font-size:11.5px;margin-top:2px">Tick a drill once you've mastered it. Every level is listed in the Guide.</div></div>`;
   if (sg) h += `<div class="tm-row"><span class="mut" style="font-size:12.5px;align-self:center">${sg === 'up' ? 'Two easy sessions in a row.' : 'This level is too hard right now.'}</span><button class="chip on" data-act="skl" data-k="${k}" data-c="${code}" data-v="${sg === 'up' ? L + 1 : L - 1}">${sg === 'up' ? 'Move up to ' + SK_LBL[L + 1] : 'Go back to ' + SK_LBL[L - 1]}</button></div>`;
   return h;
 }
