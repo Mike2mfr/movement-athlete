@@ -409,7 +409,7 @@ const METRICS = [
  {k:'msplit',n:'Middle split, hip to floor',u:'cm',lower:true},
  {k:'bridge',n:'Bridge, hands to heels',u:'cm',lower:true},
  {k:'bridgeHold',n:'Straight-arm bridge hold',u:'s',start:0,target:45},
- {k:'kipup',n:'Kip-up on flat ground (out of 5)',u:'reps',start:0,target:4},{k:'kick',n:'Kick-up consistency (out of 10)',u:'reps',start:0,target:8},
+ {k:'amrap',n:'15-min AMRAP rounds',u:'reps',start:0,target:6},{k:'kipup',n:'Kip-up on flat ground (out of 5)',u:'reps',start:0,target:4},{k:'kick',n:'Kick-up consistency (out of 10)',u:'reps',start:0,target:8},
  {k:'flare',n:'Flares in a row',u:'reps',start:0,target:3},{k:'hbk',n:'Hollowback hold',u:'s',start:0,target:5},{k:'hsqdr',n:'Handstand → QDR, clean lowers/side',u:'reps',start:0,target:3},
  {k:'btG',n:'B-twist landed on grass (out of 5)',u:'reps',start:0,target:4},
  {k:'btH',n:'B-twist landed on hard floor (out of 5)',u:'reps',start:0,target:4},
@@ -3446,6 +3446,7 @@ function otFatigue(w, di){
     if (back >= 1) {
       const xl = getLog(p.w, DAYKEYS[p.di]), done = xtrDone(p.w, DAYKEYS[p.di]); if (!done.length) return;
       const e = (xl && xl.xeff) || 'easy', pts = (e === 'hard' ? 2 : e === 'mod' ? 1 : .5) * k;
+      if (xl && xl.cardio && done.some(o => o.c === 'CON')) ['legs', 'cardio'].forEach(a => { F[a] = (F[a] || 0) + 2 * k - pts; (why[a] = why[a] || []).push('Conditioning ' + (xl.cardio === 'emom' ? 'EMOM' : 'AMRAP') + (back === 1 ? ' (yesterday)' : ' (2 days ago)')); });
       xtrAreas(done).forEach(a => { F[a] = (F[a] || 0) + pts; (why[a] = why[a] || []).push('Extra practice' + (e === 'easy' ? '' : ', ' + (e === 'mod' ? 'moderate' : 'hard')) + (back === 1 ? ' (yesterday)' : ' (2 days ago)')); });
     }
   });
@@ -3489,6 +3490,10 @@ function otAdjBanner(w, di, rows){
 const PK_GROUPS = [['pigeon'],['thread the needle'],['legs up the wall'],['twist'],['child'],['cat-cow','cat cow'],['hip-flexor','hip flexor'],['pike','hamstring fold','forward fold'],['chest'],['figure-4','figure-four'],['wrist flexor','forearm flexor'],['front split'],['pancake'],['middle split'],['lat stretch'],['frog'],['butterfly'],['couch']];
 const PK_SIMPLE = new Set(['pigeon','thread the needle','legs up the wall','twist','child']);
 function pkKeys(name){ const n = name.toLowerCase().replace(/’/g, "'"); return PK_GROUPS.filter(g => g.some(t => n.includes(t))).map(g => g[0]); }
+const COND = {
+  emom: { n: 'Conditioning: 20-min EMOM', d: '1 × 20 min', note: 'One station per minute, 5 rounds: min 1 · 12 kettlebell swings (no bell: 8 broad jumps) · min 2 · 10 goblet or vest squats · min 3 · 30s bike or rower sprint (or high knees) · min 4 · 8 controlled burpees. Rest for what is left of each minute. About 8/10 effort, round 5 as good as round 1. Warm up 5 min first.' },
+  amrap: { n: 'Conditioning: 15-min AMRAP', d: '1 × 15 min', note: 'As many rounds as possible of: 10 kettlebell swings (no bell: 8 broad jumps) · 10 jump lunges (5/leg) · 8 goblet or vest squats · 6 controlled burpees · 10 m bear crawl. Steady hard pace; write your rounds in Progress (15-min AMRAP). Warm up 5 min first.' }
+};
 function practiceCard(w, dk){
   const col = w % 4 === 0 ? 3 : (w <= 4 ? 0 : w <= 8 ? 1 : 2);
   const X = XTR[dk], F = FLX[dk], R = P.routines && P.routines.evening;
@@ -3498,6 +3503,8 @@ function practiceCard(w, dk){
   const seen = new Set();
   // 1) handstand + mobility extra
   let xr = X ? X.rows.map((r, i) => ({ c: 'XTR', i, n: r.n, d: r.d[col], note: r.note, cat: r.c })).filter(o => o.d && o.d !== '—') : [];
+  const cm = lg && lg.cardio && COND[lg.cardio] ? lg.cardio : '';
+  if (cm) xr.forEach(o => { if (o.cat === 'CON') { o.n = COND[cm].n; o.d = COND[cm].d; o.note = COND[cm].note; } });
   xr.forEach(o => pkKeys(o.n).forEach(k => seen.add(k)));
   // 2) flexibility: drop only simple duplicates of the extra session
   let fr = F ? F.rows.map((r, i) => ({ c: 'FLX', i, n: r.n, d: r.d[col], note: r.note })).filter(o => !pkKeys(o.n).some(k => PK_SIMPLE.has(k) && seen.has(k))) : [];
@@ -3507,7 +3514,7 @@ function practiceCard(w, dk){
   const fullN = xr.length + fr.length + er.length;
   if (short) {
     const hs = xr.filter(o => o.cat === 'HS').slice(0, 2), pre = hs.length ? xr.filter(o => o.cat === 'PRE').slice(0, 1) : [], br = xr.filter(o => o.cat === 'BR').slice(0, 1), mob = xr.filter(o => o.cat === 'MOB').slice(0, hs.length ? 0 : 2);
-    const keep = new Set([...pre, ...hs, ...br, ...mob]); xr = xr.filter(o => keep.has(o));
+    const keep = new Set([...pre, ...hs, ...br, ...mob, ...(cm ? xr.filter(o => o.cat === 'CON') : [])]); xr = xr.filter(o => keep.has(o));
     fr = fr.slice(0, 3); er = er.slice(0, 2);
   }
   const all = xr.concat(fr, er), done = all.filter(o => drOf(o.c).includes(o.i)).length;
@@ -3516,8 +3523,9 @@ function practiceCard(w, dk){
   const part = (key, title, sub, list) => { if (!list.length) return ''; const n = list.filter(o => drOf(o.c).includes(o.i)).length;
     return fold('pk-' + key, title, `${sub ? `<div class="mut" style="font-size:12.5px;margin:0 0 4px">${sub}</div>` : ''}<ul class="rt-list" style="margin-top:6px">${list.map(item).join('')}</ul>`, `${n}/${list.length}`, false); };
   let h = `<div class="ready" style="margin:0 0 6px"><span class="lbl">Length</span><button class="chip ${short ? '' : 'on'}" data-act="xshort" data-v="0">Full</button><button class="chip ${short ? 'on' : ''}" data-act="xshort" data-v="1">Short</button></div>`;
-  h += `<div class="mut" style="font-size:12.5px">${short ? `Short: ${all.length} of ${fullN} exercises, the essentials of each part. About 15 min.` : `One optional session in three parts, about ${dk === 'D7' ? '50' : '45'} min. Do the first part 4–6 h away from the main session; the stretching parts fit best in the evening. Skip it on low-readiness days.`}${col === 3 ? ' Deload week: lighter doses.' : ''}</div>`;
+  h += `<div class="mut" style="font-size:12.5px">${short ? `Short: ${all.length} of ${fullN} exercises, the essentials of each part. About 15 min${cm ? ' plus the ' + (cm === 'emom' ? '20' : '15') + '-min conditioning' : ''}.` : `One optional session in three parts, about ${dk === 'D7' ? '50' : '45'} min. Do the first part 4–6 h away from the main session; the stretching parts fit best in the evening. Skip it on low-readiness days.`}${col === 3 ? ' Deload week: lighter doses.' : ''}</div>`;
   if (done) { const xe = (lg && lg.xeff) || 'easy'; h += `<div class="ready" style="margin:8px 0 2px"><span class="lbl">How hard was it?</span>${[['easy','Easy'],['mod','Moderate'],['hard','Hard']].map(([k, l]) => `<button class="chip ${xe === k ? 'on' : ''}" data-act="xeff" data-v="${k}">${l}</button>`).join('')}</div><div class="mut" style="font-size:12px;margin:0 0 4px">Counts towards your progress. Hard handstand, wrist, bridge or cardio work gives the same areas half the sets in the next session; easy or moderate work adds to the load from other training.</div>`; }
+  if (X && X.rows.some(r => r.c === 'CON')) h += `<div class="ready" style="margin:8px 0 2px"><span class="lbl">Cardio</span>${[['', 'Easy aerobic'], ['emom', 'EMOM 20 min'], ['amrap', 'AMRAP 15 min']].map(([k, l]) => `<button class="chip ${cm === k ? 'on' : ''}" data-act="cardio" data-v="${k}">${l}</button>`).join('')}</div>${cm ? `<div class="mut" style="font-size:12px;margin:0 0 4px">${w % 4 === 0 ? 'Deload week: easy aerobic is the better choice this week. ' : ''}Hard conditioning counts as hard work for the legs and cardio: the next sessions trim those areas if needed. Not the day before a heavy handstand or press day.</div>` : ''}`;
   if (X) h += part('x', '1 · ' + esc(X.t), esc(X.s.replace(/ · \d+ min/, '')) + ' · bodyweight only, easy effort', xr);
   if (F) h += part('f', '2 · Flexibility: ' + esc(F.t), 'Mild tension, slow nasal breathing, never bounce', fr);
   if (R) h += part('e', '3 · Evening wind-down', '5–8 slow breaths per position', er);
@@ -3785,6 +3793,7 @@ document.addEventListener('click', ev => {
   else if (a === 'ez') { const e = entry(b.dataset.c); e.ez = !e.ez; if (!e.ez) delete e.ez; e.t = Date.now(); pruneEntry(b.dataset.c); saveSession(); render(); }
   else if (a === 'fitoff' || a === 'fiton') { const lg = ensureLog(V.week, DAYKEYS[V.dayIdx]); if (a === 'fitoff') lg.full = true; else delete lg.full; saveSession(); render(); }
   else if (a === 'xeff') { const lg = ensureLog(V.week, DAYKEYS[V.dayIdx]); lg.xeff = b.dataset.v; if (lg.xeff === 'easy') delete lg.xeff; saveSession(); render(); }
+  else if (a === 'cardio') { const lg = ensureLog(V.week, DAYKEYS[V.dayIdx]); if (b.dataset.v) lg.cardio = b.dataset.v; else delete lg.cardio; saveSession(); render(); }
   else if (a === 'xshort') { const lg = ensureLog(V.week, DAYKEYS[V.dayIdx]); lg.xshort = b.dataset.v === '1'; saveSession(); render(); }
   else if (a === 'rstr') { S.profile.restStr = b.dataset.v === '1'; persist('profile'); render(); }
   else if (a === 'short') { const lg = ensureLog(V.week, DAYKEYS[V.dayIdx]); lg.short = b.dataset.v === '1'; if (!lg.short) lg.shortAdd = []; saveSession(); render(); }
