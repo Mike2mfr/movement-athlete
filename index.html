@@ -71,7 +71,7 @@ h1,h2,h3{margin:0;text-wrap:balance}
 .chip.miss.on{background:var(--bad);border-color:var(--bad);color:#fff}
 .list{display:flex;flex-direction:column;gap:8px}
 .ex{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
-.ex.logged{border-color:color-mix(in srgb,var(--good) 45%,var(--line))}.ex.off{background:color-mix(in srgb,var(--line) 55%,var(--surface));border-style:dashed}.ex.off .ex-name,.ex.off .code{opacity:.6}.ex.off .ex-row .rx{opacity:.6}.offtag{font-size:11.5px;font-weight:600;padding:2px 7px;border-radius:999px;background:var(--surface);border:1px dashed var(--line);color:var(--muted, #777)}
+.ex.prehab .ex-body{padding-left:14px}.ex.prehab{border:2px solid color-mix(in srgb,var(--good) 55%,var(--line));background:color-mix(in srgb,var(--good) 7%,var(--surface))}.ex.logged{border-color:color-mix(in srgb,var(--good) 45%,var(--line))}.ex.off{background:color-mix(in srgb,var(--line) 55%,var(--surface));border-style:dashed}.ex.off .ex-name,.ex.off .code{opacity:.6}.ex.off .ex-row .rx{opacity:.6}.offtag{font-size:11.5px;font-weight:600;padding:2px 7px;border-radius:999px;background:var(--surface);border:1px dashed var(--line);color:var(--muted, #777)}
 .ex-row.nolbl ~ .tm-row{padding-left:14px}.ex-row.nolbl ~ .rs-strip{margin-left:14px}.ex-row.nolbl{grid-template-columns:1fr auto;padding-left:14px}.ex-row{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:start;padding:12px 12px 12px 10px;cursor:pointer;width:100%;background:none;border:0;text-align:left}
 .code{font-family:var(--f-num);font-size:12px;font-weight:700;color:var(--mut);padding-top:2px}
 .ex.logged .code{color:var(--good)}
@@ -819,6 +819,18 @@ function painApply(week, dayKey, z){
   });
   return z;
 }
+function painPrehab(){
+  const sev = painSev(), out = [];
+  painOn().forEach(a => { const nm = (PH.areas.find(x => x[0] === a) || ['', a])[1]; (PH.ex[a] || []).slice(0, 3).forEach(e => out.push([e[0], (sev === 'mod' && e[2] && e[2] !== '—') ? e[2] : e[1], e[3] || '', nm])); });
+  return out;
+}
+function prehabBox(w, di, lg){
+  if (!painOn().length || !painLive(w, di)) return '';
+  const L = painPrehab(); if (!L.length) return '';
+  const dr = (lg && lg.entries && lg.entries.PHB && lg.entries.PHB.dr) || [], done = L.filter((_, i) => dr.includes(i)).length;
+  const areas = [...new Set(L.map(x => x[3]))].join(' + ');
+  return `<div class="ex prehab ${done === L.length ? 'logged' : ''}"><div class="ex-row nolbl" style="cursor:default"><span class="ex-name">Prehab: ${esc(areas)}<span class="tags"><span class="src c-MOB">Do first</span><span class="lvl">${done ? done + '/' : ''}${L.length} drills</span></span></span><span class="rx">5–8 min</span></div><div class="ex-body"><ul class="rt-list">${L.map((d, i) => `<li><button class="rt-item ${dr.includes(i) ? 'on' : ''}" data-act="rt" data-c="PHB" data-i="${i}" aria-pressed="${dr.includes(i)}"><span class="check ${dr.includes(i) ? 'on' : ''}" aria-hidden="true">${dr.includes(i) ? '✓' : ''}</span><span class="rt-txt"><b>${esc(d[0])}</b><span class="rt-dose">${esc(d[1])}</span>${d[2] ? `<span class="mut">${esc(d[2])}</span>` : ''}</span></button>${drillSecs(d[1]) ? `<button class="chip tm" data-act="timer" data-s="${drillSecs(d[1])}" data-l="${esc(d[0])}" data-k="work">⏱ ${fmtT(drillSecs(d[1]))}</button>` : ''}</li>`).join('')}</ul><div class="mut" style="font-size:12px;margin-top:6px">Gentle, pain at 3/10 or less. The full session for each area is in the Prehab tab.</div></div></div>`;
+}
 function painCard(w, di, SP){
   const Q = V.ph, on = new Set(Q.sel || []), adapt = Q.adapt !== false, sev = painSev(), live = painLive(w, di);
   let h = `<div class="ready" style="flex-wrap:wrap"><span class="lbl">Any pain?</span>${PH.areas.map(([k, l]) => `<button class="chip ${on.has(k) ? 'on' : ''}" data-act="phz" data-v="${k}" aria-pressed="${on.has(k)}">${esc(l)}</button>`).join('')}</div>`;
@@ -828,8 +840,8 @@ function painCard(w, di, SP){
   if (Q.sev === 'sev') h += `<div class="banner warn" style="margin:0 0 8px"><div><b>Strong pain</b>Rest today is the better choice: an easy walk and breathing only. If it isn't clearly better in 2–3 days, get it checked.</div></div>`;
   if (!live) return h + `<div class="mut" style="font-size:12.5px;margin:0 0 10px">Past day: shown as planned. Pain adjustments apply from today on.</div>`;
   const nSkip = Object.values(SP.painWhy || {}).filter(t => /skipped/.test(t)).length, nHalf = Object.values(SP.painWhy || {}).filter(t => /half/.test(t)).length;
-  const pre = [...on].map(a => { const L = (PH.ex[a] || []).slice(0, 3); return L.length ? `<li><b>${esc((PH.areas.find(x => x[0] === a) || ['', a])[1])}:</b> ${L.map(e => esc(e[0]) + ' ' + esc(sev === 'mod' ? e[2] : e[1])).join(' · ')}</li>` : ''; }).join('');
-  h += `<div class="banner warn" style="margin:0 0 12px"><div><b>Adjusted for your pain</b>${nSkip} exercise${nSkip === 1 ? '' : 's'} that load it moved to "Skipped today", ${nHalf} with half the sets. Stay at 3/10 pain or less; stop anything that makes it worse. This stays on until you untick it.${pre ? `<div style="margin-top:6px"><b style="font-size:13px">Prehab first (5–8 min)</b><ul style="margin:4px 0 0;padding-left:18px;font-size:13px">${pre}</ul><div class="mut" style="font-size:12px;margin-top:4px">The full session for each area is in the Prehab tab.</div></div>` : ''}${sev === 'mod' ? '<div style="margin-top:6px;font-size:12.5px">Moderate pain that lasts more than a week, swelling, or pain at rest: get it checked.</div>' : ''}</div></div>`;
+  const pre = '';
+  h += `<div class="banner warn" style="margin:0 0 12px"><div><b>Adjusted for your pain</b>${nSkip} exercise${nSkip === 1 ? '' : 's'} that load it moved to "Skipped today", ${nHalf} with half the sets. Stay at 3/10 pain or less; stop anything that makes it worse. This stays on until you untick it. A prehab box with exercises for it is at the top of today's session.${pre ? `<div style="margin-top:6px"><b style="font-size:13px">Prehab first (5–8 min)</b><ul style="margin:4px 0 0;padding-left:18px;font-size:13px">${pre}</ul><div class="mut" style="font-size:12px;margin-top:4px">The full session for each area is in the Prehab tab.</div></div>` : ''}${sev === 'mod' ? '<div style="margin-top:6px;font-size:12.5px">Moderate pain that lasts more than a week, swelling, or pain at rest: get it checked.</div>' : ''}</div></div>`;
   return h;
 }
 function shortPlan(week, dayKey, lg){
@@ -1092,7 +1104,7 @@ function renderToday(){
   h += '<div class="days" role="tablist">' + DAYKEYS.map((k,i) => {
     const lg = getLog(w, k), sess = sessionOf(w, k);
     let dot = '';
-    if (lg && sess) { const sp = shortPlan(w, k, lg), tot = sess.rows.filter(r => r[2].some(Boolean) && r[0] !== 'R' && !sp.skip.has(r[0])).length, n = Object.keys(lg.entries).filter(k => k !== 'EVE' && k !== 'DAY' && k !== 'XTR' && k !== 'FLX' && !(lg.entries[k].ez && !lg.entries[k].r && !lg.entries[k].res && !(lg.entries[k].dr || []).length)).length; if (n) dot = `<em class="dot ${n >= tot ? '' : 'part'}"></em>`; }
+    if (lg && sess) { const sp = shortPlan(w, k, lg), tot = sess.rows.filter(r => r[2].some(Boolean) && r[0] !== 'R' && !sp.skip.has(r[0])).length, n = Object.keys(lg.entries).filter(k => k !== 'EVE' && k !== 'DAY' && k !== 'XTR' && k !== 'FLX' && k !== 'PHB' && !(lg.entries[k].ez && !lg.entries[k].r && !lg.entries[k].res && !(lg.entries[k].dr || []).length)).length; if (n) dot = `<em class="dot ${n >= tot ? '' : 'part'}"></em>`; }
     const d = dateOf(w, i);
     return `<button class="day ${i===di?'sel':''} ${w===pos.week&&i===pos.dayIdx&&!pos.before?'today':''}" data-act="day" data-i="${i}" role="tab" aria-selected="${i===di}">${dot}<b>${DAYSHORT[i]}</b><span>${d.getDate()}/${d.getMonth()+1}</span></button>`;
   }).join('') + '</div>';
@@ -1141,6 +1153,7 @@ function renderToday(){
   const nextL = lblFrom(sess.rows.filter(r => !SP.skip.has(r[0])), 0); spSkip.forEach(r => { LBL[r[0]] = ''; });
   const relbl = t => String(t).replace(/(?<![\w-])([A-Z]\d)(?![\w-])/g, m => !(m in LBL) ? m : LBL[m] || (sess.rows.find(r => r[0] === m) ? clean(sess.rows.find(r => r[0] === m)[1]).split(/ [(:·]/)[0].toLowerCase() : m));
   h += '<div class="list">';
+  h += prehabBox(w, di, lg);
   const rowCard = (row, opt) => {
     const [code, nameRaw, wk, note, src] = row;
     if (SP.skip.has(code) && !opt) return;
@@ -1222,7 +1235,7 @@ function renderToday(){
     const od = spSkip.filter(r => { const e = lg?.entries?.[r[0]]; return e && (e.r || e.res || (e.dr || []).length); }).length;
     h += fold('short-skip', SP.pain ? 'Skipped today' : SP.fit ? 'Optional if you have time' : 'Skipped today', `<p class="mut" style="margin:0 0 8px;font-size:13px">Do any of these now or later in the day. Open one and log it here: it stays in this list and still counts towards your progress.</p><div class="list">${body}</div>`, od ? od + '/' + spSkip.length + ' done' : String(spSkip.length), false);
   }
-  const tot = sess.rows.filter(r => r[2].some(Boolean) && r[0] !== 'R' && (!SP.skip.has(r[0]) || (lg && lg.entries[r[0]] && !(lg.entries[r[0]].ez && !lg.entries[r[0]].r && !lg.entries[r[0]].res && !(lg.entries[r[0]].dr || []).length)))).length, n = lg ? Object.keys(lg.entries).filter(k => k !== 'EVE' && k !== 'DAY' && k !== 'XTR' && k !== 'FLX' && !(lg.entries[k].ez && !lg.entries[k].r && !lg.entries[k].res && !(lg.entries[k].dr || []).length)).length : 0;
+  const tot = sess.rows.filter(r => r[2].some(Boolean) && r[0] !== 'R' && (!SP.skip.has(r[0]) || (lg && lg.entries[r[0]] && !(lg.entries[r[0]].ez && !lg.entries[r[0]].r && !lg.entries[r[0]].res && !(lg.entries[r[0]].dr || []).length)))).length, n = lg ? Object.keys(lg.entries).filter(k => k !== 'EVE' && k !== 'DAY' && k !== 'XTR' && k !== 'FLX' && k !== 'PHB' && !(lg.entries[k].ez && !lg.entries[k].r && !lg.entries[k].res && !(lg.entries[k].dr || []).length)).length : 0;
   h += `<div class="complete"><span><b class="num">${n}/${tot}</b> logged</span><span class="mut">Easy twice in a row steps it up · Hard twice or missed steps it down</span></div>`;
   h += fastBanner(iso(dateOf(w, di))) + foldCard('daily', dailyCard(w, dk)) + foldCard('breath', breathCard(iso(dateOf(w, di)))) + foldCard('mind', mindCard(iso(dateOf(w, di)))) + otherCard(w, dk) + practiceCard(w, dk);
   return h;
@@ -1287,7 +1300,7 @@ function renderProgress(){
   // adherence
   let logged = 0, planned = 0;
   const pos = todayPos();
-  for (let w = 1; w <= Math.min(12, pos.week); w++) for (let di = 0; di < 6; di++) { if (w === pos.week && di > pos.dayIdx) break; planned++; if (getLog(w, DAYKEYS[di]) && Object.keys(getLog(w, DAYKEYS[di]).entries).filter(k => k !== 'EVE' && k !== 'DAY' && k !== 'XTR' && k !== 'FLX').length) logged++; }
+  for (let w = 1; w <= Math.min(12, pos.week); w++) for (let di = 0; di < 6; di++) { if (w === pos.week && di > pos.dayIdx) break; planned++; if (getLog(w, DAYKEYS[di]) && Object.keys(getLog(w, DAYKEYS[di]).entries).filter(k => k !== 'EVE' && k !== 'DAY' && k !== 'XTR' && k !== 'FLX' && k !== 'PHB').length) logged++; }
   if (!pos.before) h += fold('pg-adh', 'Sessions logged', `<div><div class="num" style="font-size:22px;font-weight:700">${logged} / ${planned}</div><div class="mut" style="font-size:12.5px">Counted up to today</div></div>`, `${logged}/${planned}`, false);
   const XS = xtrStats();
   if (!pos.before) h += fold('pg-xtr', 'Extra practice', `<div style="display:flex;gap:18px;flex-wrap:wrap"><div><div class="num" style="font-size:22px;font-weight:700">${XS.days} / ${XS.sofar}</div><div class="mut" style="font-size:12.5px">days with extra practice</div></div><div><div class="num" style="font-size:22px;font-weight:700">${XS.streak}</div><div class="mut" style="font-size:12.5px">day streak</div></div><div><div class="num" style="font-size:22px;font-weight:700">${XS.items}</div><div class="mut" style="font-size:12.5px">exercises done</div></div></div><ul class="mut" style="font-size:13px;margin:10px 0 0;padding-left:18px"><li>Splits, pancake + hamstrings: ${XS.split} day${XS.split === 1 ? '' : 's'}</li><li>Bridge + shoulder opening: ${XS.bridge} day${XS.bridge === 1 ? '' : 's'}</li><li>Handstand practice: ${XS.hs} day${XS.hs === 1 ? '' : 's'}</li><li>Wrist and shoulder prehab: ${XS.wrist} day${XS.wrist === 1 ? '' : 's'}</li><li>Easy aerobic: about ${XS.cardio} min</li></ul>`, XS.days + ' days', false);
