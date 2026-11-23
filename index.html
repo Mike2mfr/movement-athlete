@@ -71,7 +71,7 @@ h1,h2,h3{margin:0;text-wrap:balance}
 .chip.miss.on{background:var(--bad);border-color:var(--bad);color:#fff}
 .list{display:flex;flex-direction:column;gap:8px}
 .ex{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
-.ex.logged{border-color:color-mix(in srgb,var(--good) 45%,var(--line))}
+.ex.logged{border-color:color-mix(in srgb,var(--good) 45%,var(--line))}.ex.off{background:color-mix(in srgb,var(--line) 55%,var(--surface));border-style:dashed}.ex.off .ex-name,.ex.off .code{opacity:.6}.ex.off .ex-row .rx{opacity:.6}.offtag{font-size:11.5px;font-weight:600;padding:2px 7px;border-radius:999px;background:var(--surface);border:1px dashed var(--line);color:var(--muted, #777)}
 .ex-row.nolbl ~ .tm-row{padding-left:14px}.ex-row.nolbl ~ .rs-strip{margin-left:14px}.ex-row.nolbl{grid-template-columns:1fr auto;padding-left:14px}.ex-row{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:start;padding:12px 12px 12px 10px;cursor:pointer;width:100%;background:none;border:0;text-align:left}
 .code{font-family:var(--f-num);font-size:12px;font-weight:700;color:var(--mut);padding-top:2px}
 .ex.logged .code{color:var(--good)}
@@ -1186,11 +1186,13 @@ function renderToday(){
     if (er) tags += `<span class="rated">· ${RATINGS.find(x=>x[0]===er)[1]}${e.res?` · ${esc(e.res)}`:''}</span>`;
     const ezOn = !!(e && e.ez) && !/^A\d?$/.test(code), ezv = easierOf(name);
     if (ezOn) tags = `<span class="src c-MOB">Easier option</span>` + tags;
-    h += `<div class="ex ${e && (e.r || e.res || (e.dr || []).length) ? 'logged' : ''}"><button class="ex-row${code in LBL && !LBL[code] ? ' nolbl' : ''}" data-act="open" data-c="${code}" aria-expanded="${open}">${code in LBL && !LBL[code] ? '' : `<span class="code">${esc(code in LBL ? LBL[code] : code)}</span>`}<span class="ex-name">${esc(ezOn ? (ezGeneric(ezv[0]) ? name : ezv[0]) : name)}${ezOn ? `<span class="mut" style="display:block;font-size:12px;font-weight:500">${ezGeneric(ezv[0]) ? 'Easier: ' + esc(ezv[0].toLowerCase()) : 'instead of: ' + esc(name)}</span>` : ''}<div class="tags">${tags}</div></span><span class="rx">${esc(rx||'—')}${changed?`<span class="was">${esc(planned)}</span>`:''}</span></button>`;
+    const off = !planned || planned === '—';
+    if (off) tags = `<span class="offtag">${isDeload(w) ? 'Rest this deload week' : 'Not this week'}</span>` + tags;
+    h += `<div class="ex ${off ? 'off' : ''} ${e && (e.r || e.res || (e.dr || []).length) ? 'logged' : ''}"><button class="ex-row${code in LBL && !LBL[code] ? ' nolbl' : ''}" data-act="open" data-c="${code}" aria-expanded="${open}">${code in LBL && !LBL[code] ? '' : `<span class="code">${esc(code in LBL ? LBL[code] : code)}</span>`}<span class="ex-name">${esc(ezOn ? (ezGeneric(ezv[0]) ? name : ezv[0]) : name)}${ezOn ? `<span class="mut" style="display:block;font-size:12px;font-weight:500">${ezGeneric(ezv[0]) ? 'Easier: ' + esc(ezv[0].toLowerCase()) : 'instead of: ' + esc(name)}</span>` : ''}<div class="tags">${tags}</div></span><span class="rx">${esc(rx||'—')}${changed?`<span class="was">${esc(planned)}</span>`:''}</span></button>`;
     h += altChips(w, dk, code);
     h += skChips(w, dk, code);
     const tm = timerSpec(rx, note); if (tm) h += `<div class="tm-row">${tm.work ? `<button class="chip tm" data-act="timer" data-s="${tm.work}" data-l="${esc(name)}" data-k="work">⏱ ${fmtT(tm.work)}${tm.side ? ' / side' : ''}</button>` : ''}${tm.rest ? `<button class="chip tm rest" data-act="timer" data-s="${tm.rest}" data-l="${esc(name)}" data-k="rest">Rest ${fmtT(tm.rest)}</button>` : ''}</div>`;
-    if (RSM[code]) h += `<div class="rs-strip"><span class="rs-ic" aria-hidden="true">↻</span><span><b>Stretch in the rest:</b> ${esc(RSM[code][0])} · ${esc(RSM[code][1])}</span></div>`;
+    if (RSM[code] && !off) h += `<div class="rs-strip"><span class="rs-ic" aria-hidden="true">↻</span><span><b>Stretch in the rest:</b> ${esc(RSM[code][0])} · ${esc(RSM[code][1])}</span></div>`;
     if (open) {
       h += `<div class="ex-body">${note?`<div class="ex-note">${esc(relbl(isPct ? withKg(note) : note))}</div>`:''}${/^A\d?$/.test(code) ? '' : `<div class="ex-note" style="margin-top:6px;border-left:3px solid #2b7a62;padding-left:8px"><b>${ezOn ? 'Doing the easier option:' : 'Too hard today? Easier option:'}</b> ${esc(ezv[0])}. ${esc(ezv[1])}<div style="margin-top:6px"><button class="chip ${ezOn ? 'on' : ''}" data-act="ez" data-c="${code}">${ezOn ? 'Back to the original' : 'Use the easier option today'}</button></div></div>`}${RSM[code] ? `<div class="ex-note" style="margin-top:6px"><b>During each rest:</b> ${esc(RSM[code][0])} ${esc(RSM[code][1])}. ${esc(RSM[code][2])} Easy, about 60–70% of your range. Stop 20s before the next set.</div>` : ''}`;
       if (isPct) h += `<div class="why">1RM (added weight): ${oneRM().v}kg, ${oneRM().src}.</div>`;
