@@ -71,7 +71,7 @@ h1,h2,h3{margin:0;text-wrap:balance}
 .chip.miss.on{background:var(--bad);border-color:var(--bad);color:#fff}
 .list{display:flex;flex-direction:column;gap:8px}
 .ex{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
-.ex.prehab .ex-body{padding-left:14px}.ex.prehab{border:2px solid color-mix(in srgb,var(--good) 55%,var(--line));background:color-mix(in srgb,var(--good) 7%,var(--surface))}.ex.logged{border-color:color-mix(in srgb,var(--good) 45%,var(--line))}.ex.off{background:color-mix(in srgb,var(--line) 55%,var(--surface));border-style:dashed}.ex.off .ex-name,.ex.off .code{opacity:.6}.ex.off .ex-row .rx{opacity:.6}.offtag{font-size:11.5px;font-weight:600;padding:2px 7px;border-radius:999px;background:var(--surface);border:1px dashed var(--line);color:var(--muted, #777)}
+.ex.prehab .ex-body{padding-left:14px}.ex.prehab{border:2px solid color-mix(in srgb,var(--good) 55%,var(--line));background:color-mix(in srgb,var(--good) 7%,var(--surface))}.ex.logged{border-color:color-mix(in srgb,var(--good) 45%,var(--line))}.ex.off{background:color-mix(in srgb,var(--line) 55%,var(--surface));border-style:dashed}.ex.off .ex-name,.ex.off .code{opacity:.6}.ex.off .ex-row .rx{opacity:.6}.rt-item.xoff{background:color-mix(in srgb,var(--line) 55%,var(--surface));border-style:dashed;cursor:default}.rt-item.xoff b{opacity:.75}.offtag{font-size:11.5px;font-weight:600;padding:2px 7px;border-radius:999px;background:var(--surface);border:1px dashed var(--line);color:var(--muted, #777)}
 .ex-row.nolbl ~ .tm-row{padding-left:14px}.ex-row.nolbl ~ .rs-strip{margin-left:14px}.ex-row.nolbl{grid-template-columns:1fr auto;padding-left:14px}.ex-row{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:start;padding:12px 12px 12px 10px;cursor:pointer;width:100%;background:none;border:0;text-align:left}
 .code{font-family:var(--f-num);font-size:12px;font-weight:700;color:var(--mut);padding-top:2px}
 .ex.logged .code{color:var(--good)}
@@ -3443,7 +3443,7 @@ function extraCard(w, dk){
   if (open) {
     h += `<div class="br-note info" style="margin-top:10px">${esc(X.i)}${col === 3 ? ' Deload week: lighter doses.' : ''}</div>`;
     h += `<ul class="rt-list" style="margin-top:8px">${rows.map(({ r, i }) => { const on = dr.includes(i), s = drillSecs(r.d[col]), cat = XTR_CAT[r.c] || ['', ''];
-      return `<li><button class="rt-item ${on ? 'on' : ''}" data-act="rt" data-c="XTR" data-i="${i}" aria-pressed="${on}"><span class="check ${on ? 'on' : ''}" aria-hidden="true">${on ? '✓' : ''}</span><span class="rt-txt"><b>${esc(r.n)} <span class="src ${cat[1]}">${cat[0]}</span></b><span class="rt-dose">${esc(r.d[col])}</span>${r.note ? `<span class="mut">${esc(r.note)}</span>` : ''}</span></button>${s ? `<button class="chip tm" data-act="timer" data-s="${s}" data-l="${esc(r.n)}" data-k="work">⏱ ${fmtT(s)}</button>` : ''}</li>`; }).join('')}</ul>`;
+    return `<li><button class="rt-item ${on ? 'on' : ''}" data-act="rt" data-c="XTR" data-i="${i}" aria-pressed="${on}"><span class="check ${on ? 'on' : ''}" aria-hidden="true">${on ? '✓' : ''}</span><span class="rt-txt"><b>${esc(r.n)} <span class="src ${cat[1]}">${cat[0]}</span></b><span class="rt-dose">${esc(r.d[col])}</span>${r.note ? `<span class="mut">${esc(r.note)}</span>` : ''}</span></button>${s ? `<button class="chip tm" data-act="timer" data-s="${s}" data-l="${esc(r.n)}" data-k="work">⏱ ${fmtT(s)}</button>` : ''}</li>`; }).join('')}</ul>`;
   }
   return h + '</div>';
 }
@@ -3521,7 +3521,7 @@ function otFatigue(w, di){
     if (back >= 1) {
       const xl = getLog(p.w, DAYKEYS[p.di]), done = xtrDone(p.w, DAYKEYS[p.di]); if (!done.length) return;
       const e = (xl && xl.xeff) || 'easy', pts = (e === 'hard' ? 2 : e === 'mod' ? 1 : .5) * k;
-      if (xl && xl.cardio && done.some(o => o.c === 'CON')) ['legs', 'cardio'].forEach(a => { F[a] = (F[a] || 0) + 2 * k - pts; (why[a] = why[a] || []).push('Conditioning ' + (xl.cardio === 'emom' ? 'EMOM' : 'AMRAP') + (back === 1 ? ' (yesterday)' : ' (2 days ago)')); });
+      if (xl && xl.cardio && p.w % 4 !== 0 && done.some(o => o.c === 'CON')) ['legs', 'cardio'].forEach(a => { F[a] = (F[a] || 0) + 2 * k - pts; (why[a] = why[a] || []).push('Conditioning ' + (xl.cardio === 'emom' ? 'EMOM' : 'AMRAP') + (back === 1 ? ' (yesterday)' : ' (2 days ago)')); });
       xtrAreas(done).forEach(a => { F[a] = (F[a] || 0) + pts; (why[a] = why[a] || []).push('Extra practice' + (e === 'easy' ? '' : ', ' + (e === 'mod' ? 'moderate' : 'hard')) + (back === 1 ? ' (yesterday)' : ' (2 days ago)')); });
     }
   });
@@ -3591,7 +3591,9 @@ function practiceCard(w, dk){
   const seen = new Set();
   // 1) handstand + mobility extra
   let xr = X ? X.rows.map((r, i) => ({ c: 'XTR', i, n: r.n, d: r.d[col], note: r.note, cat: r.c })).filter(o => o.d && o.d !== '—') : [];
-  const cm = lg && lg.cardio && COND[lg.cardio] ? lg.cardio : '';
+  const dl = w % 4 === 0, cm = !dl && lg && lg.cardio && COND[lg.cardio] ? lg.cardio : '';
+  let xoff = [];
+  if (dl) { let hs = 0; xr.forEach(o => { if (o.cat === 'HS' && ++hs > 1) o.off = 1; if (o.cat === 'BR' && /push-up|one-arm|walk-down|hop|ladder|straight-arm/i.test(o.n)) o.off = 1; if (o.cat === 'PRE' && /wrist push|fingertip|hammer/i.test(o.n)) o.off = 1; }); xoff = xr.filter(o => o.off); xr = xr.filter(o => !o.off); }
   if (cm) xr.forEach(o => { if (o.cat === 'CON') { o.n = COND[cm].n; o.d = COND[cm].d; o.note = condNote(w, lg, cm); } });
   xr.forEach(o => pkKeys(o.n).forEach(k => seen.add(k)));
   // 2) flexibility: drop only simple duplicates of the extra session
@@ -3607,14 +3609,17 @@ function practiceCard(w, dk){
   }
   const all = xr.concat(fr, er), done = all.filter(o => drOf(o.c).includes(o.i)).length;
   const item = o => { const on = drOf(o.c).includes(o.i), sec = drillSecs(o.d), cat = o.c === 'XTR' ? (XTR_CAT[o.cat] || ['', '']) : null;
+    if (o.off) return `<li><div class="rt-item xoff" aria-disabled="true"><span class="check" aria-hidden="true" style="opacity:.35"></span><span class="rt-txt"><b>${esc(o.n)} <span class="offtag">Rest this deload week</span></b><span class="rt-dose" style="text-decoration:line-through;opacity:.6">${esc(o.d)}</span></span></div></li>`;
     return `<li><button class="rt-item ${on ? 'on' : ''}" data-act="rt" data-c="${o.c}" data-i="${o.i}" aria-pressed="${on}"><span class="check ${on ? 'on' : ''}" aria-hidden="true">${on ? '✓' : ''}</span><span class="rt-txt"><b>${esc(o.n)}${cat && cat[0] ? ` <span class="src ${cat[1]}">${cat[0]}</span>` : ''}</b><span class="rt-dose">${esc(o.d)}</span>${o.note ? `<span class="mut">${esc(o.note)}</span>` : ''}</span></button>${sec ? `<button class="chip tm" data-act="timer" data-s="${sec}" data-l="${esc(o.n)}" data-k="work" style="margin:4px 0 0 34px">⏱ ${fmtT(sec)}</button>` : ''}</li>`; };
-  const part = (key, title, sub, list) => { if (!list.length) return ''; const n = list.filter(o => drOf(o.c).includes(o.i)).length;
-    return fold('pk-' + key, title, `${sub ? `<div class="mut" style="font-size:12.5px;margin:0 0 4px">${sub}</div>` : ''}<ul class="rt-list" style="margin-top:6px">${list.map(item).join('')}</ul>`, `${n}/${list.length}`, false); };
+  const part = (key, title, sub, list, offl) => { if (!list.length) return ''; const n = list.filter(o => drOf(o.c).includes(o.i)).length;
+    return fold('pk-' + key, title, `${sub ? `<div class="mut" style="font-size:12.5px;margin:0 0 4px">${sub}</div>` : ''}<ul class="rt-list" style="margin-top:6px">${list.map(item).join('')}${(offl || []).map(item).join('')}</ul>`, `${n}/${list.length}`, false); };
   let h = `<div class="ready" style="margin:0 0 6px"><span class="lbl">Length</span><button class="chip ${short ? '' : 'on'}" data-act="xshort" data-v="0">Full</button><button class="chip ${short ? 'on' : ''}" data-act="xshort" data-v="1">Short</button></div>`;
   h += `<div class="mut" style="font-size:12.5px">${short ? `Short: ${all.length} of ${fullN} exercises, the essentials of each part. About 15 min${cm ? ' plus the ' + (cm === 'emom' ? '20' : '15') + '-min conditioning' : ''}.` : `One optional session in three parts, about ${dk === 'D7' ? '50' : '45'} min. Do the first part 4–6 h away from the main session; the stretching parts fit best in the evening. Skip it on low-readiness days.`}${col === 3 ? ' Deload week: lighter doses.' : ''}</div>`;
+  if (dl) h += `<div class="banner info" style="margin:8px 0 4px"><div><b>Deload week</b>Lighter doses on every part${xoff.length ? `, and ${xoff.length} of the harder drills rest this week (shaded)` : ''}. Keep it easy: the point is to arrive fresh for next week.</div></div>`;
   if (done) { const xe = (lg && lg.xeff) || 'easy'; h += `<div class="ready" style="margin:8px 0 2px"><span class="lbl">How hard was it?</span>${[['easy','Easy'],['mod','Moderate'],['hard','Hard']].map(([k, l]) => `<button class="chip ${xe === k ? 'on' : ''}" data-act="xeff" data-v="${k}">${l}</button>`).join('')}</div><div class="mut" style="font-size:12px;margin:0 0 4px">Counts towards your progress. Hard handstand, wrist, bridge or cardio work gives the same areas half the sets in the next session; easy or moderate work adds to the load from other training.</div>`; }
-  if (X && X.rows.some(r => r.c === 'CON')) h += `<div class="ready" style="margin:8px 0 2px"><span class="lbl">Cardio</span>${[['', 'Easy aerobic'], ['emom', 'EMOM 20 min'], ['amrap', 'AMRAP 15 min']].map(([k, l]) => `<button class="chip ${cm === k ? 'on' : ''}" data-act="cardio" data-v="${k}">${l}</button>`).join('')}</div>${cm ? `<div class="mut" style="font-size:12px;margin:0 0 4px">${w % 4 === 0 ? 'Deload week: easy aerobic is the better choice this week. ' : ''}Hard conditioning counts as hard work for the legs and cardio: the next sessions trim those areas if needed. Not the day before a heavy handstand or press day. Stations rotate each week; tap Swap to change one.</div>${condStations(w, lg, cm)}` : ''}`;
-  if (X) h += part('x', '1 · ' + esc(X.t), esc(X.s.replace(/ · \d+ min/, '')) + ' · bodyweight only, easy effort', xr);
+  if (X && X.rows.some(r => r.c === 'CON') && dl) h += `<div class="mut" style="font-size:12.5px;margin:8px 0 4px"><b>Deload week:</b> easy aerobic only. The EMOM and AMRAP come back next week.</div>`;
+  else if (X && X.rows.some(r => r.c === 'CON')) h += `<div class="ready" style="margin:8px 0 2px"><span class="lbl">Cardio</span>${[['', 'Easy aerobic'], ['emom', 'EMOM 20 min'], ['amrap', 'AMRAP 15 min']].map(([k, l]) => `<button class="chip ${cm === k ? 'on' : ''}" data-act="cardio" data-v="${k}">${l}</button>`).join('')}</div>${cm ? `<div class="mut" style="font-size:12px;margin:0 0 4px">${w % 4 === 0 ? 'Deload week: easy aerobic is the better choice this week. ' : ''}Hard conditioning counts as hard work for the legs and cardio: the next sessions trim those areas if needed. Not the day before a heavy handstand or press day. Stations rotate each week; tap Swap to change one.</div>${condStations(w, lg, cm)}` : ''}`;
+  if (X) h += part('x', '1 · ' + esc(X.t), esc(X.s.replace(/ · \d+ min/, '')) + ' · bodyweight only, easy effort' + (dl ? ' · deload: lighter doses' : ''), xr, xoff);
   if (F) h += part('f', '2 · Flexibility: ' + esc(F.t), 'Mild tension, slow nasal breathing, never bounce', fr);
   if (R) h += part('e', '3 · Evening wind-down', '5–8 slow breaths per position', er);
   return fold('tc-practice', 'Extra practice · optional', h, `${done}/${all.length}`, false);
