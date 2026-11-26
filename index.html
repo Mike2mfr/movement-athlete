@@ -1352,7 +1352,7 @@ function renderToday(){
   const lg = getLog(w, dk);
   const ready = lg?.readiness || null;
   const low = ready === 'low';
-  h += `<div class="sess-head"><div><div class="eyebrow">${DAYSHORT[di]} · ${dateOf(w,di).toLocaleDateString(undefined,{day:'numeric',month:'short'})}</div><h2>${esc(sess.title)}</h2><div class="sub">${esc(sess.sub.replace(/ · ~2h| · 90–120 min/, ''))} · ≈ ${fmtDur(estSessionMin(w, dk))}</div></div></div>` + whyCard(w, dk);
+  h += `<div class="sess-head"><div><div class="eyebrow">${DAYSHORT[di]} · ${dateOf(w,di).toLocaleDateString(undefined,{day:'numeric',month:'short'})}</div><h2>${esc(sess.title)}</h2><div class="sub">${esc(sess.sub.replace(/ · ~2h| · 90–120 min/, ''))}</div><div class="sub" style="margin-top:2px">Total ≈ ${fmtDur(estSessionMin(w, dk))}, warm-up included</div></div></div>` + whyCard(w, dk);
   if (P.bw) h += `<div class="ready bwsw"><span class="lbl">Equipment</span><button class="chip ${sess.bw ? '' : 'on'}" data-act="bwmode" data-v="0">Full gym</button><button class="chip ${sess.bw ? 'on' : ''}" data-act="bwmode" data-v="1">Bodyweight only</button></div>` + (sess.bw ? `<div class="banner info" style="margin:0 0 12px"><div><b>Bodyweight version</b>Handstand, floor, mobility and flow work stay the same; the gym exercises are swapped. You need: ${esc(P.bw.kit.replace(/\.$/, ''))}.</div></div>` : '');
   h += `<div class="ready"><span class="lbl">How do you feel?</span>` + [['good','Good'],['ok','OK'],['low','Low']].map(([k,l]) => `<button class="chip ${ready===k?'on':''}" data-act="ready" data-v="${k}">${l}</button>`).join('') + `</div>`;
   const OA = otAdjust(w, di); h += otAdjBanner(w, di, sess.rows);
