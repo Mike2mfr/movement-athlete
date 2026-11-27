@@ -1119,47 +1119,98 @@ function focusTrim(week, dk, z){
   sess.rows.forEach(r => { if (PREPC.includes(r[0]) || /^A\d?$/.test(r[0]) || isSkillRow(r) || focusHit(r, F)) return; z.trim.add(r[0]); z.focusT.add(r[0]); });
   return z;
 }
-/* ---------- calf return plan ---------- */
-const CALF_RET = [
-  ['Week 1 · strength only, no hops', [['Double-leg calf raises, 3 s down', '3 × 15'], ['Single-leg calf raises, straight and bent knee', '3 × 10/leg'], ['Calf isometric: up on the toes of one leg on a step', '3 × 30s/leg'], ['Tibialis raises', '2 × 20']]],
-  ['Week 2 · low, soft hops', [['Single-leg calf raises, slow', '3 × 12/leg'], ['Pogo hops, small and quiet, both legs', '3 × 20'], ['Lateral line hops, both legs', '2 × 10'], ['Easy flow rope with a light bounce', '2 × 1 min']]],
-  ['Week 3 · springy again', [['Single-leg calf raises, 2 s pause at the top', '3 × 12/leg'], ['Pogo hops, higher', '3 × 30'], ['Single-leg pogos', '3 × 10/leg'], ['Easy skips and bounds', '2 × 15 m']]]
-];
-const HEAVY_PLYO = /depth|broad|sprint|bound|tuck jump|box jump|shuttle|skater|jumping pistol/;
-function retStage(week, di){
-  const s = V.ph && V.ph.ret && V.ph.ret.calf; if (!s || (V.ph.sel || []).includes('calf')) return 0;
+/* ---------- return plans: 3 weeks back after a pain or strain ---------- */
+const RET = {
+  calf: [/depth|broad|sprint|bound|tuck jump|box jump|shuttle|skater|jumping pistol/, [
+    [['Double-leg calf raises, 3 s down', '3 × 15'], ['Single-leg calf raises, straight and bent knee', '3 × 10/leg'], ['Calf isometric: up on the toes of one leg on a step', '3 × 30s/leg'], ['Tibialis raises', '2 × 20']],
+    [['Single-leg calf raises, slow', '3 × 12/leg'], ['Pogo hops, small and quiet, both legs', '3 × 20'], ['Lateral line hops, both legs', '2 × 10'], ['Easy flow rope with a light bounce', '2 × 1 min']],
+    [['Single-leg calf raises, 2 s pause at the top', '3 × 12/leg'], ['Pogo hops, higher', '3 × 30'], ['Single-leg pogos', '3 × 10/leg'], ['Easy skips and bounds', '2 × 15 m']]]],
+  ankle: [/depth|broad|sprint|bound|tuck jump|box jump|shuttle|skater|jumping pistol/, [
+    [['Ankle circles and alphabet', '2 × each foot'], ['Double-leg calf raises, slow', '3 × 15'], ['Single-leg balance', '3 × 30s/leg'], ['Tibialis raises', '2 × 20']],
+    [['Single-leg calf raises', '3 × 12/leg'], ['Single-leg balance, eyes closed', '3 × 20s/leg'], ['Pogo hops, small', '3 × 20'], ['Lateral line hops, both legs', '2 × 10']],
+    [['Single-leg pogos', '3 × 10/leg'], ['Lateral hops over a line, fast', '3 × 15'], ['Hop and stick the landing', '3 × 5/leg'], ['Easy skips', '2 × 15 m']]]],
+  knee: [/depth|broad|box jump|tuck jump|bound|sprint|jumping pistol|shrimp|skater/, [
+    [['Wall sit or Spanish squat hold', '5 × 30s'], ['Band terminal knee extensions', '3 × 15/leg'], ['Tibialis raises', '2 × 20'], ['Slow box step-ups, low box', '3 × 8/leg']],
+    [['Split squat, 3 s down', '3 × 8/leg'], ['Slow step-downs from a low box', '3 × 8/leg'], ['Backward walking', '3 × 20 m'], ['Sissy squat, holding a support, short range', '3 × 8']],
+    [['Deep split squat', '3 × 8/leg'], ['Poliquin step-ups', '3 × 10/leg'], ['Small jumps, soft landing', '3 × 5'], ['Pistol to a box', '3 × 5/leg']]]],
+  ham: [/nordic|sprint|b-twist|kick/, [
+    [['Hamstring bridge hold, heels on a bench', '3 × 30s'], ['Bodyweight RDL, slow', '3 × 10'], ['Slider leg curls, lower only', '3 × 6'], ['Gentle pancake, no pulling', '2 × 45s']],
+    [['Single-leg RDL', '3 × 8/leg'], ['Slider leg curls, full', '3 × 8'], ['Nordic lowers, top half only', '3 × 3'], ['Easy A-skips', '2 × 15 m']],
+    [['Nordic lowers, full range', '3 × 4'], ['Single-leg hamstring bridge', '3 × 10/leg'], ['Build-up runs at 70%', '4 × 40 m'], ['Easy kicks', '2 × 8/side']]]],
+  hip: [/b-twist|split|kick|flare/, [
+    [['90/90 switches', '2 × 10'], ['Clamshells', '3 × 15/side'], ['Glute bridge', '3 × 12'], ['Hip circles on all fours (CARs)', '2 × 5/side']],
+    [['Cossack squat', '3 × 6/side'], ['Copenhagen plank, short lever (knee on the bench)', '3 × 20s/side'], ['Active frog rocks', '2 × 10'], ['Side lunge', '3 × 8/side']],
+    [['Deep lunge with a twist', '2 × 6/side'], ['Copenhagen plank, long lever', '3 × 20s/side'], ['Leg swings, front and side', '2 × 10/leg'], ['Slow, easy kicks', '2 × 8/side']]]],
+  lowback: [/ab wheel|rollout|deadlift|weighted|good morning|drop-back|b-twist|walkover/, [
+    [['Curl-up with 10 s holds', '3 × 6'], ['Side plank', '3 × 20s/side'], ['Bird dog', '3 × 8/side'], ['Cat-cow', '2 × 10']],
+    [['Dead bug', '3 × 10'], ['Glute bridge march', '3 × 10'], ['Hollow body hold', '3 × 20s'], ['Jefferson curl, no weight, slow', '2 × 6']],
+    [['Bodyweight back extensions', '3 × 12'], ['Light RDL', '3 × 10'], ['Bridge push-ups', '3 × 5'], ['Ab wheel from the knees, short range', '3 × 6']]]],
+  back: [/weighted pull|one-arm pull|one-arm finisher|lever/, [
+    [['Band pull-aparts', '3 × 20'], ['Scapular pull-ups', '3 × 8'], ['Dead hang', '3 × 20s'], ['Prone Y-T-W raises', '2 × 8']],
+    [['Inverted rows', '3 × 10'], ['Band face pulls', '3 × 15'], ['Easy chin-ups', '3 × 5'], ['One-arm scapular pulls, feet assisting', '3 × 5/side']],
+    [['Pull-ups', '3 × 6'], ['Archer rows', '3 × 6/side'], ['Band-assisted one-arm lowers', '3 × 2/side'], ['Dead hang', '3 × 30s']]]],
+  neck: [/headstand|head bridge|kip|hspu|handstand push|tripod/, [
+    [['Chin tucks', '3 × 10'], ['Neck isometrics, hand pressing in 4 directions', '2 × 10s each'], ['Slow neck circles', '2 × 5/side'], ['Upper trap stretch', '2 × 30s/side']],
+    [['Neck isometrics, stronger push', '3 × 15s each'], ['Lying face-down head lifts', '3 × 10'], ['Lying face-up head lifts', '3 × 10'], ['Forehead on a cushion against the wall, light press', '3 × 15s']],
+    [['Head lifts with a light towel resistance', '3 × 12'], ['Headstand against the wall, short holds', '3 × 20s'], ['Tripod holds', '3 × 15s'], ['Handstand push-up lowers, top half only', '3 × 3']]]],
+  shoulder: [/one-arm|planche|weighted|dip|ring|lever|flare|hspu|handstand push/, [
+    [['Band external rotations', '3 × 15/side'], ['Scapular push-ups', '3 × 10'], ['Wall slides', '3 × 10'], ['Side-lying external rotation, light', '2 × 12/side']],
+    [['Plank to downward dog', '3 × 10'], ['Band face pulls', '3 × 15'], ['Wall handstand, short holds', '3 × 20s'], ['Slow push-ups', '3 × 8']],
+    [['Wall handstand shoulder taps', '3 × 10'], ['Pike push-ups', '3 × 8'], ['German hang, knees bent', '3 × 15s'], ['Shoulder opener on a bench', '2 × 30s']]]],
+  elbow: [/one-arm pull|one-arm finisher|weighted|planche|lever|archer/, [
+    [['Light wrist curls and reverse wrist curls, slow down', '3 × 15'], ['Band twists, palm up and palm down', '3 × 15'], ['Hang with feet on the floor', '3 × 20s'], ['Rice bucket', '2 min']],
+    [['Light reverse curls', '3 × 12'], ['Chin-up lowers, 5 s', '3 × 3'], ['Push-ups', '3 × 10'], ['Light hammer curls', '3 × 12']],
+    [['Pull-ups', '3 × 5'], ['Archer push-ups', '3 × 5/side'], ['Dead hang', '3 × 30s'], ['Band-assisted one-arm lowers', '2 × 2/side']]]],
+  wrist: [/one-arm|planche|flare|macaco|b-twist|press to/, [
+    [['Wrist circles and rocks', '2 × 10'], ['Finger pulses against the wall', '2 × 15'], ['Light wrist curls and reverse curls', '3 × 15'], ['Rice bucket', '2 min']],
+    [['Wrist push-ups from the knees', '3 × 10'], ['Kneeling palm push-offs', '3 × 10'], ['Fingertip plank holds', '3 × 10s'], ['Wall handstand, short holds', '3 × 20s']],
+    [['Crow holds', '3 × 15s'], ['Full wrist push-ups', '3 × 10'], ['Handstand holds', '3 × 30s'], ['Light planche leans', '3 × 15s']]]]
+};
+const RET_STEP = ['No hard or impact work for this area this week: it gets strength work first.', 'The easier exercises for this area are back at half sets; the hardest stay out.', 'Everything is back except the hardest exercises, which stay at half sets.'];
+const retName = a => (PH.areas.find(x => x[0] === a) || ['', a])[1];
+function retStage(week, di, a){
+  const s = V.ph && V.ph.ret && V.ph.ret[a]; if (!s || !RET[a] || (V.ph.sel || []).includes(a)) return 0;
   const d = Math.floor((dateOf(week, di) - parseISO(s)) / 864e5);
   return d < 0 || d >= 21 ? 0 : 1 + Math.floor(d / 7);
 }
+function retOn(week, di){ return Object.keys((V.ph && V.ph.ret) || {}).filter(a => retStage(week, di, a)); }
 function retApply(week, dk, z){
   if (!V.ph || V.ph.adapt === false) return z;
-  const di = DAYKEYS.indexOf(dk), st = retStage(week, di); if (!st || !painLive(week, di)) return z;
+  const di = DAYKEYS.indexOf(dk), A = retOn(week, di); if (!A.length || !painLive(week, di)) return z;
   const sess = sessionOf(week, dk); if (!sess) return z;
-  z.ret = st; z.painWhy = z.painWhy || {};
-  sess.rows.forEach(r => {
-    const [code, name, , , cat] = r, n = name.toLowerCase();
-    if (cat === 'MOB' || PREPC.includes(code) || /^A\d?$/.test(code) || z.skip.has(code)) return;
-    const av = PAINR.calf.avoid.test(n) && !/pistol/.test(n), hv = HEAVY_PLYO.test(n);
-    if (st === 1 && av) { z.skip.add(code); z.trim.delete(code); z.painWhy[code] = 'Calf return wk 1: skipped'; }
-    else if (st === 2 && hv) { z.skip.add(code); z.trim.delete(code); z.painWhy[code] = 'Calf return wk 2: skipped'; }
-    else if ((st === 2 && av) || (st === 3 && hv)) { z.trim.add(code); z.painWhy[code] = 'Calf return wk ' + st + ': half sets'; }
-  });
+  z.ret = true; z.painWhy = z.painWhy || {};
+  A.forEach(a => { const st = retStage(week, di, a), hvR = RET[a][0], nm = retName(a);
+    sess.rows.forEach(r => {
+      const [code, name, , , cat] = r, n = name.toLowerCase();
+      if (cat === 'MOB' || PREPC.includes(code) || /^A\d?$/.test(code) || z.skip.has(code)) return;
+      const av = PAINR[a].avoid.test(n) && !(a === 'calf' && /pistol/.test(n)), hv = hvR.test(n);
+      if (st === 1 && av) { z.skip.add(code); z.trim.delete(code); z.painWhy[code] = nm + ' return wk 1: skipped'; }
+      else if (st === 2 && hv) { z.skip.add(code); z.trim.delete(code); z.painWhy[code] = nm + ' return wk 2: skipped'; }
+      else if ((st === 2 && av) || (st === 3 && hv)) { z.trim.add(code); z.painWhy[code] = nm + ' return wk ' + st + ': half sets'; }
+    }); });
   return z;
 }
 function retBox(w, di, lg){
   if (!V.ph || V.ph.adapt === false || !painLive(w, di)) return '';
-  const st = retStage(w, di); if (!st) return '';
-  const [t, L] = CALF_RET[st - 1], dr = (lg && lg.entries && lg.entries.CRB && lg.entries.CRB.dr) || [], done = L.filter((_, i) => dr.includes(i)).length;
-  return `<div class="ex prehab ${done === L.length ? 'logged' : ''}"><div class="ex-row nolbl" style="cursor:default"><span class="ex-name">Calf return: ${esc(t)}<span class="tags"><span class="src c-MOB">Do first</span><span class="lvl">${done ? done + '/' : ''}${L.length} drills</span></span></span><span class="rx">8–10 min</span></div><div class="ex-body"><ul class="rt-list">${L.map((d, i) => `<li><button class="rt-item ${dr.includes(i) ? 'on' : ''}" data-act="rt" data-c="CRB" data-i="${i}" aria-pressed="${dr.includes(i)}"><span class="check ${dr.includes(i) ? 'on' : ''}" aria-hidden="true">${dr.includes(i) ? '✓' : ''}</span><span>${esc(d[0])} <span class="mut">· ${esc(d[1])}</span></span></button></li>`).join('')}</ul><div class="ex-note">Any sharp pain or a limp the next morning: go back one week. Calf pain again? Tick Calf above and the plan restarts when you untick it.</div></div></div>`;
+  return retOn(w, di).map(a => {
+    const st = retStage(w, di, a), L = RET[a][1][st - 1], c = 'RB-' + a, dr = (lg && lg.entries && lg.entries[c] && lg.entries[c].dr) || [], done = L.filter((_, i) => dr.includes(i)).length;
+    return `<div class="ex prehab ${done === L.length ? 'logged' : ''}"><div class="ex-row nolbl" style="cursor:default"><span class="ex-name">${esc(retName(a))} return · week ${st} of 3<span class="tags"><span class="src c-MOB">Do first</span><span class="lvl">${done ? done + '/' : ''}${L.length} drills</span></span></span><span class="rx">8–10 min</span></div><div class="ex-body"><ul class="rt-list">${L.map((d, i) => `<li><button class="rt-item ${dr.includes(i) ? 'on' : ''}" data-act="rt" data-c="${c}" data-i="${i}" aria-pressed="${dr.includes(i)}"><span class="check ${dr.includes(i) ? 'on' : ''}" aria-hidden="true">${dr.includes(i) ? '✓' : ''}</span><span>${esc(d[0])} <span class="mut">· ${esc(d[1])}</span></span></button></li>`).join('')}</ul><div class="ex-note">Sharp pain, or worse the next morning: go back one week. If it hurts again, tick it under "Any pain?"; the plan restarts when you untick it.</div></div></div>`;
+  }).join('');
 }
 function retCard(w, di){
-  const Q = V.ph, s = Q.ret && Q.ret.calf, on = (Q.sel || []).includes('calf');
-  if (on) return '';
-  const dd = s ? Math.floor((Math.max(dateOf(w, di), parseISO(iso(new Date()))) - parseISO(s)) / 864e5) : -1, st = dd < 0 || dd >= 21 ? 0 : 1 + Math.floor(dd / 7);
-  if (s && st) return `<div class="banner info" style="margin:0 0 12px"><div><b>Calf return · week ${st} of 3</b>${['No hops or jumps this week: the calf gets strength work first.', 'Low, soft hops are back at half sets; depth drops, broad jumps, sprints and bounds stay out.', 'Everything is back except the hardest jumps, which stay at half sets.'][st - 1]} The drills are in the box at the top of the session. Started ${parseISO(s).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}.<div style="margin-top:6px"><button class="chip" data-act="phret" data-v="0">End the plan</button></div></div></div>`;
-  return `<div class="ready"><span class="lbl">Calf strain?</span><button class="chip" data-act="phret" data-v="1">Start the 3-week return plan</button></div>`;
+  const Q = V.ph, R = Q.ret || {}, today = parseISO(iso(new Date()));
+  let h = '';
+  Object.keys(R).forEach(a => {
+    if (!RET[a] || (Q.sel || []).includes(a)) return;
+    const dd = Math.floor((Math.max(dateOf(w, di), today) - parseISO(R[a])) / 864e5), st = dd < 0 || dd >= 21 ? 0 : 1 + Math.floor(dd / 7);
+    if (st) h += `<div class="banner info" style="margin:0 0 12px"><div><b>${esc(retName(a))} return · week ${st} of 3</b>${RET_STEP[st - 1]} The drills are in the box at the top of the session. Started ${parseISO(R[a]).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}.<div style="margin-top:6px"><button class="chip" data-act="phret" data-a="${a}" data-v="0">End the plan</button></div></div></div>`;
+  });
+  const free = PH.areas.filter(([k]) => RET[k] && !(Q.sel || []).includes(k) && !(R[k] && Math.floor((today - parseISO(R[k])) / 864e5) < 21));
+  if (V.retPick) h += `<div class="ready" style="flex-wrap:wrap"><span class="lbl">Return plan for:</span>${free.map(([k, l]) => `<button class="chip" data-act="phret" data-a="${k}" data-v="1">${esc(l)}</button>`).join('')}<button class="chip" data-act="phret-pick">Cancel</button></div>`;
+  else if (free.length) h += `<div class="ready"><span class="lbl">Coming back from a strain?</span><button class="chip" data-act="phret-pick">Start a 3-week return plan</button></div>`;
+  return h;
 }
-function condJumpy(){ return (V.ph && ((V.ph.sel || []).includes('calf') || (V.ph.sel || []).includes('ankle'))) || retStage(V.week, V.dayIdx) && retStage(V.week, V.dayIdx) < 3; }
+function condJumpy(){ const s = (V.ph && V.ph.sel) || []; return s.includes('calf') || s.includes('ankle') || s.includes('knee') || ['calf', 'ankle', 'knee'].some(a => { const st = retStage(V.week, V.dayIdx, a); return st && st < 3; }); }
 /* ---------- phase check: a short test at the start of weeks 5 and 9 ---------- */
 const BENCH = [
   ['oawall', 'One-arm wall hold, weaker side', 's'],
@@ -1489,7 +1540,7 @@ function renderToday(){
   h += '<div class="days" role="tablist">' + DAYKEYS.map((k,i) => {
     const lg = getLog(w, k), sess = sessionOf(w, k);
     let dot = '';
-    if (lg && sess) { const sp = shortPlan(w, k, lg), tot = sess.rows.filter(r => r[2].some(Boolean) && r[0] !== 'R' && !sp.skip.has(r[0])).length, n = Object.keys(lg.entries).filter(k => k !== 'EVE' && k !== 'DAY' && k !== 'XTR' && k !== 'FLX' && k !== 'PHB' && k !== 'CRB' && !(lg.entries[k].ez && !lg.entries[k].r && !lg.entries[k].res && !(lg.entries[k].dr || []).length)).length; if (n) dot = `<em class="dot ${n >= tot ? '' : 'part'}"></em>`; }
+    if (lg && sess) { const sp = shortPlan(w, k, lg), tot = sess.rows.filter(r => r[2].some(Boolean) && r[0] !== 'R' && !sp.skip.has(r[0])).length, n = Object.keys(lg.entries).filter(k => k !== 'EVE' && k !== 'DAY' && k !== 'XTR' && k !== 'FLX' && k !== 'PHB' && !/^RB-/.test(k) && !(lg.entries[k].ez && !lg.entries[k].r && !lg.entries[k].res && !(lg.entries[k].dr || []).length)).length; if (n) dot = `<em class="dot ${n >= tot ? '' : 'part'}"></em>`; }
     const d = dateOf(w, i);
     return `<button class="day ${i===di?'sel':''} ${w===pos.week&&i===pos.dayIdx&&!pos.before?'today':''}" data-act="day" data-i="${i}" role="tab" aria-selected="${i===di}">${dot}<b>${DAYSHORT[i]}</b><span>${d.getDate()}/${d.getMonth()+1}</span></button>`;
   }).join('') + '</div>';
@@ -1626,7 +1677,7 @@ function renderToday(){
     const od = spSkip.filter(r => { const e = lg?.entries?.[r[0]]; return e && (e.r || e.res || (e.dr || []).length); }).length;
     h += fold('short-skip', SP.pain ? 'Skipped today' : SP.fit ? 'Optional if you have time' : 'Skipped today', `<p class="mut" style="margin:0 0 8px;font-size:13px">Do any of these now or later in the day. Open one and log it here: it stays in this list and still counts towards your progress.</p><div class="list">${body}</div>`, od ? od + '/' + spSkip.length + ' done' : String(spSkip.length), false);
   }
-  const tot = sess.rows.filter(r => r[2].some(Boolean) && r[0] !== 'R' && (!SP.skip.has(r[0]) || (lg && lg.entries[r[0]] && !(lg.entries[r[0]].ez && !lg.entries[r[0]].r && !lg.entries[r[0]].res && !(lg.entries[r[0]].dr || []).length)))).length, n = lg ? Object.keys(lg.entries).filter(k => k !== 'EVE' && k !== 'DAY' && k !== 'XTR' && k !== 'FLX' && k !== 'PHB' && k !== 'CRB' && !(lg.entries[k].ez && !lg.entries[k].r && !lg.entries[k].res && !(lg.entries[k].dr || []).length)).length : 0;
+  const tot = sess.rows.filter(r => r[2].some(Boolean) && r[0] !== 'R' && (!SP.skip.has(r[0]) || (lg && lg.entries[r[0]] && !(lg.entries[r[0]].ez && !lg.entries[r[0]].r && !lg.entries[r[0]].res && !(lg.entries[r[0]].dr || []).length)))).length, n = lg ? Object.keys(lg.entries).filter(k => k !== 'EVE' && k !== 'DAY' && k !== 'XTR' && k !== 'FLX' && k !== 'PHB' && !/^RB-/.test(k) && !(lg.entries[k].ez && !lg.entries[k].r && !lg.entries[k].res && !(lg.entries[k].dr || []).length)).length : 0;
   h += `<div class="complete"><span><b class="num">${n}/${tot}</b> logged</span><span class="mut">Easy twice in a row steps it up · Hard twice or missed steps it down</span></div>`;
   h += fastBanner(iso(dateOf(w, di))) + foldCard('daily', dailyCard(w, dk)) + foldCard('breath', breathCard(iso(dateOf(w, di)))) + foldCard('mind', mindCard(iso(dateOf(w, di)))) + practiceCard(w, dk);
   return h;
@@ -1691,7 +1742,7 @@ function renderProgress(){
   // adherence
   let logged = 0, planned = 0;
   const pos = todayPos();
-  for (let w = 1; w <= Math.min(12, pos.week); w++) for (let di = 0; di < 6; di++) { if (w === pos.week && di > pos.dayIdx) break; planned++; if (getLog(w, DAYKEYS[di]) && Object.keys(getLog(w, DAYKEYS[di]).entries).filter(k => k !== 'EVE' && k !== 'DAY' && k !== 'XTR' && k !== 'FLX' && k !== 'PHB' && k !== 'CRB').length) logged++; }
+  for (let w = 1; w <= Math.min(12, pos.week); w++) for (let di = 0; di < 6; di++) { if (w === pos.week && di > pos.dayIdx) break; planned++; if (getLog(w, DAYKEYS[di]) && Object.keys(getLog(w, DAYKEYS[di]).entries).filter(k => k !== 'EVE' && k !== 'DAY' && k !== 'XTR' && k !== 'FLX' && k !== 'PHB' && !/^RB-/.test(k)).length) logged++; }
   if (!pos.before) h += fold('pg-adh', 'Sessions logged', `<div><div class="num" style="font-size:22px;font-weight:700">${logged} / ${planned}</div><div class="mut" style="font-size:12.5px">Counted up to today</div></div>`, `${logged}/${planned}`, false);
   const XS = xtrStats();
   if (!pos.before) h += fold('pg-xtr', 'Extra practice', `<div style="display:flex;gap:18px;flex-wrap:wrap"><div><div class="num" style="font-size:22px;font-weight:700">${XS.days} / ${XS.sofar}</div><div class="mut" style="font-size:12.5px">days with extra practice</div></div><div><div class="num" style="font-size:22px;font-weight:700">${XS.streak}</div><div class="mut" style="font-size:12.5px">day streak</div></div><div><div class="num" style="font-size:22px;font-weight:700">${XS.items}</div><div class="mut" style="font-size:12.5px">exercises done</div></div></div><ul class="mut" style="font-size:13px;margin:10px 0 0;padding-left:18px"><li>Splits, pancake + hamstrings: ${XS.split} day${XS.split === 1 ? '' : 's'}</li><li>Bridge + shoulder opening: ${XS.bridge} day${XS.bridge === 1 ? '' : 's'}</li><li>Handstand practice: ${XS.hs} day${XS.hs === 1 ? '' : 's'}</li><li>Wrist and shoulder prehab: ${XS.wrist} day${XS.wrist === 1 ? '' : 's'}</li><li>Easy aerobic: about ${XS.cardio} min</li></ul>`, XS.days + ' days', false);
@@ -3626,7 +3677,8 @@ document.addEventListener('click', ev => {
     const box = b.closest('div[style*="margin:6px 0 10px"]'); if (box) { const all = box.querySelectorAll('[data-act=skm]'), d = box.querySelectorAll('[data-act=skm].on').length, sp = box.querySelector('.skm-n'); if (sp) sp.textContent = d + '/' + all.length + ' mastered'; }
     document.querySelectorAll('[data-act=skm][data-k="' + key + '"]').forEach(x => { if (x !== b) { x.classList.toggle('on', on); x.textContent = on ? '✓' : ''; } });
     persist('profile'); return; }
-  if (a === 'phret') { const Q = V.ph; Q.ret = Q.ret || {}; if (b.dataset.v === '1') Q.ret.calf = iso(new Date()); else delete Q.ret.calf; phSave(Q); const y = window.scrollY; render(); window.scrollTo(0, y); return; }
+  if (a === 'phret-pick') { V.retPick = !V.retPick; const y = window.scrollY; render(); window.scrollTo(0, y); return; }
+  if (a === 'phret') { const Q = V.ph, ar = b.dataset.a || 'calf'; Q.ret = Q.ret || {}; if (b.dataset.v === '1') { Q.ret[ar] = iso(new Date()); V.retPick = false; toast(retName(ar) + ' return plan started: 3 weeks'); } else delete Q.ret[ar]; phSave(Q); const y = window.scrollY; render(); window.scrollTo(0, y); return; }
   if (a === 'pst') { S.profile.pst = +b.dataset.v; persist('profile'); const y = window.scrollY; render(); window.scrollTo(0, y); toast('Pistol: ' + PST_LBL[+b.dataset.v]); return; }
   if (a === 'bench-save' || a === 'bench-apply') { const key = benchKey(V.week), B = (S.profile.bench = S.profile.bench || {})[key] = S.profile.bench[key] || { v: {} };
     if (a === 'bench-save') { const d = iso(new Date()); Object.entries(B.v).forEach(([k, val]) => { if (val === '' || val == null || isNaN(+val)) return; S.metrics.entries = S.metrics.entries.filter(x => !(x.k === k && x.bk === key)); S.metrics.entries.push({ id: 'm' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), k, v: +val, d, t: Date.now(), bk: key }); }); B.saved = d; persist('metrics'); toast('Saved to Progress'); }
@@ -3639,7 +3691,7 @@ document.addEventListener('click', ev => {
   if (a === 'phadapt') { V.ph.adapt = b.dataset.v === '1'; phSave(V.ph); const y = window.scrollY; render(); window.scrollTo(0, y); return; }
   if (a === 'phz' || a === 'phsev' || a === 'phdir' || a === 'phck' || a === 'phreset') {
     const Q = V.ph, v = b.dataset.v, t = iso(new Date());
-    if (a === 'phz') { const was = Q.sel.includes(v); Q.sel = was ? Q.sel.filter(x => x !== v) : Q.sel.concat(v); Q.ret = Q.ret || {}; if (v === 'calf') { if (was) { Q.ret.calf = t; toast('Calf return plan started: 3 weeks'); } else delete Q.ret.calf; } }
+    if (a === 'phz') { const was = Q.sel.includes(v); Q.sel = was ? Q.sel.filter(x => x !== v) : Q.sel.concat(v); Q.ret = Q.ret || {}; if (RET[v]) { if (was) { Q.ret[v] = t; toast(retName(v) + ' return plan started: 3 weeks'); } else delete Q.ret[v]; } }
     else if (a === 'phsev') Q.sev = v; else if (a === 'phdir') Q.dir = v;
     else if (a === 'phreset') delete Q.done[t];
     else { const d = Q.done[t] = Q.done[t] || {}; if (d[v]) delete d[v]; else d[v] = 1; }
