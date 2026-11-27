@@ -1514,6 +1514,8 @@ let toastT;
 function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 1800); }
 // collapsible topic: remembers open/closed across re-renders
 // turns a day card into a tap-to-open topic (closed until you open it; remembers its state)
+const HIDEABLE = [['care', 'Prehab'], ['breath', 'Breath'], ['mind', 'Mind'], ['supps', 'Fuel']];
+const hidden = k => !!(S.profile.hide && S.profile.hide[k]);
 function foldCard(key, html){
   if (!html) return '';
   let m = html.match(/^<div class="card brcard"><div class="br-head"><h3>([\s\S]*?)<\/h3><span class="mut num">([\s\S]*?)<\/span><\/div>([\s\S]*)<\/div>$/);
@@ -1557,7 +1559,7 @@ function renderToday(){
   if (dk === 'D7') {
     h += `<div class="rest-card"><div class="eyebrow">Sunday</div><h2>Rest</h2><p class="mut">Optional 10-minute reset: spinal waves 5 min, passive squat 2–5 min, passive hang 1 min. Go for a walk.</p></div>` + whyCard(w, dk);
     if (P.routines && P.routines.dw_flow) { const F = P.routines.dw_flow; h += `<details class="card" style="margin-top:10px"><summary style="cursor:pointer"><b>${esc(F[0])}</b><div class="mut" style="font-size:12.5px;margin-top:3px">${esc(F[1])}</div></summary><ul class="rt-list" style="margin-top:10px">${F[2].map(d => `<li class="rt-item" style="grid-template-columns:1fr;cursor:default"><span class="rt-txt"><b>${esc(d[0])}</b><span class="rt-dose">${esc(d[1])}</span>${d[2]?`<span class="mut">${esc(d[2])}</span>`:''}</span></li>`).join('')}</ul></details>`; }
-    h += fastBanner(iso(dateOf(w, di))) + foldCard('daily', dailyCard(w, dk)) + foldCard('breath', breathCard(iso(dateOf(w, di)))) + foldCard('mind', mindCard(iso(dateOf(w, di)))) + practiceCard(w, dk);
+    h += (hidden('supps') ? '' : fastBanner(iso(dateOf(w, di)))) + foldCard('daily', dailyCard(w, dk)) + (hidden('breath') ? '' : foldCard('breath', breathCard(iso(dateOf(w, di))))) + (hidden('mind') ? '' : foldCard('mind', mindCard(iso(dateOf(w, di))))) + practiceCard(w, dk);
     return h;
   }
   const sess = sessionOf(w, dk);
@@ -1679,7 +1681,7 @@ function renderToday(){
   }
   const tot = sess.rows.filter(r => r[2].some(Boolean) && r[0] !== 'R' && (!SP.skip.has(r[0]) || (lg && lg.entries[r[0]] && !(lg.entries[r[0]].ez && !lg.entries[r[0]].r && !lg.entries[r[0]].res && !(lg.entries[r[0]].dr || []).length)))).length, n = lg ? Object.keys(lg.entries).filter(k => k !== 'EVE' && k !== 'DAY' && k !== 'XTR' && k !== 'FLX' && k !== 'PHB' && !/^RB-/.test(k) && !(lg.entries[k].ez && !lg.entries[k].r && !lg.entries[k].res && !(lg.entries[k].dr || []).length)).length : 0;
   h += `<div class="complete"><span><b class="num">${n}/${tot}</b> logged</span><span class="mut">Easy twice in a row steps it up · Hard twice or missed steps it down</span></div>`;
-  h += fastBanner(iso(dateOf(w, di))) + foldCard('daily', dailyCard(w, dk)) + foldCard('breath', breathCard(iso(dateOf(w, di)))) + foldCard('mind', mindCard(iso(dateOf(w, di)))) + practiceCard(w, dk);
+  h += (hidden('supps') ? '' : fastBanner(iso(dateOf(w, di)))) + foldCard('daily', dailyCard(w, dk)) + (hidden('breath') ? '' : foldCard('breath', breathCard(iso(dateOf(w, di))))) + (hidden('mind') ? '' : foldCard('mind', mindCard(iso(dateOf(w, di))))) + practiceCard(w, dk);
   return h;
 }
 
@@ -1837,7 +1839,7 @@ function renderGuide(){
 
 /* ---------- SETTINGS ---------- */
 function renderSettings(){
-  let h = `<div class="section-title">Settings</div>` + syncCard() + `<div class="card">`;
+  let h = `<div class="section-title">Settings</div>` + syncCard() + `<div class="card"><h3>Sections</h3><p class="mut" style="font-size:13px;margin:0 0 8px">Hide the sections you don't use. Their tab and their cards on Today disappear; your saved data stays and comes back when you show them again. The pain selector on Today keeps adapting your sessions even with Prehab hidden.</p>${HIDEABLE.map(([k, l]) => `<div class="set-row"><span><b style="font-size:14px">${l}</b></span><div style="display:flex;gap:6px"><button class="chip ${hidden(k) ? '' : 'on'}" data-act="hidesec" data-k="${k}" data-v="0" aria-pressed="${!hidden(k)}">Show</button><button class="chip ${hidden(k) ? 'on' : ''}" data-act="hidesec" data-k="${k}" data-v="1" aria-pressed="${hidden(k)}">Hide</button></div></div>`).join('')}</div><div class="card">`;
   h += `<div class="set-row"><label for="s-start">Program start (a Monday)<span class="hint">Today's session is worked out from this date</span></label><input type="date" id="s-start" value="${esc(S.profile.startDate)}"></div>`;
   h += `<div class="set-row"><span><b style="font-size:14px">Training cycle ${cycN()}</b><span class="hint">Started ${esc(S.profile.startDate)}${(S.profile.cycles || []).length ? ' · ' + S.profile.cycles.length + ' finished' : ''}. A new 12-week cycle builds on your results.</span></span><button class="btn ghost" data-act="cyc-review">Start next cycle…</button></div>`;
   h += `<div class="set-row"><label for="s-bw">Bodyweight (kg)<span class="hint">Lower-body standards are % of bodyweight</span></label><input type="number" id="s-bw" step="0.5" inputmode="decimal" value="${esc(S.profile.bw)}" style="width:90px"></div>`;
@@ -3773,7 +3775,7 @@ function dailyCard(w, dk){
     const on = dr.includes(i);
     h += `<div class="br-item ${on ? 'done' : ''}"><button class="check ${on ? 'on' : ''}" data-act="rt" data-c="DAY" data-i="${i}" aria-pressed="${on}" aria-label="Mark done">${on ? '✓' : ''}</button><span class="br-txt"><b>${esc(title)}</b><span class="mut">${esc(detail)}</span></span>`;
     if (secs) h += `<button class="chip tm" data-act="timer" data-s="${secs}" data-l="${esc(title)}" data-k="work">⏱ ${fmtT(secs)}</button>`;
-    else if (act && act.tab) h += `<button class="btn ghost br-go" data-act="tab" data-v="${act.tab}">Open</button>`;
+    else if (act && act.tab && !hidden(act.tab)) h += `<button class="btn ghost br-go" data-act="tab" data-v="${act.tab}">Open</button>`;
     else if (act && act.open) h += `<button class="btn ghost br-go" data-act="open" data-c="${act.open}">Show</button>`;
     else if (act && act.fold) h += `<button class="btn ghost br-go" data-act="pfold" data-v="${act.fold}">Show</button>`;
     else h += '<span></span>';
@@ -4294,8 +4296,12 @@ const ICONS = {
 function render(){
   const main = $('#main');
   const focusId = document.activeElement && document.activeElement.id;
+  if (hidden(V.tab)) V.tab = 'today';
   main.innerHTML = V.tab === 'today' ? renderToday() : V.tab === 'progress' ? renderProgress() : V.tab === 'guide' ? renderGuide() : V.tab === 'supps' ? renderFuel() : V.tab === 'care' ? renderCare() : V.tab === 'breath' ? renderBreath() : V.tab === 'mind' ? renderMind() : renderSettings();
-  $('#tabs').innerHTML = [['today','Today'],['progress','Progress'],['care','Prehab'],['breath','Breath'],['mind','Mind'],['supps','Fuel'],['guide','Guide'],['settings','Settings']].map(([k,l]) => `<button class="tab ${V.tab===k?'on':''}" data-act="tab" data-v="${k}" aria-current="${V.tab===k?'page':'false'}">${ICONS[k]}<span>${l}</span></button>`).join('');
+  if (hidden(V.tab)) V.tab = 'today';
+  const TB = [['today','Today'],['progress','Progress'],['care','Prehab'],['breath','Breath'],['mind','Mind'],['supps','Fuel'],['guide','Guide'],['settings','Settings']].filter(([k]) => !hidden(k));
+  $('#tabs').style.gridTemplateColumns = `repeat(${TB.length},1fr)`;
+  $('#tabs').innerHTML = TB.map(([k,l]) => `<button class="tab ${V.tab===k?'on':''}" data-act="tab" data-v="${k}" aria-current="${V.tab===k?'page':'false'}">${ICONS[k]}<span>${l}</span></button>`).join('');
   if (focusId) { const el = document.getElementById(focusId); if (el && el.tagName === 'INPUT' && el.type === 'text') { el.focus(); const n = el.value.length; try { el.setSelectionRange(n, n); } catch(e){} } }
 }
 function entry(code){
@@ -4310,6 +4316,7 @@ function pruneEntry(code){
 document.addEventListener('click', ev => {
   const b = ev.target.closest('[data-act]'); if (!b) return;
   const a = b.dataset.act;
+  if (a === 'hidesec') { S.profile.hide = Object.assign({}, S.profile.hide || {}, { [b.dataset.k]: b.dataset.v === '1' }); persist('profile'); const y = window.scrollY; render(); window.scrollTo(0, y); return; }
   if (a === 'tab') { V.tab = b.dataset.v; try { localStorage.setItem('ma2-tab', V.tab); } catch(e){} if (V.tab === 'today') { const p = todayPos(); V.week = p.week; V.dayIdx = p.dayIdx; } render(); window.scrollTo(0,0); }
   else if (a === 'wk') { V.week = Math.min(12, Math.max(wMin(), V.week + (+b.dataset.d))); V.open = null; render(); }
   else if (a === 'day') { V.dayIdx = +b.dataset.i; V.open = null; render(); }
