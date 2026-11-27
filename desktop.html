@@ -1644,6 +1644,8 @@ function renderToday(){
   const nextL = lblFrom(sess.rows.filter(r => !SP.skip.has(r[0])), 0); spSkip.forEach(r => { LBL[r[0]] = ''; });
   const relbl = t => String(t).replace(/(?<![\w-])([A-Z]\d)(?![\w-])/g, m => !(m in LBL) ? m : LBL[m] || (sess.rows.find(r => r[0] === m) ? clean(sess.rows.find(r => r[0] === m)[1]).split(/ [(:·]/)[0].toLowerCase() : m));
   WMQ = [];
+  if (painOn().length && painLive(w, di)) { const L = painPrehab(); if (L.length) WMQ.push({ code: 'PHB', name: 'Prehab: ' + [...new Set(L.map(x => x[3]))].join(' + '), rx: L.length + ' drills · 5–8 min', note: 'For the pain you ticked. Do these first, slowly and pain-free.', lbl: '', tags: '<span class="src c-MOB">Do first</span>', items: L.map(d => [d[0], d[1], d[2]]) }); }
+  if (V.ph && V.ph.adapt !== false && painLive(w, di)) retOn(w, di).forEach(a => { const st = retStage(w, di, a); WMQ.push({ code: 'RB-' + a, name: retName(a) + ' return · week ' + st + ' of 3', rx: '4 drills · 8–10 min', note: RET_STEP[st - 1], lbl: '', tags: '<span class="src c-MOB">Do first</span>', items: RET[a][1][st - 1].map(d => [d[0], d[1], '']) }); });
   h += `<button class="btn wm-start" data-act="wm-open"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4l13 8-13 8z"/></svg>Workout mode</button>` + swCard(w, dk);
   h += '<div class="list">';
   h += prehabBox(w, di, lg) + retBox(w, di, lg);
@@ -3778,6 +3780,7 @@ function swStop(){
 /* ---------- workout mode ---------- */
 function wmSets(rx){ const m = String(rx).match(/(\d+)\s*(?:rounds?|sets?)/i) || String(rx).match(/^(\d+)\s*×/); return m ? Math.min(10, +m[1]) : 1; }
 function wmRest(rx, note){ const t = timerSpec(rx, note); if (t && t.rest) return t.rest; const m = String(note).match(/Rest (\d+)\s*s/i) || String(note).match(/Rest (\d+)\s*min/i); return m ? (/min/i.test(m[0]) ? +m[1] * 60 : +m[1]) : 90; }
+function wmDone(x, lg){ const y = lg && lg.entries[x.code]; if (!y) return false; return x.items ? (y.dr || []).length >= x.items.length : !!(y.r || (y.sd || 0) >= wmSets(x.rx)); }
 function wmResting(){ return !!(TM && TM.kind === 'rest' && V.wm); }
 function wmRestBlock(q, sd, n){
   const items = [], rd = V.wm.rd || [];
@@ -3798,18 +3801,18 @@ function wmRender(){
   document.body.classList.add('wm-on'); o.hidden = false;
   const Q = WMQ, i = Math.min(V.wm.i, Q.length - 1); if (!Q.length) { V.wm = null; o.hidden = true; return; }
   const q = Q[i], lg = getLog(V.week, DAYKEYS[V.dayIdx]), e = (lg && lg.entries[q.code]) || {}, n = wmSets(q.rx), sd = Math.min(n, e.sd || 0), nx = Q[i + 1];
-  const doneOf = x => { const y = lg && lg.entries[x.code]; return y && (y.r || (y.sd || 0) >= wmSets(x.rx)); };
+  const doneOf = x => wmDone(x, lg), fin = q.items ? true : sd >= n;
   const bars = Q.map((x, j) => `<i class="${doneOf(x) ? 'ok' : j === i ? 'cur' : ''}"></i>`).join('');
   const d = dateOf(V.week, V.dayIdx);
   o.innerHTML = `<div class="wm-in"><div class="wm-top"><button class="icon-btn" data-act="wm-close" aria-label="Close workout mode">✕</button><div style="text-align:center"><div class="eyebrow">Week ${V.week} · ${d.toLocaleDateString(undefined, { weekday: 'long' })}</div><div class="mut num" style="font-size:13px">Exercise ${i + 1} of ${Q.length}</div></div><span style="width:44px"></span></div>
     <div class="wm-bars">${bars}</div>
     <div class="wm-card"><div style="display:flex;gap:8px;align-items:center">${q.lbl ? `<span class="code">${esc(q.lbl)}</span>` : ''}${q.tags}</div><h2 class="wm-name">${esc(q.name)}</h2><div class="num wm-rx">${esc(q.rx)}</div>${q.note ? `<p class="wm-note">${esc(q.note)}</p>` : ''}
-      <div class="wm-sets" role="group" aria-label="Sets">${Array.from({ length: n }, (_, j) => `<button class="wm-set ${j < sd ? 'ok' : j === sd ? 'cur' : ''}" data-act="wm-set" data-n="${j + 1}" aria-label="Set ${j + 1}${j < sd ? ', done' : ''}">${j + 1}</button>`).join('')}</div>
+      ${q.items ? `<div class="wm-rl" style="margin-top:6px">${q.items.map((d, j) => { const on = (e.dr || []).includes(j); return `<button class="wm-ri ${on ? 'on' : ''}" data-act="rt" data-c="${q.code}" data-i="${j}" aria-pressed="${on}"><span class="check ${on ? 'on' : ''}" aria-hidden="true">${on ? '✓' : ''}</span><span><b>${esc(d[0])}</b> <span class="mut">· ${esc(d[1])}</span>${d[2] ? `<br><span class="mut" style="font-size:12.5px">${esc(d[2])}</span>` : ''}</span></button>`; }).join('')}</div>` : `      <div class="wm-sets" role="group" aria-label="Sets">${Array.from({ length: n }, (_, j) => `<button class="wm-set ${j < sd ? 'ok' : j === sd ? 'cur' : ''}" data-act="wm-set" data-n="${j + 1}" aria-label="Set ${j + 1}${j < sd ? ', done' : ''}">${j + 1}</button>`).join('')}</div>`}
 </div>
-    ${wmRestBlock(q, sd, n)}
-    <div class="wm-rate">${RATINGS.slice(0, 3).map(([k, l]) => `<button class="chip ${e.r === k ? 'on' : ''}" data-act="rate" data-c="${q.code}" data-v="${k}">${l}</button>`).join('')}</div>
+    ${q.items ? '' : wmRestBlock(q, sd, n)}
+    <div class="wm-rate" ${q.items ? 'style="display:none"' : ''}>${RATINGS.slice(0, 3).map(([k, l]) => `<button class="chip ${e.r === k ? 'on' : ''}" data-act="rate" data-c="${q.code}" data-v="${k}">${l}</button>`).join('')}</div>
     ${nx ? `<div class="wm-next"><span class="eyebrow" style="margin:0">Next</span><span>${esc(nx.name)} · ${esc(nx.rx)}</span></div>` : '<div class="wm-next"><span>Last exercise: then the cool-down in the list.</span></div>'}
-    <div class="wm-nav"><button class="btn ghost" data-act="wm-go" data-d="-1" ${i === 0 ? 'disabled' : ''} aria-label="Previous exercise">‹</button><button class="btn wm-cta" data-act="${sd >= n ? (nx ? 'wm-go' : 'wm-close') : 'wm-set'}" data-d="1" data-n="${sd + 1}">${sd >= n ? (nx ? 'Next exercise →' : 'Finish') : 'Set ' + (sd + 1) + ' done'}</button><button class="btn ghost" data-act="wm-go" data-d="1" ${nx ? '' : 'disabled'} aria-label="Next exercise">›</button></div></div>`;
+    <div class="wm-nav"><button class="btn ghost" data-act="wm-go" data-d="-1" ${i === 0 ? 'disabled' : ''} aria-label="Previous exercise">‹</button><button class="btn wm-cta" data-act="${fin ? (nx ? 'wm-go' : 'wm-close') : 'wm-set'}" data-d="1" data-n="${sd + 1}">${fin ? (nx ? 'Next exercise →' : 'Finish') : 'Set ' + (sd + 1) + ' done'}</button><button class="btn ghost" data-act="wm-go" data-d="1" ${nx ? '' : 'disabled'} aria-label="Next exercise">›</button></div></div>`;
 }
 /* ---------- weekly recap ---------- */
 function recapData(w){
@@ -3913,7 +3916,7 @@ document.addEventListener('click', ev => {
   const b = ev.target.closest('[data-act]'); if (!b) return;
   const a = b.dataset.act, F = FS();
   if (a === 'pr-close') { const o = document.getElementById('pr-ov'); if (o) o.hidden = true; return; }
-  if (a === 'wm-open') { V.wm = { i: 0 }; const lg = getLog(V.week, DAYKEYS[V.dayIdx]); const j = WMQ.findIndex(x => { const y = lg && lg.entries[x.code]; return !(y && (y.r || (y.sd || 0) >= wmSets(x.rx))); }); V.wm.i = j < 0 ? 0 : j; wmRender(); return; }
+  if (a === 'wm-open') { V.wm = { i: 0 }; const lg = getLog(V.week, DAYKEYS[V.dayIdx]); const j = WMQ.findIndex(x => !wmDone(x, lg)); V.wm.i = j < 0 ? 0 : j; wmRender(); return; }
   if (a === 'wm-close') { V.wm = null; wmRender(); render(); return; }
   if (a === 'wm-more') { if (TM) { TM.total += 15; TM.over = false; TM.lastWarn = null; } wmRender(); return; }
   if (a === 'wm-skip') { TM = null; cancelAnimationFrame(tmRaf); tmRender(); wmRender(); return; }
