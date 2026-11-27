@@ -71,7 +71,53 @@ h1,h2,h3{margin:0;text-wrap:balance}
 .chip.miss.on{background:var(--bad);border-color:var(--bad);color:#fff}
 .list{display:flex;flex-direction:column;gap:8px}
 .ex{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
-.ex.prehab .ex-body{padding-left:14px}.ex.prehab{border:2px solid color-mix(in srgb,var(--good) 55%,var(--line));background:color-mix(in srgb,var(--good) 7%,var(--surface))}.ex.logged{border-color:color-mix(in srgb,var(--good) 45%,var(--line))}.ex.off{background:color-mix(in srgb,var(--line) 55%,var(--surface));border-style:dashed}.ex.off .ex-name,.ex.off .code{opacity:.6}.ex.off .ex-row .rx{opacity:.6}.rt-item.xoff{background:color-mix(in srgb,var(--line) 55%,var(--surface));border-style:dashed;cursor:default}.rt-item.xoff b{opacity:.75}.offtag{font-size:11.5px;font-weight:600;padding:2px 7px;border-radius:999px;background:var(--surface);border:1px dashed var(--line);color:var(--muted, #777)}
+.ex.prehab .ex-body{padding-left:14px}
+.toast{z-index:9}
+.wm-start{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;margin:0 0 12px;min-height:48px;font-size:15px}
+#wm{position:fixed;inset:0;z-index:6;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch}
+body.wm-on{overflow:hidden}
+.wm-in{max-width:560px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top,0px)) 16px 160px;display:flex;flex-direction:column;gap:14px}
+.wm-top{display:flex;align-items:center;justify-content:space-between}
+.wm-bars{display:flex;gap:4px}.wm-bars i{flex:1;height:5px;border-radius:3px;background:var(--line)}.wm-bars i.ok{background:var(--good)}.wm-bars i.cur{background:var(--accent)}
+.wm-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:8px}
+.wm-name{margin:0;font-family:var(--f-display);font-weight:800;font-size:34px;line-height:1.02;text-transform:uppercase}
+.wm-rx{font-size:18px;font-weight:700}.wm-note{margin:0;font-size:14px;color:var(--mut);line-height:1.45}
+.wm-sets{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.wm-set{width:52px;height:52px;border-radius:50%;border:2px solid var(--line);background:var(--surface);color:var(--fg);font:700 16px var(--f-num);cursor:pointer}
+.wm-set.ok{background:var(--good);border-color:var(--good);color:#fff}.wm-set.cur{border-color:var(--accent)}
+.wm-rate{display:flex;gap:8px}.wm-rate .chip{flex:1;justify-content:center;min-height:44px}
+.wm-next{background:var(--surface2);border-radius:14px;padding:12px 14px;display:flex;gap:12px;align-items:center;font-size:14px;font-weight:600}
+.wm-nav{display:flex;gap:8px}.wm-nav .ghost{width:56px;font-size:22px}.wm-cta{flex:1;min-height:58px;font-size:17px}
+#pr-ov{position:fixed;inset:0;z-index:10;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:20px}
+#pr-ov[hidden]{display:none}
+.pr-card{position:relative;overflow:hidden;background:#1b1d22;color:#f2f0eb;border-radius:22px;padding:28px 22px 22px;max-width:340px;width:100%;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;animation:prIn .35s ease-out}
+.pr-eb{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#e7c457;font-weight:700}
+.pr-n{font-family:var(--f-display);font-weight:800;font-size:28px;text-transform:uppercase;line-height:1.05}
+.pr-v{font-family:var(--f-num);font-size:42px;font-weight:700}.pr-s{font-size:13px;color:#c9c6bf;margin-bottom:10px}
+.pr-cf{position:absolute;inset:0;pointer-events:none}.pr-cf i{position:absolute;top:-12px;width:7px;height:12px;border-radius:2px;animation:prFall 1.6s ease-in forwards}
+@keyframes prFall{to{transform:translateY(420px) rotate(540deg);opacity:0}}@keyframes prIn{from{transform:scale(.85);opacity:0}}
+@media (prefers-reduced-motion:reduce){.pr-card,.pr-cf i{animation:none}.pr-cf{display:none}}
+.sw-dial{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:220px;height:220px;margin:12px auto 0;border-radius:50%;border:10px solid var(--accent);background:var(--surface);color:var(--fg);cursor:pointer}
+.sw-dial.run{border-color:var(--good)}.sw-dial .num{font-size:54px;font-weight:700}.sw-h{font-size:12px;font-weight:600;color:var(--mut);text-transform:uppercase;letter-spacing:.08em}
+.sw-box{background:var(--surface2);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column}.sw-box .mut{font-size:12px}.sw-box b{font-size:20px}
+.rw-grid,.bd-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.rw{background:var(--surface2);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;border:2px solid transparent}.rw.new{border-color:var(--accent)}
+.bd-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.bd{display:flex;flex-direction:column;align-items:center;gap:5px;text-align:center}
+.bd-i{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--f-display);font-weight:800;font-size:19px;background:var(--surface2);color:var(--mut);border:2px solid var(--line)}
+.bd.on .bd-i{background:#1b1d22;color:#e7c457;border-color:var(--accent)}.bd-l{font-size:11px;line-height:1.25;color:var(--mut)}.bd.on .bd-l{color:var(--fg)}
+.st-row,.st-head{display:grid;grid-template-columns:118px 1fr;align-items:center;gap:6px;padding:5px 0}.st-head{font-size:10.5px;color:var(--mut);font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:0}
+.st-head .st-dots span{text-align:center}.st-n{font-weight:700;font-size:13.5px}.st-dots{display:grid}
+.st-d{justify-self:center;width:30px;height:30px;border-radius:50%;background:var(--surface2);border:3px solid var(--surface2);box-sizing:border-box;display:flex;align-items:center;justify-content:center;font:700 9.5px var(--f-num);color:var(--fg)}
+.st-d.ok{background:var(--good);border-color:var(--good);color:#fff;font-size:12px}.st-d.cur{background:var(--surface);border-color:var(--accent)}
+.rc-card{background:#1b1d22;color:#f2f0eb;border-radius:18px;padding:20px 18px;display:flex;flex-direction:column}
+.rc-eb{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#e7c457;font-weight:700}.rc-t{font-family:var(--f-display);font-weight:800;font-size:38px;text-transform:uppercase;line-height:1}
+.rc-d{font-size:12px;color:#9a9c9f;text-align:right}.rc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:14px 0}
+.rc-s{background:#262b33;border-radius:12px;padding:12px;display:flex;flex-direction:column}.rc-s b{font-size:24px}.rc-s span{font-size:12px;color:#c9c6bf}
+.rc-eb2{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#9a9c9f;font-weight:700;margin:4px 0 6px}
+.rc-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin-bottom:10px}.rc-days div{display:flex;flex-direction:column;align-items:center;gap:3px}.rc-days i{width:100%;height:28px;border-radius:7px;background:#3a3d44}.rc-days i.ok{background:#5fbf86}.rc-days i.x{background:#e7c457}.rc-days span{font-size:11px;color:#9a9c9f}
+.rc-l{font-size:14px;line-height:1.55}
+.cb-list{margin:10px 0 12px;padding-left:22px;font-size:15px;font-weight:600;line-height:1.9}
+.ex.prehab{border:2px solid color-mix(in srgb,var(--good) 55%,var(--line));background:color-mix(in srgb,var(--good) 7%,var(--surface))}.ex.logged{border-color:color-mix(in srgb,var(--good) 45%,var(--line))}.ex.off{background:color-mix(in srgb,var(--line) 55%,var(--surface));border-style:dashed}.ex.off .ex-name,.ex.off .code{opacity:.6}.ex.off .ex-row .rx{opacity:.6}.rt-item.xoff{background:color-mix(in srgb,var(--line) 55%,var(--surface));border-style:dashed;cursor:default}.rt-item.xoff b{opacity:.75}.offtag{font-size:11.5px;font-weight:600;padding:2px 7px;border-radius:999px;background:var(--surface);border:1px dashed var(--line);color:var(--muted, #777)}
 .ex-row.nolbl ~ .tm-row{padding-left:14px}.ex-row.nolbl ~ .rs-strip{margin-left:14px}.ex-row.nolbl{grid-template-columns:1fr auto;padding-left:14px}.ex-row{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:start;padding:12px 12px 12px 10px;cursor:pointer;width:100%;background:none;border:0;text-align:left}
 .code{font-family:var(--f-num);font-size:12px;font-weight:700;color:var(--mut);padding-top:2px}
 .ex.logged .code{color:var(--good)}
@@ -1554,7 +1600,8 @@ function renderToday(){
   if (dk === 'D7') {
     h += `<div class="rest-card"><div class="eyebrow">Sunday</div><h2>Rest</h2><p class="mut">Optional 10-minute reset: spinal waves 5 min, passive squat 2–5 min, passive hang 1 min. Go for a walk.</p></div>` + whyCard(w, dk);
     if (P.routines && P.routines.dw_flow) { const F = P.routines.dw_flow; h += `<details class="card" style="margin-top:10px"><summary style="cursor:pointer"><b>${esc(F[0])}</b><div class="mut" style="font-size:12.5px;margin-top:3px">${esc(F[1])}</div></summary><ul class="rt-list" style="margin-top:10px">${F[2].map(d => `<li class="rt-item" style="grid-template-columns:1fr;cursor:default"><span class="rt-txt"><b>${esc(d[0])}</b><span class="rt-dose">${esc(d[1])}</span>${d[2]?`<span class="mut">${esc(d[2])}</span>`:''}</span></li>`).join('')}</ul></details>`; }
-    h += (hidden('supps') ? '' : fastBanner(iso(dateOf(w, di)))) + foldCard('daily', dailyCard(w, dk)) + (hidden('breath') ? '' : foldCard('breath', breathCard(iso(dateOf(w, di))))) + (hidden('mind') ? '' : foldCard('mind', mindCard(iso(dateOf(w, di))))) + practiceCard(w, dk);
+      h += recapCard(w) + questCard(w);
+  h += (hidden('supps') ? '' : fastBanner(iso(dateOf(w, di)))) + foldCard('daily', dailyCard(w, dk)) + (hidden('breath') ? '' : foldCard('breath', breathCard(iso(dateOf(w, di))))) + (hidden('mind') ? '' : foldCard('mind', mindCard(iso(dateOf(w, di))))) + practiceCard(w, dk);
     return h;
   }
   const sess = sessionOf(w, dk);
@@ -1588,6 +1635,8 @@ function renderToday(){
   };
   const nextL = lblFrom(sess.rows.filter(r => !SP.skip.has(r[0])), 0); spSkip.forEach(r => { LBL[r[0]] = ''; });
   const relbl = t => String(t).replace(/(?<![\w-])([A-Z]\d)(?![\w-])/g, m => !(m in LBL) ? m : LBL[m] || (sess.rows.find(r => r[0] === m) ? clean(sess.rows.find(r => r[0] === m)[1]).split(/ [(:·]/)[0].toLowerCase() : m));
+  WMQ = [];
+  h += `<button class="btn wm-start" data-act="wm-open"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4l13 8-13 8z"/></svg>Workout mode</button>` + swCard(w, dk);
   h += '<div class="list">';
   h += prehabBox(w, di, lg) + retBox(w, di, lg);
   const rowCard = (row, opt) => {
@@ -1638,6 +1687,7 @@ function renderToday(){
     const off = !planned || planned === '—';
     if (off) tags = `<span class="offtag">${isDeload(w) ? 'Rest this deload week' : 'Not this week'}</span>` + tags;
     h += `<div class="ex ${off ? 'off' : ''} ${e && (e.r || e.res || (e.dr || []).length) ? 'logged' : ''}"><button class="ex-row${code in LBL && !LBL[code] ? ' nolbl' : ''}" data-act="open" data-c="${code}" aria-expanded="${open}">${code in LBL && !LBL[code] ? '' : `<span class="code">${esc(code in LBL ? LBL[code] : code)}</span>`}<span class="ex-name">${esc(ezOn ? (ezGeneric(ezv[0]) ? name : ezv[0]) : name)}${ezOn ? `<span class="mut" style="display:block;font-size:12px;font-weight:500">${ezGeneric(ezv[0]) ? 'Easier: ' + esc(ezv[0].toLowerCase()) : 'instead of: ' + esc(name)}</span>` : ''}<div class="tags">${tags}</div></span><span class="rx">${esc(rx||'—')}${changed?`<span class="was">${esc(planned)}</span>`:''}</span></button>`;
+    if (!off && !opt && planned && !/^(TEST)$/.test(planned) && !/\(optional\)|· optional/i.test(nameRaw + ' ' + planned)) WMQ.push({ code, name, rx: String(rx), note: relbl(isPct ? withKg(note) : note), lbl: code in LBL ? LBL[code] : code, tags: badges(src), hs: hsRestOf(row, w, SP), st: RSM[code] ? RSM[code][0] + ' · ' + RSM[code][1] : '' });
     h += altChips(w, dk, code);
     h += skChips(w, dk, code);
     if (dk === 'D4') h += pstChips(row);
@@ -1676,6 +1726,7 @@ function renderToday(){
   }
   const tot = sess.rows.filter(r => r[2].some(Boolean) && r[0] !== 'R' && (!SP.skip.has(r[0]) || (lg && lg.entries[r[0]] && !(lg.entries[r[0]].ez && !lg.entries[r[0]].r && !lg.entries[r[0]].res && !(lg.entries[r[0]].dr || []).length)))).length, n = lg ? Object.keys(lg.entries).filter(k => k !== 'EVE' && k !== 'DAY' && k !== 'XTR' && k !== 'FLX' && k !== 'PHB' && !/^RB-/.test(k) && !(lg.entries[k].ez && !lg.entries[k].r && !lg.entries[k].res && !(lg.entries[k].dr || []).length)).length : 0;
   h += `<div class="complete"><span><b class="num">${n}/${tot}</b> logged</span><span class="mut">Easy twice in a row steps it up · Hard twice or missed steps it down</span></div>`;
+  h += ((dk === 'D4' || dk === 'D6') ? comboCard() : '') + questCard(w);
   h += (hidden('supps') ? '' : fastBanner(iso(dateOf(w, di)))) + foldCard('daily', dailyCard(w, dk)) + (hidden('breath') ? '' : foldCard('breath', breathCard(iso(dateOf(w, di))))) + (hidden('mind') ? '' : foldCard('mind', mindCard(iso(dateOf(w, di))))) + practiceCard(w, dk);
   return h;
 }
@@ -1703,8 +1754,9 @@ function renderProgress(){
   const bst = brStats();
   const ms = mdStats();
   let h = cycProgress();
-  h += fold('pg-breath', 'Breathwork', `<div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><div class="mut" style="font-size:13px">${bst.streak}-day streak · ${bst.sess} sessions · BOLT ${bst.lastB ? bst.lastB.v + 's' : 'not tested yet'}</div><button class="btn ghost" data-act="bprog">Details</button></div>`, bst.streak + '-day streak', false);
-  h += fold('pg-mind', 'Meditation', `<div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><div class="mut" style="font-size:13px">${ms.streak}-day streak · ${ms.n} practices done · ${ms.j} journal entr${ms.j === 1 ? 'y' : 'ies'}</div><button class="btn ghost" data-act="mview" data-v="today">Open</button></div>`, ms.streak + '-day streak', false);
+  { const tp = todayPos(), rw = tp.before ? 1 : Math.min(12, tp.week); h += skillTree() + fold('pg-rec', 'Records wall', recordsWall(), '', true) + badgesCard() + fold('pg-recap', 'Week ' + rw + ' recap', recapCard(rw), '', false); }
+  if (!hidden('breath')) h += fold('pg-breath', 'Breathwork', `<div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><div class="mut" style="font-size:13px">${bst.streak}-day streak · ${bst.sess} sessions · BOLT ${bst.lastB ? bst.lastB.v + 's' : 'not tested yet'}</div><button class="btn ghost" data-act="bprog">Details</button></div>`, bst.streak + '-day streak', false);
+  if (!hidden('mind')) h += fold('pg-mind', 'Meditation', `<div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><div class="mut" style="font-size:13px">${ms.streak}-day streak · ${ms.n} practices done · ${ms.j} journal entr${ms.j === 1 ? 'y' : 'ies'}</div><button class="btn ghost" data-act="mview" data-v="today">Open</button></div>`, ms.streak + '-day streak', false);
   h += `<div class="section-title">Skill ladder</div><p class="mut" style="margin:0 0 8px;font-size:13.5px">Your level in each handstand element. Today's session uses it. Move up only when you meet the requirement.</p>`;
   ['Balance','Movement','Specialist','Elements'].forEach(ph => {
     const els = Object.values(EL).filter(e => e.phase === ph); if (!els.length) return;
@@ -3667,9 +3719,192 @@ setInterval(() => {
   const b = document.getElementById('fast-bar'); if (b) b.style.width = Math.min(100, ms / 36000 / goal).toFixed(1) + '%';
   const m = document.getElementById('fast-mini'); if (m) m.textContent = fmtHM(ms) + ' / ' + goal + 'h';
 }, 30000);
+/* ================= fun & interactive ================= */
+let WMQ = [];
+const RECAP_SKIP = /^(EVE|DAY|XTR|FLX|PHB|HST|RB-.*)$/;
+/* ---------- personal records ---------- */
+function mBest(k, before){ const m = METRICS.find(x => x.k === k); if (!m) return null; const e = S.metrics.entries.filter(x => x.k === k && (!before || x.t < before)).map(x => +x.v); return e.length ? (m.lower ? Math.min(...e) : Math.max(...e)) : null; }
+function prCheck(k, v){
+  const m = METRICS.find(x => x.k === k); if (!m || m.flat || v == null || isNaN(v)) return;
+  const b = mBest(k); if (b == null) return;
+  if (m.lower ? v < b : v > b) prShow(m.n, v + (m.u === 's' ? 's' : ' ' + m.u), (m.lower ? '' : '+') + (Math.round((v - b) * 10) / 10) + ' ' + m.u + ' on your best (' + b + ' ' + m.u + ')');
+}
+function prShow(name, val, sub){
+  try { navigator.vibrate && navigator.vibrate([60, 40, 120]); } catch (e) {}
+  try { tmBeep(660, 1); setTimeout(() => tmBeep(880, 1), 160); } catch (e) {}
+  const cf = Array.from({ length: 26 }, (_, i) => `<i style="left:${(i * 37) % 100}%;background:${['#e7c457', '#5fbf86', '#76a3d8', '#e57a45', '#a389cf'][i % 5]};animation-delay:${(i % 7) * 0.08}s"></i>`).join('');
+  let o = document.getElementById('pr-ov'); if (!o) { o = document.createElement('div'); o.id = 'pr-ov'; document.body.appendChild(o); }
+  o.innerHTML = `<div class="pr-card" role="dialog" aria-label="New record"><div class="pr-cf" aria-hidden="true">${cf}</div><svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#e7c457" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4zM7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3"/></svg><div class="pr-eb">New record</div><div class="pr-n">${esc(name)}</div><div class="pr-v">${esc(val)}</div><div class="pr-s">${esc(sub)}</div><button class="btn" data-act="pr-close">Nice!</button></div>`;
+  o.hidden = false;
+}
+function recordsWall(){
+  const now = Date.now(), rows = [];
+  METRICS.forEach(m => { if (m.flat) return; const E = S.metrics.entries.filter(x => x.k === m.k); if (!E.length) return; const best = E.reduce((a, x) => (m.lower ? +x.v < +a.v : +x.v > +a.v) ? x : a); rows.push({ m, best, fresh: now - (best.t || parseISO(best.d).getTime()) < 7 * 864e5 }); });
+  HOLDK.forEach(([k, l]) => { const H = (S.profile.holds || []).filter(x => x.k === k); if (!H.length) return; const best = H.reduce((a, x) => x.v > a.v ? x : a); rows.push({ m: { n: 'Hold timer · ' + l, u: 's' }, best: { v: best.v, d: best.d, t: best.t }, fresh: now - best.t < 7 * 864e5 }); });
+  if (!rows.length) return '<p class="mut" style="font-size:13px;margin:0">Log benchmarks or use the hold timer: your bests show up here.</p>';
+  rows.sort((a, b) => (b.best.t || 0) - (a.best.t || 0));
+  const more = rows.length > 6 && !V.rwAll ? rows.length - 6 : 0;
+  return `<div class="rw-grid">${rows.slice(0, more ? 6 : rows.length).map(r => `<div class="rw ${r.fresh ? 'new' : ''}"><span class="mut" style="font-size:12px;line-height:1.3">${esc(r.m.n)}</span><span class="num" style="font-size:20px;font-weight:700">${esc(String(r.best.v))}${r.m.u === 's' ? 's' : ' ' + esc(r.m.u)}</span><span class="mut" style="font-size:11.5px">${parseISO(r.best.d).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}${r.fresh ? ' · new' : ''}</span></div>`).join('')}</div>${rows.length > 6 ? `<button class="chip" data-act="rw-all" style="margin-top:10px">${more ? 'Show all ' + rows.length : 'Show fewer'}</button>` : ''}`;
+}
+/* ---------- hold timer ---------- */
+const HOLDK = [['hs', 'Freestanding'], ['oawall', 'One-arm wall'], ['oaL', 'One-arm, left'], ['oaR', 'One-arm, right']];
+let SW = { k: 'hs', run: false, t0: 0, last: 0, spoke: 0 };
+function swBest(k, day){ const H = (S.profile.holds || []).filter(x => x.k === k && (!day || x.d === day)); return H.length ? Math.max(...H.map(x => x.v)) : null; }
+function swCard(w, dk){
+  const today = iso(new Date()), H = (S.profile.holds || []).filter(x => x.k === SW.k && x.d === today), bt = swBest(SW.k, today), ba = swBest(SW.k), tot = (S.profile.holds || []).filter(x => x.d === today).reduce((a, x) => a + x.v, 0), voice = S.profile.swVoice !== false;
+  const body = `<div class="tm-row" role="group" aria-label="Hold type" style="flex-wrap:wrap">${HOLDK.map(([k, l]) => `<button class="chip ${SW.k === k ? 'on' : ''}" data-act="sw-k" data-k="${k}" aria-pressed="${SW.k === k}">${l}</button>`).join('')}</div>
+    <button class="sw-dial ${SW.run ? 'run' : ''}" data-act="sw-go" aria-label="${SW.run ? 'Stop the hold' : 'Start the hold'}"><span class="num" id="sw-t">${(SW.run ? (performance.now() - SW.t0) / 1000 : SW.last).toFixed(1)}</span><span class="sw-h">${SW.run ? 'Tap when you come down' : 'Tap when you are up'}</span></button>
+    <div class="grid2" style="margin:10px 0"><div class="sw-box"><span class="mut">Best today</span><b class="num">${bt != null ? bt + 's' : '–'}</b></div><div class="sw-box"><span class="mut">All-time best</span><b class="num" style="color:var(--accent)">${ba != null ? ba + 's' : '–'}</b></div></div>
+    ${H.length ? `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px">${H.map((x, i) => `<button class="chip ${x.v === bt ? 'on' : ''}" data-act="sw-del" data-t="${x.t}" title="Tap to delete">${x.v}s</button>`).join('')}</div>` : ''}
+    <div class="mut" style="font-size:12.5px;margin-bottom:8px">Time upside down today (timed holds): ${fmtT(Math.round(tot))}</div>
+    <div class="ready"><span class="lbl">Voice count every 5 s</span><button class="chip ${voice ? 'on' : ''}" data-act="sw-voice">${voice ? 'On' : 'Off'}</button><button class="chip" data-act="sw-save">Save today's bests to Progress</button></div>`;
+  return fold('sw', 'Hold timer', body, ba != null ? 'best ' + ba + 's' : '', false);
+}
+function swSay(n){ try { if (S.profile.swVoice === false || !window.speechSynthesis) return; const u = new SpeechSynthesisUtterance(String(n)); u.rate = 1.2; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch (e) {} }
+setInterval(() => { if (!SW.run) return; const s = (performance.now() - SW.t0) / 1000, el = document.getElementById('sw-t'); if (el) el.textContent = s.toFixed(1); const f = Math.floor(s / 5) * 5; if (f > 0 && f !== SW.spoke) { SW.spoke = f; swSay(f); } }, 100);
+function swStop(){
+  const v = Math.round((performance.now() - SW.t0) / 100) / 10; SW.run = false; SW.last = v; if (v < 1) return;
+  const prev = swBest(SW.k); S.profile.holds = (S.profile.holds || []).concat([{ k: SW.k, v, d: iso(new Date()), t: Date.now() }]); persist('profile');
+  if (prev != null && v > prev) prShow('Hold timer · ' + HOLDK.find(x => x[0] === SW.k)[1], v + 's', '+' + (Math.round((v - prev) * 10) / 10) + ' s on your best (' + prev + ' s)');
+}
+/* ---------- workout mode ---------- */
+function wmSets(rx){ const m = String(rx).match(/(\d+)\s*(?:rounds?|sets?)/i) || String(rx).match(/^(\d+)\s*×/); return m ? Math.min(10, +m[1]) : 1; }
+function wmRest(rx, note){ const t = timerSpec(rx, note); if (t && t.rest) return t.rest; const m = String(note).match(/Rest (\d+)\s*s/i) || String(note).match(/Rest (\d+)\s*min/i); return m ? (/min/i.test(m[0]) ? +m[1] * 60 : +m[1]) : 90; }
+function wmRender(){
+  let o = document.getElementById('wm'); if (!V.wm) { if (o) o.hidden = true; document.body.classList.remove('wm-on'); return; }
+  if (!o) { o = document.createElement('div'); o.id = 'wm'; document.body.appendChild(o); }
+  document.body.classList.add('wm-on'); o.hidden = false;
+  const Q = WMQ, i = Math.min(V.wm.i, Q.length - 1); if (!Q.length) { V.wm = null; o.hidden = true; return; }
+  const q = Q[i], lg = getLog(V.week, DAYKEYS[V.dayIdx]), e = (lg && lg.entries[q.code]) || {}, n = wmSets(q.rx), sd = Math.min(n, e.sd || 0), nx = Q[i + 1];
+  const doneOf = x => { const y = lg && lg.entries[x.code]; return y && (y.r || (y.sd || 0) >= wmSets(x.rx)); };
+  const bars = Q.map((x, j) => `<i class="${doneOf(x) ? 'ok' : j === i ? 'cur' : ''}"></i>`).join('');
+  const d = dateOf(V.week, V.dayIdx);
+  o.innerHTML = `<div class="wm-in"><div class="wm-top"><button class="icon-btn" data-act="wm-close" aria-label="Close workout mode">✕</button><div style="text-align:center"><div class="eyebrow">Week ${V.week} · ${d.toLocaleDateString(undefined, { weekday: 'long' })}</div><div class="mut num" style="font-size:13px">Exercise ${i + 1} of ${Q.length}</div></div><span style="width:44px"></span></div>
+    <div class="wm-bars">${bars}</div>
+    <div class="wm-card"><div style="display:flex;gap:8px;align-items:center">${q.lbl ? `<span class="code">${esc(q.lbl)}</span>` : ''}${q.tags}</div><h2 class="wm-name">${esc(q.name)}</h2><div class="num wm-rx">${esc(q.rx)}</div>${q.note ? `<p class="wm-note">${esc(q.note)}</p>` : ''}
+      <div class="wm-sets" role="group" aria-label="Sets">${Array.from({ length: n }, (_, j) => `<button class="wm-set ${j < sd ? 'ok' : j === sd ? 'cur' : ''}" data-act="wm-set" data-n="${j + 1}" aria-label="Set ${j + 1}${j < sd ? ', done' : ''}">${j + 1}</button>`).join('')}</div>
+      ${q.hs ? `<div class="rs-strip hs-strip" style="margin-top:10px"><span class="rs-ic" aria-hidden="true">⤒</span><span><b>In the rest:</b> ${esc(q.hs)}</span></div>` : ''}${q.st ? `<div class="rs-strip" style="margin-top:6px"><span class="rs-ic" aria-hidden="true">↻</span><span><b>Stretch in the rest:</b> ${esc(q.st)}</span></div>` : ''}</div>
+    <div class="wm-rate">${RATINGS.slice(0, 3).map(([k, l]) => `<button class="chip ${e.r === k ? 'on' : ''}" data-act="rate" data-c="${q.code}" data-v="${k}">${l}</button>`).join('')}</div>
+    ${nx ? `<div class="wm-next"><span class="eyebrow" style="margin:0">Next</span><span>${esc(nx.name)} · ${esc(nx.rx)}</span></div>` : '<div class="wm-next"><span>Last exercise: then the cool-down in the list.</span></div>'}
+    <div class="wm-nav"><button class="btn ghost" data-act="wm-go" data-d="-1" ${i === 0 ? 'disabled' : ''} aria-label="Previous exercise">‹</button><button class="btn wm-cta" data-act="${sd >= n ? (nx ? 'wm-go' : 'wm-close') : 'wm-set'}" data-d="1" data-n="${sd + 1}">${sd >= n ? (nx ? 'Next exercise →' : 'Finish') : 'Set ' + (sd + 1) + ' done'}</button><button class="btn ghost" data-act="wm-go" data-d="1" ${nx ? '' : 'disabled'} aria-label="Next exercise">›</button></div></div>`;
+}
+/* ---------- weekly recap ---------- */
+function recapData(w){
+  const pos = todayPos(), days = [], c = cycN();
+  let sess = 0, xtr = 0;
+  DAYKEYS.forEach((dk, di) => { const lg = getLog(w, dk), n = lg ? Object.keys(lg.entries || {}).filter(k => !RECAP_SKIP.test(k)).length : 0, x = lg && lg.entries && (lg.entries.XTR || lg.entries.FLX); days.push(n > 0 ? 2 : x ? 1 : 0); if (n > 0 && di < 6) sess++; if (x) xtr++; });
+  const d0 = iso(dateOf(w, 0)), d6 = iso(dateOf(w, 6)), inW = d => d >= d0 && d <= d6;
+  const holds = (S.profile.holds || []).filter(x => inW(x.d)), hold = holds.reduce((a, x) => a + x.v, 0);
+  const recs = [];
+  S.metrics.entries.filter(x => inW(x.d)).forEach(x => { const m = METRICS.find(y => y.k === x.k); if (!m || m.flat) return; const b = mBest(x.k, x.t || 1); if (b != null && (m.lower ? +x.v < b : +x.v > b)) recs.push(m.n + ': ' + x.v + (m.u === 's' ? 's' : ' ' + m.u)); });
+  HOLDK.forEach(([k, l]) => { const W = holds.filter(x => x.k === k); if (!W.length) return; const b = Math.max(...W.map(x => x.v)), prior = (S.profile.holds || []).filter(x => x.k === k && x.d < d0); if (prior.length && b > Math.max(...prior.map(x => x.v))) recs.push(l + ' hold: ' + b + 's'); });
+  let streak = 0; const today = new Date();
+  for (let i = 0; i < 400; i++) { const d = new Date(today); d.setDate(d.getDate() - i); const p = posOfDate(d); if (!p) break; const lg = getLog(p.week, DAYKEYS[p.dayIdx]); const any = lg && Object.keys(lg.entries || {}).length; if (any) streak++; else if (i > 0 && p.dayIdx !== 6) break; }
+  const q = (S.profile.quests || {})['c' + c + 'w' + w];
+  return { w, c, days, sess, xtr, hold, recs, streak, quest: q === 'done' ? questOf(w)[0] : '', pst: PST_LBL[pstCur()], ph: phaseOf(w).name, d0, d6 };
+}
+function posOfDate(d){ const st = parseISO(S.profile.startDate), diff = Math.floor((parseISO(iso(d)) - st) / 864e5); if (diff < 0) return null; const week = Math.floor(diff / 7) + 1; return week > 12 ? null : { week, dayIdx: diff % 7 }; }
+function recapCard(w){
+  const R = recapData(w), fm = s => parseISO(s).toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+  const stat = (v, l, c) => `<div class="rc-s"><b class="num" style="color:${c}">${v}</b><span>${l}</span></div>`;
+  return `<div class="rc-card"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><div class="rc-eb">Project Mastery</div><div class="rc-t">Week ${w} recap</div></div><div class="rc-d">${fm(R.d0)} – ${fm(R.d6)}<br>${esc(R.ph)}</div></div>
+    <div class="rc-grid">${stat(R.sess + '/6', 'sessions done', '#5fbf86')}${stat(fmtT(Math.round(R.hold)), 'timed holds', '#e7c457')}${stat(R.recs.length, R.recs.length === 1 ? 'new record' : 'new records', '#e7c457')}${stat(R.streak, 'day streak', '#76a3d8')}</div>
+    <div class="rc-eb2">Days</div><div class="rc-days">${R.days.map((v, i) => `<div><i class="${v === 2 ? 'ok' : v === 1 ? 'x' : ''}"></i><span>${DAYSHORT[i][0]}</span></div>`).join('')}</div>
+    <div class="rc-eb2">This week</div><div class="rc-l">${[...R.recs.map(x => 'New record · ' + x), R.xtr ? R.xtr + ' extra practice day' + (R.xtr > 1 ? 's' : '') : '', R.quest ? 'Side quest done · ' + R.quest : '', 'Pistol stage · ' + R.pst].filter(Boolean).map(esc).join('<br>')}</div>
+    <button class="btn" data-act="rc-save" data-w="${w}" style="margin-top:14px">Save image</button></div>`;
+}
+function recapImage(w){
+  const R = recapData(w), cv = document.createElement('canvas'), W = 1080, H = 1350; cv.width = W; cv.height = H; const g = cv.getContext('2d');
+  g.fillStyle = '#1b1d22'; g.fillRect(0, 0, W, H);
+  const F = (s, wt, f) => wt + ' ' + s + 'px ' + (f || '"Public Sans", system-ui, sans-serif');
+  g.fillStyle = '#e7c457'; g.font = F(30, '700'); g.fillText('PROJECT MASTERY', 80, 120);
+  g.fillStyle = '#f2f0eb'; g.font = F(130, '800', '"Big Shoulders Display", Impact, sans-serif'); g.fillText('WEEK ' + w + ' RECAP', 80, 260);
+  g.fillStyle = '#9a9c9f'; g.font = F(32, '500'); g.fillText(parseISO(R.d0).toLocaleDateString(undefined, { day: 'numeric', month: 'short' }) + ' – ' + parseISO(R.d6).toLocaleDateString(undefined, { day: 'numeric', month: 'short' }) + ' · ' + R.ph, 80, 320);
+  const S4 = [[R.sess + '/6', 'sessions done', '#5fbf86'], [fmtT(Math.round(R.hold)), 'timed holds', '#e7c457'], [String(R.recs.length), 'new records', '#e7c457'], [String(R.streak), 'day streak', '#76a3d8']];
+  S4.forEach(([v, l, c], i) => { const x = 80 + (i % 2) * 470, y = 380 + Math.floor(i / 2) * 230; g.fillStyle = '#262b33'; g.beginPath(); g.roundRect ? g.roundRect(x, y, 440, 200, 28) : g.rect(x, y, 440, 200); g.fill(); g.fillStyle = c; g.font = F(84, '700', '"JetBrains Mono", monospace'); g.fillText(v, x + 36, y + 115); g.fillStyle = '#c9c6bf'; g.font = F(30, '500'); g.fillText(l, x + 36, y + 165); });
+  R.days.forEach((v, i) => { const x = 80 + i * 132; g.fillStyle = v === 2 ? '#5fbf86' : v === 1 ? '#e7c457' : '#3a3d44'; g.beginPath(); g.roundRect ? g.roundRect(x, 880, 112, 70, 16) : g.rect(x, 880, 112, 70); g.fill(); g.fillStyle = '#9a9c9f'; g.font = F(26, '600'); g.fillText(DAYSHORT[i], x + 30, 990); });
+  g.fillStyle = '#f2f0eb'; g.font = F(34, '500'); [...R.recs.slice(0, 3).map(x => 'New record · ' + x), R.quest ? 'Side quest · ' + R.quest : '', 'Pistol stage · ' + R.pst].filter(Boolean).slice(0, 4).forEach((t, i) => g.fillText(t.length > 52 ? t.slice(0, 51) + '…' : t, 80, 1070 + i * 52));
+  cv.toBlob(b => { const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'project-mastery-week-' + w + '.png'; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000); toast('Image saved'); }, 'image/png');
+}
+/* ---------- side quests & badges ---------- */
+const QUESTS = [
+  ['Edge of the bench', 'Hold a 30 s handstand on the edge of a park bench or a low wall. Bail to the front, never to the back.'],
+  ['Squat juggler', 'Juggle 3 balls for 1 minute while sitting in a deep squat.'],
+  ['Kip-up ten', '10 kip-ups in a row on grass or a mat. Rest as long as you need between them, no stopping the set.'],
+  ['Ladder walk', 'Walk 10 m on your hands. Tiny steps, shoulders over the hands.'],
+  ['Three-move floreio', 'Link 3 floreios on hard floor, filmed, without a reset between them.'],
+  ['Handstand to QDR, both sides', 'One clean handstand → queda de rins lower to each side in the same session.'],
+  ['Minute in the bridge', 'A 60 s straight-arm bridge hold, eyes on your hands.'],
+  ['Juggle and balance', 'Juggle 3 balls for 30 s standing on one leg, then switch.'],
+  ['Lowest box', '5 touch-and-go pistols per leg on the lowest box you can, 3 s down.'],
+  ['Handstand shapes', 'In one handstand: straddle → tuck → straddle → straight, no fall.'],
+  ['Crow to handstand', '3 crow-to-handstand mounts, any shape.'],
+  ['Long L-sit', 'Beat your L-sit best by 5 s on parallettes or the floor.'],
+  ['Cube walk', 'Walk 10 m forward and 10 m backward with a Rubik\'s cube balanced on your head.'],
+  ['Hollowback on the wall', 'Walk down from a handstand into a hollowback against the wall, 3 times, slow.'],
+  ['Cartwheel line', '10 cartwheels in a straight line, both sides, hands and feet on the line.'],
+  ['Silent landings', 'Every jump and floreio this week lands without a sound.']
+];
+const questOf = w => QUESTS[((cycN() - 1) * 12 + w - 1) % QUESTS.length];
+function questCard(w){
+  const key = 'c' + cycN() + 'w' + w, st = (S.profile.quests || {})[key], [t, d] = questOf(w);
+  const body = `<p style="margin:0 0 4px;font-weight:700;font-size:15px">${esc(t)}</p><p class="mut" style="margin:0 0 10px;font-size:13.5px">${esc(d)}</p>${st ? `<div class="mut" style="font-size:13px">${st === 'done' ? 'Done: badge earned.' : 'Skipped this week.'} <button class="chip" data-act="quest" data-v="">Undo</button></div>` : `<div style="display:flex;gap:8px"><button class="btn" data-act="quest" data-v="done">Done it</button><button class="btn ghost" data-act="quest" data-v="skip">Skip</button></div>`}<p class="mut" style="font-size:12px;margin:8px 0 0">Optional. One a week, no penalty for skipping.</p>`;
+  return fold('quest', 'Side quest', body, st === 'done' ? '✓' : st === 'skip' ? 'skipped' : 'this week', false);
+}
+function badgeList(){
+  const Q = S.profile.quests || {}, nq = Object.values(Q).filter(v => v === 'done').length, B = k => mBest(k);
+  const hs = Math.max(B('hs') || 0, swBest('hs') || 0), oa = Math.max(B('oahsA') || 0, swBest('oaL') || 0, swBest('oaR') || 0);
+  return [
+    ['60', 'First 60 s handstand', hs >= 60], ['KU', 'First kip-up', (B('kipup') || 0) >= 1], ['QR', 'First QDR lower', (B('hsqdr') || 0) >= 1], ['OA', '10 s one-arm', oa >= 10],
+    ['FL', 'First flare', (B('flare') || 0) >= 1], ['PR', 'First press', (B('press') || 0) >= 1], ['PS', 'Full pistol', pstCur() >= 3], ['HB', 'Hollowback 5 s', (B('hbk') || 0) >= 5],
+    ['Q1', 'First side quest', nq >= 1], ['Q5', '5 side quests', nq >= 5], ['Q10', '10 side quests', nq >= 10], ['12', 'Full cycle done', (S.profile.cycles || []).length >= 1]
+  ];
+}
+function badgesCard(){ const L = badgeList(), n = L.filter(b => b[2]).length; return fold('pg-badges', 'Badges', `<div class="bd-grid">${L.map(([i, l, on]) => `<div class="bd ${on ? 'on' : ''}"><span class="bd-i">${i}</span><span class="bd-l">${esc(l)}</span></div>`).join('')}</div>`, n + '/' + L.length, false); }
+/* ---------- skill tree ---------- */
+function skillTree(){
+  const M = S.profile.skm || {}, K = [['KU', 'Kip-up'], ['FL', 'Flare'], ['BT', 'B-twist'], ['MC', 'Macaco'], ['HB', 'Hollowback'], ['HQ', 'Handstand → QDR']];
+  const pct = (k, L) => { const o = skLevels(k, null).find(x => x.L === L); if (!o || !o.items.length) return 0; const ks = o.items.map((t, i) => k + '|' + (k === 'MC' ? 'D6|' : '') + L + '|' + i); return Math.round(ks.filter(x => M[x]).length / ks.length * 100); };
+  const row = (n, cur, max, p) => `<div class="st-row"><span class="st-n">${esc(n)}</span><div class="st-dots" style="grid-template-columns:repeat(${max},minmax(0,1fr))">${Array.from({ length: max }, (_, i) => `<span class="st-d ${i < cur ? 'ok' : i === cur ? 'cur' : ''}" ${i === cur && p != null ? `style="--p:${p}%"` : ''}>${i < cur ? '✓' : i === cur && p ? p + '%' : ''}</span>`).join('')}</div></div>`;
+  let h = `<div class="st-head"><span></span><div class="st-dots" style="grid-template-columns:repeat(4,minmax(0,1fr))"><span>Found.</span><span>Lvl 1</span><span>Lvl 2</span><span>Lvl 3</span></div></div>`;
+  K.forEach(([k, n]) => { const c = skCur(k); h += row(n, c, 4, c < 4 ? pct(k, c) : null); });
+  h += `<div class="st-head" style="margin-top:8px"><span></span><div class="st-dots" style="grid-template-columns:repeat(5,minmax(0,1fr))">${PST_LBL.map((l, i) => `<span>${i + 1}</span>`).join('')}</div></div>` + row('Pistol', pstCur(), 5, null) + `<div class="mut" style="font-size:12px;margin:2px 0 0 124px">Now: ${esc(PST_LBL[pstCur()])}</div>`;
+  h += `<p class="mut" style="font-size:12px;margin:8px 0 0">A filled dot is a level passed. The ringed dot is where you train now: the % is how many of its drills you've ticked as mastered.</p>`;
+  return fold('pg-tree', 'Skill tree', h, '', true);
+}
+/* ---------- floreio combo generator ---------- */
+let CB = { n: 4, seed: Math.floor(Math.random() * 1000) };
+function comboPool(){
+  const P0 = [['Ginga', 0], ['Aú', 0], ['Rolê', 0], ['Meia lua de compasso', 0], ['Queda de rins', 0], ['Negativa → rolê', 0], ['Corta capim', 0], ['Esquiva lateral', 0], ['Aú de cabeça', 0]];
+  const G = [['Handstand → QDR', 'HQ', 1], ['Kip-up', 'KU', 1], ['Macaco', 'MC', 1], ['Aú sem mão prep: low aú', 'BT', 1], ['B-twist', 'BT', 2], ['Flare (1 circle)', 'FL', 2], ['Hollowback walkover', 'HB', 2], ['Helicóptero', 'BT', 2], ['Bridge rotation', 'HB', 1]];
+  return P0.map(x => x[0]).concat(G.filter(([, k, L]) => skCur(k) >= L).map(x => x[0]));
+}
+function comboList(){ const P = comboPool(), out = []; let s = CB.seed; while (out.length < CB.n && out.length < P.length) { s = (s * 9301 + 49297) % 233280; const m = P[Math.floor(s / 233280 * P.length)]; if (!out.includes(m)) out.push(m); } return out; }
+function comboCard(){
+  const L = comboList();
+  const body = `<p class="mut" style="font-size:13px;margin:0 0 8px">Only moves at your current skill levels. Flow them in order, then freestyle.</p><div class="tm-row">${[3, 4, 5].map(n => `<button class="chip ${CB.n === n ? 'on' : ''}" data-act="cb-n" data-v="${n}">${n} moves</button>`).join('')}</div><ol class="cb-list">${L.map(m => `<li>${esc(m)}</li>`).join('')}</ol><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-act="cb-roll">New combo</button><button class="btn ghost" data-act="timer" data-s="120" data-l="Freestyle round" data-k="work">Freestyle round 2:00</button></div>`;
+  return fold('combo', 'Floreio combo generator', body, '', false);
+}
+
 document.addEventListener('click', ev => {
   const b = ev.target.closest('[data-act]'); if (!b) return;
   const a = b.dataset.act, F = FS();
+  if (a === 'pr-close') { const o = document.getElementById('pr-ov'); if (o) o.hidden = true; return; }
+  if (a === 'wm-open') { V.wm = { i: 0 }; const lg = getLog(V.week, DAYKEYS[V.dayIdx]); const j = WMQ.findIndex(x => { const y = lg && lg.entries[x.code]; return !(y && (y.r || (y.sd || 0) >= wmSets(x.rx))); }); V.wm.i = j < 0 ? 0 : j; wmRender(); return; }
+  if (a === 'wm-close') { V.wm = null; wmRender(); render(); return; }
+  if (a === 'wm-go') { V.wm.i = Math.max(0, Math.min(WMQ.length - 1, V.wm.i + (+b.dataset.d))); wmRender(); document.getElementById('wm').scrollTop = 0; return; }
+  if (a === 'wm-set') { const q = WMQ[V.wm.i], e = entry(q.code), n = wmSets(q.rx), k = +b.dataset.n; e.sd = (e.sd || 0) >= k ? k - 1 : k; e.t = Date.now(); if (e.sd >= n && !e.r) e.r = 'right'; saveSession(); if (e.sd > 0 && e.sd < n && (e.sd === k)) tmStart(wmRest(q.rx, q.note), 'Rest · ' + q.name, 'rest'); wmRender(); return; }
+  if (a === 'sw-k') { if (SW.run) return; SW.k = b.dataset.k; SW.last = 0; const y = window.scrollY; render(); window.scrollTo(0, y); return; }
+  if (a === 'sw-go') { if (SW.run) { swStop(); } else { SW.run = true; SW.t0 = performance.now(); SW.spoke = 0; try { tmBeep(520, 1); } catch (e) {} } const y = window.scrollY; render(); window.scrollTo(0, y); return; }
+  if (a === 'sw-del') { S.profile.holds = (S.profile.holds || []).filter(x => String(x.t) !== b.dataset.t); persist('profile'); const y = window.scrollY; render(); window.scrollTo(0, y); toast('Hold deleted'); return; }
+  if (a === 'sw-voice') { S.profile.swVoice = S.profile.swVoice === false; persist('profile'); const y = window.scrollY; render(); window.scrollTo(0, y); return; }
+  if (a === 'sw-save') { const d = iso(new Date()), bL = swBest('oaL', d), bR = swBest('oaR', d), put = (k, v) => { if (v == null) return; prCheck(k, v); S.metrics.entries.push({ id: 'm' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), k, v, d, t: Date.now() }); };
+    put('hs', swBest('hs', d)); put('oawall', swBest('oawall', d)); if (bL != null || bR != null) { put('oahsA', Math.max(bL || 0, bR || 0)); if (bL != null && bR != null) put('oahsB', Math.min(bL, bR)); } persist('metrics'); toast('Saved to Progress'); return; }
+  if (a === 'quest') { const Q = S.profile.quests = S.profile.quests || {}, key = 'c' + cycN() + 'w' + V.week; if (b.dataset.v) Q[key] = b.dataset.v; else delete Q[key]; persist('profile'); const y = window.scrollY; render(); window.scrollTo(0, y); if (b.dataset.v === 'done') prShow('Side quest', questOf(V.week)[0], 'Badge earned. See them all in Progress.'); return; }
+  if (a === 'cb-n') { CB.n = +b.dataset.v; const y = window.scrollY; render(); window.scrollTo(0, y); return; }
+  if (a === 'cb-roll') { CB.seed = Math.floor(Math.random() * 100000); const y = window.scrollY; render(); window.scrollTo(0, y); return; }
+  if (a === 'rw-all') { V.rwAll = !V.rwAll; const y = window.scrollY; render(); window.scrollTo(0, y); return; }
+  if (a === 'rc-save') { recapImage(+b.dataset.w); return; }
   if (a === 'skm') { ev.preventDefault(); const M = S.profile.skm = S.profile.skm || {}, key = b.dataset.k; if (M[key]) delete M[key]; else M[key] = 1; const on = !!M[key]; b.classList.toggle('on', on); b.textContent = on ? '✓' : ''; b.setAttribute('aria-pressed', on);
     const box = b.closest('div[style*="margin:6px 0 10px"]'); if (box) { const all = box.querySelectorAll('[data-act=skm]'), d = box.querySelectorAll('[data-act=skm].on').length, sp = box.querySelector('.skm-n'); if (sp) sp.textContent = d + '/' + all.length + ' mastered'; }
     document.querySelectorAll('[data-act=skm][data-k="' + key + '"]').forEach(x => { if (x !== b) { x.classList.toggle('on', on); x.textContent = on ? '✓' : ''; } });
@@ -3678,7 +3913,7 @@ document.addEventListener('click', ev => {
   if (a === 'phret') { const Q = V.ph, ar = b.dataset.a || 'calf'; Q.ret = Q.ret || {}; if (b.dataset.v === '1') { Q.ret[ar] = iso(new Date()); V.retPick = false; toast(retName(ar) + ' return plan started: 3 weeks'); } else delete Q.ret[ar]; phSave(Q); const y = window.scrollY; render(); window.scrollTo(0, y); return; }
   if (a === 'pst') { S.profile.pst = +b.dataset.v; persist('profile'); const y = window.scrollY; render(); window.scrollTo(0, y); toast('Pistol: ' + PST_LBL[+b.dataset.v]); return; }
   if (a === 'bench-save' || a === 'bench-apply') { const key = benchKey(V.week), B = (S.profile.bench = S.profile.bench || {})[key] = S.profile.bench[key] || { v: {} };
-    if (a === 'bench-save') { const d = iso(new Date()); Object.entries(B.v).forEach(([k, val]) => { if (val === '' || val == null || isNaN(+val)) return; S.metrics.entries = S.metrics.entries.filter(x => !(x.k === k && x.bk === key)); S.metrics.entries.push({ id: 'm' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), k, v: +val, d, t: Date.now(), bk: key }); }); B.saved = d; persist('metrics'); toast('Saved to Progress'); }
+    if (a === 'bench-save') { const d = iso(new Date()); Object.entries(B.v).forEach(([k, val]) => { if (val === '' || val == null || isNaN(+val)) return; S.metrics.entries = S.metrics.entries.filter(x => !(x.k === k && x.bk === key)); prCheck(k, +val); S.metrics.entries.push({ id: 'm' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), k, v: +val, d, t: Date.now(), bk: key }); }); B.saved = d; persist('metrics'); toast('Saved to Progress'); }
     else { const sg = benchSug(B.v); S.profile.sk = Object.assign({}, S.profile.sk || {}, sg); Object.values(S.logs).forEach(lg => { if (lg.week >= V.week && lg.sk && !Object.keys(lg.entries || {}).length) delete lg.sk; }); const lg = getLog(V.week, DAYKEYS[V.dayIdx]); if (lg && lg.sk) Object.assign(lg.sk, sg); B.applied = iso(new Date()); saveSession(); toast('Skill levels updated'); }
     persist('profile'); const y = window.scrollY; render(); window.scrollTo(0, y); return; }
   if (a === 'foc-review') { V.focReview = true; V.focPick = V.focPick || []; render(); window.scrollTo(0, 0); return; }
@@ -4293,6 +4528,7 @@ function render(){
   const focusId = document.activeElement && document.activeElement.id;
   if (hidden(V.tab)) V.tab = 'today';
   main.innerHTML = V.tab === 'today' ? renderToday() : V.tab === 'progress' ? renderProgress() : V.tab === 'guide' ? renderGuide() : V.tab === 'supps' ? renderFuel() : V.tab === 'care' ? renderCare() : V.tab === 'breath' ? renderBreath() : V.tab === 'mind' ? renderMind() : renderSettings();
+  try { wmRender(); } catch (e) {}
   if (hidden(V.tab)) V.tab = 'today';
   const TB = [['today','Today'],['progress','Progress'],['care','Prehab'],['breath','Breath'],['mind','Mind'],['supps','Fuel'],['guide','Guide'],['settings','Settings']].filter(([k]) => !hidden(k));
   $('#tabs').style.gridTemplateColumns = `repeat(${TB.length},1fr)`;
@@ -4306,7 +4542,7 @@ function entry(code){
 function saveSession(){ persist('log-' + logKey(V.week, DAYKEYS[V.dayIdx])); }
 function pruneEntry(code){
   const lg = getLog(V.week, DAYKEYS[V.dayIdx]); const e = lg?.entries[code];
-  if (e && !e.r && !e.res && !e.pain && !e.ez && !(e.dr && e.dr.length)) delete lg.entries[code];
+  if (e && !e.r && !e.res && !e.pain && !e.ez && !e.sd && !(e.dr && e.dr.length)) delete lg.entries[code];
 }
 document.addEventListener('click', ev => {
   const b = ev.target.closest('[data-act]'); if (!b) return;
@@ -4398,6 +4634,7 @@ document.addEventListener('submit', ev => {
   ev.preventDefault();
   const k = $('#m-k').value, v = parseFloat($('#m-v').value), d = $('#m-d').value || iso(new Date());
   if (isNaN(v)) return;
+  prCheck(k, v);
   S.metrics.entries.push({ id: 'm' + Date.now().toString(36) + Math.random().toString(36).slice(2,5), k, v, d, t: Date.now() });
   if (k === 'bw') S.profile.bw = v, persist('profile');
   persist('metrics'); render(); toast('Benchmark saved');
