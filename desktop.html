@@ -116,6 +116,14 @@ body.wm-on{overflow:hidden}
 .rc-eb2{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#9a9c9f;font-weight:700;margin:4px 0 6px}
 .rc-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin-bottom:10px}.rc-days div{display:flex;flex-direction:column;align-items:center;gap:3px}.rc-days i{width:100%;height:28px;border-radius:7px;background:#3a3d44}.rc-days i.ok{background:#5fbf86}.rc-days i.x{background:#e7c457}.rc-days span{font-size:11px;color:#9a9c9f}
 .rc-l{font-size:14px;line-height:1.55}
+body.wm-on #tmbar{display:none}
+.wm-rest{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 16px}
+.wm-rest.on{background:#1b1d22;border-color:#1b1d22;color:#f2f0eb}.wm-rest.on .eyebrow{color:#9a9c9f}.wm-rest.on .mut{color:#c9c6bf}
+.wm-rt{display:flex;align-items:center;justify-content:space-between;gap:10px}.wm-rt b{font-size:40px;font-weight:700}
+.wm-rest.on .chip{background:#262b33;color:#f2f0eb;border-color:#3a3d44}
+.wm-rl{display:flex;flex-direction:column;gap:8px}
+.wm-ri{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);color:inherit;font:inherit;font-size:14px;line-height:1.4;cursor:pointer}
+.wm-rest.on .wm-ri{background:#262b33;border-color:#3a3d44}.wm-ri.on{opacity:.65}
 .cb-list{margin:10px 0 12px;padding-left:22px;font-size:15px;font-weight:600;line-height:1.9}
 .ex.prehab{border:2px solid color-mix(in srgb,var(--good) 55%,var(--line));background:color-mix(in srgb,var(--good) 7%,var(--surface))}.ex.logged{border-color:color-mix(in srgb,var(--good) 45%,var(--line))}.ex.off{background:color-mix(in srgb,var(--line) 55%,var(--surface));border-style:dashed}.ex.off .ex-name,.ex.off .code{opacity:.6}.ex.off .ex-row .rx{opacity:.6}.rt-item.xoff{background:color-mix(in srgb,var(--line) 55%,var(--surface));border-style:dashed;cursor:default}.rt-item.xoff b{opacity:.75}.offtag{font-size:11.5px;font-weight:600;padding:2px 7px;border-radius:999px;background:var(--surface);border:1px dashed var(--line);color:var(--muted, #777)}
 .ex-row.nolbl ~ .tm-row{padding-left:14px}.ex-row.nolbl ~ .rs-strip{margin-left:14px}.ex-row.nolbl{grid-template-columns:1fr auto;padding-left:14px}.ex-row{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:start;padding:12px 12px 12px 10px;cursor:pointer;width:100%;background:none;border:0;text-align:left}
@@ -3770,6 +3778,20 @@ function swStop(){
 /* ---------- workout mode ---------- */
 function wmSets(rx){ const m = String(rx).match(/(\d+)\s*(?:rounds?|sets?)/i) || String(rx).match(/^(\d+)\s*×/); return m ? Math.min(10, +m[1]) : 1; }
 function wmRest(rx, note){ const t = timerSpec(rx, note); if (t && t.rest) return t.rest; const m = String(note).match(/Rest (\d+)\s*s/i) || String(note).match(/Rest (\d+)\s*min/i); return m ? (/min/i.test(m[0]) ? +m[1] * 60 : +m[1]) : 90; }
+function wmResting(){ return !!(TM && TM.kind === 'rest' && V.wm); }
+function wmRestBlock(q, sd, n){
+  const items = [], rd = V.wm.rd || [];
+  if (q.hs) items.push(['⤒', 'Handstand', q.hs + (q.st ? ', then the stretch' : '')]);
+  if (q.st) items.push(['↻', 'Stretch', q.st]);
+  const r = wmResting(), over = r && TM.left <= 0;
+  let h = `<div class="wm-rest ${r ? 'on' : ''}" data-r="${r ? (over ? 2 : 1) : 0}">`;
+  if (r) h += `<div class="wm-rt"><div><div class="eyebrow" style="margin:0;color:${over ? '#5fbf86' : '#e7c457'}">${over ? 'Rest done: next set' : 'Rest'}</div><b class="num" id="wm-rest">${fmtT(Math.ceil(Math.abs(TM.left)))}</b></div><div style="display:flex;gap:6px"><button class="chip" data-act="wm-more">+15s</button><button class="chip" data-act="wm-skip">${over ? 'Close' : 'Skip rest'}</button></div></div>`;
+  h += `<div class="eyebrow" style="margin:${r ? '12px' : '0'} 0 6px">During the rest</div>`;
+  if (items.length) h += `<div class="wm-rl">${items.map(([ic, t, d], j) => `<button class="wm-ri ${rd.includes(j) ? 'on' : ''}" data-act="wm-ri" data-j="${j}" aria-pressed="${rd.includes(j)}"><span class="check ${rd.includes(j) ? 'on' : ''}" aria-hidden="true">${rd.includes(j) ? '✓' : ''}</span><span><b>${ic} ${t}</b><br>${esc(d)}</span></button>`).join('')}</div>${q.hs && n > 1 ? `<div class="mut" style="font-size:12px;margin-top:6px">${sd >= n - 1 ? 'Last set next: skip the handstand if you need the full rest.' : 'Skip the handstand before your last set if you need the full rest.'}</div>` : ''}`;
+  else h += `<div class="mut" style="font-size:13.5px">Just rest: breathe through the nose and shake out the arms.</div>`;
+  return h + '</div>';
+}
+setInterval(() => { if (!V.wm) return; const blk = document.querySelector('#wm .wm-rest'); if (!blk) return; const want = wmResting() ? (TM.left <= 0 ? '2' : '1') : '0'; if (blk.dataset.r !== want) { wmRender(); return; } const el = document.getElementById('wm-rest'); if (el && TM) el.textContent = fmtT(Math.ceil(Math.abs(TM.left))); }, 250);
 function wmRender(){
   let o = document.getElementById('wm'); if (!V.wm) { if (o) o.hidden = true; document.body.classList.remove('wm-on'); return; }
   if (!o) { o = document.createElement('div'); o.id = 'wm'; document.body.appendChild(o); }
@@ -3783,7 +3805,8 @@ function wmRender(){
     <div class="wm-bars">${bars}</div>
     <div class="wm-card"><div style="display:flex;gap:8px;align-items:center">${q.lbl ? `<span class="code">${esc(q.lbl)}</span>` : ''}${q.tags}</div><h2 class="wm-name">${esc(q.name)}</h2><div class="num wm-rx">${esc(q.rx)}</div>${q.note ? `<p class="wm-note">${esc(q.note)}</p>` : ''}
       <div class="wm-sets" role="group" aria-label="Sets">${Array.from({ length: n }, (_, j) => `<button class="wm-set ${j < sd ? 'ok' : j === sd ? 'cur' : ''}" data-act="wm-set" data-n="${j + 1}" aria-label="Set ${j + 1}${j < sd ? ', done' : ''}">${j + 1}</button>`).join('')}</div>
-      ${q.hs ? `<div class="rs-strip hs-strip" style="margin-top:10px"><span class="rs-ic" aria-hidden="true">⤒</span><span><b>In the rest:</b> ${esc(q.hs)}</span></div>` : ''}${q.st ? `<div class="rs-strip" style="margin-top:6px"><span class="rs-ic" aria-hidden="true">↻</span><span><b>Stretch in the rest:</b> ${esc(q.st)}</span></div>` : ''}</div>
+</div>
+    ${wmRestBlock(q, sd, n)}
     <div class="wm-rate">${RATINGS.slice(0, 3).map(([k, l]) => `<button class="chip ${e.r === k ? 'on' : ''}" data-act="rate" data-c="${q.code}" data-v="${k}">${l}</button>`).join('')}</div>
     ${nx ? `<div class="wm-next"><span class="eyebrow" style="margin:0">Next</span><span>${esc(nx.name)} · ${esc(nx.rx)}</span></div>` : '<div class="wm-next"><span>Last exercise: then the cool-down in the list.</span></div>'}
     <div class="wm-nav"><button class="btn ghost" data-act="wm-go" data-d="-1" ${i === 0 ? 'disabled' : ''} aria-label="Previous exercise">‹</button><button class="btn wm-cta" data-act="${sd >= n ? (nx ? 'wm-go' : 'wm-close') : 'wm-set'}" data-d="1" data-n="${sd + 1}">${sd >= n ? (nx ? 'Next exercise →' : 'Finish') : 'Set ' + (sd + 1) + ' done'}</button><button class="btn ghost" data-act="wm-go" data-d="1" ${nx ? '' : 'disabled'} aria-label="Next exercise">›</button></div></div>`;
@@ -3892,8 +3915,11 @@ document.addEventListener('click', ev => {
   if (a === 'pr-close') { const o = document.getElementById('pr-ov'); if (o) o.hidden = true; return; }
   if (a === 'wm-open') { V.wm = { i: 0 }; const lg = getLog(V.week, DAYKEYS[V.dayIdx]); const j = WMQ.findIndex(x => { const y = lg && lg.entries[x.code]; return !(y && (y.r || (y.sd || 0) >= wmSets(x.rx))); }); V.wm.i = j < 0 ? 0 : j; wmRender(); return; }
   if (a === 'wm-close') { V.wm = null; wmRender(); render(); return; }
-  if (a === 'wm-go') { V.wm.i = Math.max(0, Math.min(WMQ.length - 1, V.wm.i + (+b.dataset.d))); wmRender(); document.getElementById('wm').scrollTop = 0; return; }
-  if (a === 'wm-set') { const q = WMQ[V.wm.i], e = entry(q.code), n = wmSets(q.rx), k = +b.dataset.n; e.sd = (e.sd || 0) >= k ? k - 1 : k; e.t = Date.now(); if (e.sd >= n && !e.r) e.r = 'right'; saveSession(); if (e.sd > 0 && e.sd < n && (e.sd === k)) tmStart(wmRest(q.rx, q.note), 'Rest · ' + q.name, 'rest'); wmRender(); return; }
+  if (a === 'wm-more') { if (TM) { TM.total += 15; TM.over = false; TM.lastWarn = null; } wmRender(); return; }
+  if (a === 'wm-skip') { TM = null; cancelAnimationFrame(tmRaf); tmRender(); wmRender(); return; }
+  if (a === 'wm-ri') { const j = +b.dataset.j, L = V.wm.rd = V.wm.rd || []; const x = L.indexOf(j); if (x >= 0) L.splice(x, 1); else L.push(j); wmRender(); return; }
+  if (a === 'wm-go') { V.wm.rd = []; V.wm.i = Math.max(0, Math.min(WMQ.length - 1, V.wm.i + (+b.dataset.d))); wmRender(); document.getElementById('wm').scrollTop = 0; return; }
+  if (a === 'wm-set') { const q = WMQ[V.wm.i], e = entry(q.code), n = wmSets(q.rx), k = +b.dataset.n; e.sd = (e.sd || 0) >= k ? k - 1 : k; e.t = Date.now(); if (e.sd >= n && !e.r) e.r = 'right'; saveSession(); V.wm.rd = []; if (e.sd > 0 && e.sd < n && (e.sd === k)) tmStart(wmRest(q.rx, q.note), 'Rest · ' + q.name, 'rest'); wmRender(); return; }
   if (a === 'sw-k') { if (SW.run) return; SW.k = b.dataset.k; SW.last = 0; const y = window.scrollY; render(); window.scrollTo(0, y); return; }
   if (a === 'sw-go') { if (SW.run) { swStop(); } else { SW.run = true; SW.t0 = performance.now(); SW.spoke = 0; try { tmBeep(520, 1); } catch (e) {} } const y = window.scrollY; render(); window.scrollTo(0, y); return; }
   if (a === 'sw-del') { S.profile.holds = (S.profile.holds || []).filter(x => String(x.t) !== b.dataset.t); persist('profile'); const y = window.scrollY; render(); window.scrollTo(0, y); toast('Hold deleted'); return; }
