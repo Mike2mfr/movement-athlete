@@ -408,23 +408,22 @@ const METRICS = [
  {k:'wpu',n:'Weighted pull-up, 3 reps',u:'kg',start:40,target:47.5},
  {k:'lsit',n:'L-sit',u:'s',start:10,target:30},
  {k:'planche',n:'Advanced-tuck planche',u:'s',start:0,target:10},
- {k:'pancake',n:'Pancake, chest to floor',u:'cm',lower:true},
- {k:'fsplit',n:'Front split, hip to floor',u:'cm',lower:true},
- {k:'msplit',n:'Middle split, hip to floor',u:'cm',lower:true},
- {k:'bridge',n:'Bridge, hands to heels',u:'cm',lower:true},
+
+
+
+
  {k:'bridgeHold',n:'Straight-arm bridge hold',u:'s',start:0,target:45},
  {k:'amrap',n:'15-min AMRAP rounds',u:'reps',start:0,target:6},{k:'kipup',n:'Kip-up on flat ground (out of 5)',u:'reps',start:0,target:4},{k:'kick',n:'Kick-up consistency (out of 10)',u:'reps',start:0,target:8},
  {k:'flare',n:'Flares in a row',u:'reps',start:0,target:3},{k:'hbk',n:'Hollowback hold',u:'s',start:0,target:5},{k:'hsqdr',n:'Handstand → QDR, clean lowers/side',u:'reps',start:0,target:3},
- {k:'btG',n:'B-twist landed on grass (out of 5)',u:'reps',start:0,target:4},
- {k:'btH',n:'B-twist landed on hard floor (out of 5)',u:'reps',start:0,target:4},
+
+
  {k:'macaco',n:'One-hand macaco on hard floor (out of 5)',u:'reps',start:0,target:4},
- {k:'afh',n:'Aú de frente wall hold: lowest foot height',u:'cm',lower:true},{k:'auf',n:'Aú de frente on hard floor (out of 5)',u:'reps',start:0,target:4},
- {k:'aut',n:'Aú trancado on hard floor (out of 5)',u:'reps',start:0,target:4},
- {k:'heli',n:'Helicóptero on hard floor (out of 5)',u:'reps',start:0,target:4},
- {k:'horse',n:'Horse stance width',u:'steps',start:5,target:9},
- {k:'pklift',n:'Pancake lift: fingertips past the knees',u:'cm',start:0,target:30},
- {k:'leahy',n:'Leahy shoulder test (stick angle)',u:'°',start:150,target:180},
- {k:'oawall',n:'One-arm wall hold, weaker side',u:'s',start:0,target:20},{k:'oapDeg',n:'One-arm pull-up, elbow angle at the top',u:'°',lower:true},{k:'brot',n:'Bridge rotation (0–4)',u:'steps',start:0,target:4},
+
+
+
+
+
+ {k:'oawall',n:'One-arm wall hold, weaker side',u:'s',start:0,target:20},{k:'oapDeg',n:'One-arm pull-up, elbow angle at the top',u:'°',lower:true},
  {k:'bw',n:'Bodyweight',u:'kg',start:90,target:90,flat:true},
 ];
 const TEST_BY_DAY = {D1:0,D2:1,D3:2,D4:3,D5:4,D6:5};
@@ -1215,10 +1214,8 @@ function condJumpy(){ const s = (V.ph && V.ph.sel) || []; return s.includes('cal
 const BENCH = [
   ['oawall', 'One-arm wall hold, weaker side', 's'],
   ['oapDeg', 'One-arm pull-up: elbow angle at your highest point (180° = arm straight)', '°'],
-  ['brot', 'Bridge rotation: 0 can\'t start · 1 to the side · 2 halfway · 3 almost, with help · 4 full', '0–4'],
   ['kipup', 'Kip-ups landed on flat ground, out of 5', '/5'],
   ['flare', 'Flare circles in a row', 'reps'],
-  ['btG', 'B-twists landed on grass or a mat, out of 5', '/5'],
   ['macaco', 'Macacos landed (the version you train), out of 5', '/5'],
   ['hsqdr', 'Handstand → QDR: clean lowers per side', 'reps'],
   ['hbk', 'Hollowback hold', 's']
@@ -1227,16 +1224,14 @@ const benchKey = w => 'c' + cycN() + 'w' + w;
 const benchWeek = w => w === 5 || w === 9;
 function benchSug(v){
   const b = (x, t) => x == null || x === '' ? null : (+x >= t[2] ? 3 : +x >= t[1] ? 2 : +x >= t[0] ? 1 : 0), o = {};
-  const m = { KU: ['kipup', [1, 3, 5]], FL: ['flare', [1, 2, 3]], BT: ['btG', [1, 3, 5]], MC: ['macaco', [1, 3, 5]], HQ: ['hsqdr', [1, 2, 3]], HB: ['hbk', [1, 3, 5]] };
+  const m = { KU: ['kipup', [1, 3, 5]], FL: ['flare', [1, 2, 3]], MC: ['macaco', [1, 3, 5]], HQ: ['hsqdr', [1, 2, 3]], HB: ['hbk', [1, 3, 5]] };
   Object.entries(m).forEach(([k, [key, t]]) => { const s = b(v[key], t); if (s != null) o[k] = s; });
-  if (o.HB != null && v.brot !== '' && v.brot != null && +v.brot <= 1) o.HB = Math.min(o.HB, 1);
   return o;
 }
 function benchTips(v){
   const t = [], has = k => v[k] !== '' && v[k] != null;
   if (has('oawall')) t.push(+v.oawall < 10 ? 'One-arm: stay with the wall holds and the assisted finger level until 10s/side.' : +v.oawall < 20 ? 'One-arm: keep the wall holds and add 3–5 freestanding one-arm attempts at the end of Monday\'s accumulation.' : 'One-arm: move most of your one-arm time freestanding; keep one wall set as a warm-up.');
   if (has('oapDeg')) t.push(+v.oapDeg > 110 ? 'One-arm pull-up: use a stronger band for the singles and keep the 8 s eccentrics.' : +v.oapDeg > 80 ? 'One-arm pull-up: the top is the weak point. After the eccentrics, add 3 × 5 s holds at your highest point.' : 'One-arm pull-up: try a lighter band, and a strict attempt when fresh.');
-  if (has('brot')) t.push(+v.brot <= 1 ? 'Bridge rotation: keep it in the bridge primer, with a hand on a box or a spotter, 3 × 3/side.' : +v.brot <= 3 ? 'Bridge rotation: nearly there. Do it onto a raised surface (a mat stack) so you finish the turn, 3 × 3/side.' : 'Bridge rotation: done. Start bridge rotations from standing on Saturdays.');
   return t;
 }
 function benchCard(w){
